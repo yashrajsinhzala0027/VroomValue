@@ -642,6 +642,7 @@ app.get('/api/test-drives', async (req, res) => {
 
 app.post('/api/test-drives', async (req, res) => {
     try {
+        console.log("Create Test Drive Payload:", req.body);
         const newDrive = {
             id: Date.now(),
             ...req.body,

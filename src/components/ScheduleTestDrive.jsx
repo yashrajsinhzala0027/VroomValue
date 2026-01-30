@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
+import { useAuth } from './AuthContext';
 import { useToast } from './Toasts';
 import { bookTestDrive } from '../api/mockApi';
 import CustomSelect from './CustomSelect';
 
 const ScheduleTestDrive = ({ carTitle }) => {
     const { addToast } = useToast();
+    const { user } = useAuth();
+
+    // Pre-fill if user is logged in
+    const [name, setName] = useState(user ? user.name : '');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
-    const [phone, setPhone] = useState('');
+    const [phone, setPhone] = useState(user ? user.phone : '');
+
+    // Update state if user logs in while component is mounted
+    React.useEffect(() => {
+        if (user) {
+            setName(user.name);
+            setPhone(user.phone || '');
+        }
+    }, [user]);
 
     const timeOptions = [
         { label: "10:00 AM", value: "10:00 AM" },
@@ -19,7 +32,7 @@ const ScheduleTestDrive = ({ carTitle }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!date || !time || !phone) {
+        if (!name || !date || !time || !phone) {
             addToast("Please fill all fields", "error");
             return;
         }
@@ -27,15 +40,19 @@ const ScheduleTestDrive = ({ carTitle }) => {
         try {
             await bookTestDrive({
                 carTitle,
+                name,
                 date,
                 time,
-                phone,
-                name: 'Guest User'
+                phone
             });
             addToast("Test drive requested! We will call you at " + time, "success");
+            // Clear form but keep name/phone if logged in
             setDate('');
             setTime('');
-            setPhone('');
+            if (!user) {
+                setName('');
+                setPhone('');
+            }
         } catch (err) {
             addToast("Failed to book test drive", "error");
         }
@@ -45,6 +62,16 @@ const ScheduleTestDrive = ({ carTitle }) => {
         <div className="test-drive-widget">
             <h3>Schedule Test Drive</h3>
             <form onSubmit={handleSubmit}>
+                <div className="test-drive-field">
+                    <label className="form-label">Full Name</label>
+                    <input
+                        type="text" className="form-control"
+                        value={name} onChange={e => setName(e.target.value)}
+                        placeholder="Your Name"
+                        required
+                    />
+                </div>
+
                 <div className="test-drive-field">
                     <label className="form-label">Preferred Date</label>
                     <input
