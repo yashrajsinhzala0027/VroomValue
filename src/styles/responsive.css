@@ -1,0 +1,272 @@
+/* Global Mobile Resets */
+@media (max-width: 768px) {
+    :root {
+        --header-height: 60px;
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 24px;
+        --container-padding: 16px;
+    }
+
+    body {
+        font-size: 14px;
+    }
+
+    /* Container Adjustments */
+    .container {
+        padding: 0 var(--container-padding);
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Header & Navigation */
+    .header-inner {
+        padding: 0 var(--space-4);
+    }
+
+    .nav-links {
+        display: none;
+        /* Future: Hamburger menu implementation */
+    }
+
+    .header__nav {
+        display: none !important;
+    }
+
+    .mobile-toggle {
+        display: block !important;
+    }
+
+    /* Hero Section Mobile */
+    .hero-section {
+        height: auto;
+        min-height: auto;
+        padding-top: 100px;
+        padding-bottom: 40px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+    }
+
+    .hero-title {
+        font-size: 2.5rem !important;
+        line-height: 1.1;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem !important;
+        margin: 0 auto 24px auto;
+    }
+
+    .hero-sidebar-wrapper {
+        padding: 16px;
+        width: 100%;
+    }
+
+    .search-widget {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    /* Listings Page Layout */
+    .listings-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-top: 20px;
+    }
+
+    .filters-sidebar {
+        display: none;
+        /* Hide sidebar on mobile for now, or use bottom sheet */
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        height: 60vh;
+        z-index: 1000;
+        overflow-y: auto;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .filters-sidebar.active {
+        display: block;
+        animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* Listings Grid */
+    .listings-grid {
+        grid-template-columns: 1fr !important;
+        /* Single column cards */
+        gap: 20px;
+    }
+
+    /* Valuation Wizard / Forms */
+    .valuation-wizard-container {
+        padding: 10px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .wizard-card {
+        padding: 20px;
+        height: auto;
+        min-height: 0;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .brand-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 12px;
+    }
+
+    .brand-item {
+        padding: 10px;
+        min-height: 80px;
+    }
+
+    .model-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Form Rows to Stack */
+    .form-row {
+        flex-direction: column;
+        gap: 16px !important;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .step-content {
+        padding: 0;
+    }
+
+    /* Sell Car Form */
+    .form-card-integrated {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    /* Footer */
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .footer-col {
+        align-items: center;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Utility Adjustments */
+    .btn {
+        width: 100%;
+        /* Full width buttons on mobile */
+        justify-content: center;
+        padding: 14px;
+    }
+
+    .custom-select-header,
+    .premium-wizard-select {
+        padding: 12px 16px;
+    }
+
+    h1 {
+        font-size: 2rem !important;
+    }
+
+    h2 {
+        font-size: 1.5rem !important;
+    }
+
+    h3 {
+        font-size: 1.25rem !important;
+    }
+
+    /* Mobile Utilities */
+    .mobile-only {
+        display: block !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* Mobile Menu Active State */
+    .header__nav.mobile-active {
+        display: flex !important;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.98);
+        flex-direction: column;
+        padding: 24px;
+        gap: 16px;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        animation: slideDown 0.3s ease-out;
+        backdrop-filter: blur(10px);
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .form-grid-2,
+    .form-grid-mixed {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Default Desktop Utilities */
+.mobile-only {
+    display: none;
+}
+
+/* Small Mobile (iPhone SE etc) */
+@media (max-width: 380px) {
+    .brand-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .hero-title {
+        font-size: 2rem !important;
+    }
+}

@@ -1,0 +1,2991 @@
+[
+  {
+    "id": 2000,
+    "make": "Maruti Suzuki",
+    "model": "Swift",
+    "variant": "ZXI Plus",
+    "year": 2021,
+    "kms": 28000,
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "priceINR": 725000,
+    "city": "New Delhi",
+    "bodyType": "Hatchback",
+    "certified": true,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1197,
+    "mileageKmpl": 23.2,
+    "description": "Well maintained 2021 Maruti Suzuki Swift ZXI Plus for sale in New Delhi.",
+    "valuation": {
+      "fairPrice": 688750,
+      "goodPrice": 761250
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 580000,
+      "currentBid": 616250,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.803Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 616250,
+          "timestamp": "2026-01-29T09:05:11.805Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2000-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2000-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2000-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2000-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2001,
+    "make": "Maruti Suzuki",
+    "model": "Baleno",
+    "variant": "Alpha",
+    "year": 2020,
+    "kms": 35000,
+    "fuel": "Petrol",
+    "transmission": "CVT",
+    "priceINR": 780000,
+    "city": "Mumbai",
+    "bodyType": "Hatchback",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1197,
+    "mileageKmpl": 22.3,
+    "description": "Well maintained 2020 Maruti Suzuki Baleno Alpha for sale in Mumbai.",
+    "valuation": {
+      "fairPrice": 741000,
+      "goodPrice": 819000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2001-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2001-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2001-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2001-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2002,
+    "make": "Hyundai",
+    "model": "i20",
+    "variant": "Asta (O)",
+    "year": 2022,
+    "kms": 15000,
+    "fuel": "Petrol",
+    "transmission": "IVT",
+    "priceINR": 950000,
+    "city": "Bangalore",
+    "bodyType": "Hatchback",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1197,
+    "mileageKmpl": 20.3,
+    "description": "Well maintained 2022 Hyundai i20 Asta (O) for sale in Bangalore.",
+    "valuation": {
+      "fairPrice": 902500,
+      "goodPrice": 997500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2002-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2002-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2002-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2002-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2003,
+    "make": "Tata",
+    "model": "Altroz",
+    "variant": "XZ Plus",
+    "year": 2021,
+    "kms": 22000,
+    "fuel": "Diesel",
+    "transmission": "Manual",
+    "priceINR": 810000,
+    "city": "Pune",
+    "bodyType": "Hatchback",
+    "certified": true,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1497,
+    "mileageKmpl": 25.1,
+    "description": "Well maintained 2021 Tata Altroz XZ Plus for sale in Pune.",
+    "valuation": {
+      "fairPrice": 769500,
+      "goodPrice": 850500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2003-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2003-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2003-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2003-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2004,
+    "make": "Volkswagen",
+    "model": "Polo",
+    "variant": "GT TSI",
+    "year": 2019,
+    "kms": 45000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 850000,
+    "city": "Hyderabad",
+    "bodyType": "Hatchback",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 999,
+    "mileageKmpl": 18.2,
+    "description": "Well maintained 2019 Volkswagen Polo GT TSI for sale in Hyderabad.",
+    "valuation": {
+      "fairPrice": 807500,
+      "goodPrice": 892500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2004-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2004-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2004-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2004-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2005,
+    "make": "Maruti Suzuki",
+    "model": "Wagon R",
+    "variant": "ZXI 1.2",
+    "year": 2020,
+    "kms": 41000,
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "priceINR": 520000,
+    "city": "Ahmedabad",
+    "bodyType": "Hatchback",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1197,
+    "mileageKmpl": 21.7,
+    "description": "Well maintained 2020 Maruti Suzuki Wagon R ZXI 1.2 for sale in Ahmedabad.",
+    "valuation": {
+      "fairPrice": 494000,
+      "goodPrice": 546000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 416000,
+      "currentBid": 442000,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.819Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 442000,
+          "timestamp": "2026-01-29T09:05:11.819Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2005-f",
+        "type": "exterior-front",
+        "src": "/cars/kwid.png"
+      },
+      {
+        "id": "2005-b",
+        "type": "exterior-back",
+        "src": "/cars/kwid.png"
+      },
+      {
+        "id": "2005-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2005-s",
+        "type": "exterior-side",
+        "src": "/cars/kwid.png"
+      }
+    ]
+  },
+  {
+    "id": 2006,
+    "make": "Renault",
+    "model": "Kwid",
+    "variant": "Climber",
+    "year": 2022,
+    "kms": 12000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 480000,
+    "city": "Gurgaon",
+    "bodyType": "Hatchback",
+    "certified": true,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 999,
+    "mileageKmpl": 22,
+    "description": "Well maintained 2022 Renault Kwid Climber for sale in Gurgaon.",
+    "valuation": {
+      "fairPrice": 456000,
+      "goodPrice": 504000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2006-f",
+        "type": "exterior-front",
+        "src": "/cars/kwid.png"
+      },
+      {
+        "id": "2006-b",
+        "type": "exterior-back",
+        "src": "/cars/kwid.png"
+      },
+      {
+        "id": "2006-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2006-s",
+        "type": "exterior-side",
+        "src": "/cars/kwid.png"
+      }
+    ]
+  },
+  {
+    "id": 2007,
+    "make": "Tata",
+    "model": "Tiago",
+    "variant": "XZ Plus",
+    "year": 2021,
+    "kms": 26000,
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "priceINR": 620000,
+    "city": "Chennai",
+    "bodyType": "Hatchback",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1199,
+    "mileageKmpl": 23.8,
+    "description": "Well maintained 2021 Tata Tiago XZ Plus for sale in Chennai.",
+    "valuation": {
+      "fairPrice": 589000,
+      "goodPrice": 651000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2007-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2007-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2007-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2007-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2008,
+    "make": "Hyundai",
+    "model": "Grand i10 Nios",
+    "variant": "Sportz",
+    "year": 2020,
+    "kms": 32000,
+    "fuel": "Petrol",
+    "transmission": "AMT",
+    "priceINR": 650000,
+    "city": "Noida",
+    "bodyType": "Hatchback",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1197,
+    "mileageKmpl": 20.7,
+    "description": "Well maintained 2020 Hyundai Grand i10 Nios Sportz for sale in Noida.",
+    "valuation": {
+      "fairPrice": 617500,
+      "goodPrice": 682500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2008-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2008-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2008-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2008-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2009,
+    "make": "Toyota",
+    "model": "Glanza",
+    "variant": "V",
+    "year": 2021,
+    "kms": 29000,
+    "fuel": "Petrol",
+    "transmission": "CVT",
+    "priceINR": 790000,
+    "city": "Kolkata",
+    "bodyType": "Hatchback",
+    "certified": true,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1197,
+    "mileageKmpl": 22.9,
+    "description": "Well maintained 2021 Toyota Glanza V for sale in Kolkata.",
+    "valuation": {
+      "fairPrice": 750500,
+      "goodPrice": 829500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2009-f",
+        "type": "exterior-front",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2009-b",
+        "type": "exterior-back",
+        "src": "/cars/swift.png"
+      },
+      {
+        "id": "2009-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2009-s",
+        "type": "exterior-side",
+        "src": "/cars/swift.png"
+      }
+    ]
+  },
+  {
+    "id": 2010,
+    "make": "Honda",
+    "model": "City",
+    "variant": "ZX CVT",
+    "year": 2021,
+    "kms": 25000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1350000,
+    "city": "New Delhi",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1498,
+    "mileageKmpl": 18.4,
+    "description": "Well maintained 2021 Honda City ZX CVT for sale in New Delhi.",
+    "valuation": {
+      "fairPrice": 1282500,
+      "goodPrice": 1417500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 1080000,
+      "currentBid": 1147500,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.829Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 1147500,
+          "timestamp": "2026-01-29T09:05:11.829Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2010-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2010-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2010-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2010-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2011,
+    "make": "Hyundai",
+    "model": "Verna",
+    "variant": "SX (O) Turbo",
+    "year": 2020,
+    "kms": 38000,
+    "fuel": "Petrol",
+    "transmission": "DCT",
+    "priceINR": 1180000,
+    "city": "Mumbai",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 998,
+    "mileageKmpl": 19.2,
+    "description": "Well maintained 2020 Hyundai Verna SX (O) Turbo for sale in Mumbai.",
+    "valuation": {
+      "fairPrice": 1121000,
+      "goodPrice": 1239000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2011-f",
+        "type": "exterior-front",
+        "src": "/cars/verna.jpg"
+      },
+      {
+        "id": "2011-b",
+        "type": "exterior-back",
+        "src": "/cars/verna.jpg"
+      },
+      {
+        "id": "2011-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2011-s",
+        "type": "exterior-side",
+        "src": "/cars/verna.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2012,
+    "make": "Maruti Suzuki",
+    "model": "Ciaz",
+    "variant": "Alpha",
+    "year": 2019,
+    "kms": 42000,
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "priceINR": 890000,
+    "city": "Bangalore",
+    "bodyType": "Sedan",
+    "certified": true,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1462,
+    "mileageKmpl": 20.6,
+    "description": "Well maintained 2019 Maruti Suzuki Ciaz Alpha for sale in Bangalore.",
+    "valuation": {
+      "fairPrice": 845500,
+      "goodPrice": 934500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2012-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2012-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2012-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2012-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2013,
+    "make": "Skoda",
+    "model": "Slavia",
+    "variant": "Style 1.5 DSG",
+    "year": 2022,
+    "kms": 12000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1650000,
+    "city": "Pune",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1498,
+    "mileageKmpl": 18.7,
+    "description": "Well maintained 2022 Skoda Slavia Style 1.5 DSG for sale in Pune.",
+    "valuation": {
+      "fairPrice": 1567500,
+      "goodPrice": 1732500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2013-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2013-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2013-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2013-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2014,
+    "make": "Volkswagen",
+    "model": "Virtus",
+    "variant": "GT Plus",
+    "year": 2023,
+    "kms": 5000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1820000,
+    "city": "Hyderabad",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1498,
+    "mileageKmpl": 18.6,
+    "description": "Well maintained 2023 Volkswagen Virtus GT Plus for sale in Hyderabad.",
+    "valuation": {
+      "fairPrice": 1729000,
+      "goodPrice": 1911000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2014-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2014-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2014-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2014-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2015,
+    "make": "Maruti Suzuki",
+    "model": "Dzire",
+    "variant": "ZXI Plus",
+    "year": 2021,
+    "kms": 30000,
+    "fuel": "Petrol",
+    "transmission": "AMT",
+    "priceINR": 750000,
+    "city": "Ahmedabad",
+    "bodyType": "Sedan",
+    "certified": true,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1197,
+    "mileageKmpl": 24.1,
+    "description": "Well maintained 2021 Maruti Suzuki Dzire ZXI Plus for sale in Ahmedabad.",
+    "valuation": {
+      "fairPrice": 712500,
+      "goodPrice": 787500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 600000,
+      "currentBid": 637500,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.839Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 637500,
+          "timestamp": "2026-01-29T09:05:11.839Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2015-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2015-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2015-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2015-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2016,
+    "make": "Hyundai",
+    "model": "Aura",
+    "variant": "SX Plus Turbo",
+    "year": 2020,
+    "kms": 34000,
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "priceINR": 710000,
+    "city": "Gurgaon",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 998,
+    "mileageKmpl": 20.5,
+    "description": "Well maintained 2020 Hyundai Aura SX Plus Turbo for sale in Gurgaon.",
+    "valuation": {
+      "fairPrice": 674500,
+      "goodPrice": 745500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2016-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2016-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2016-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2016-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2017,
+    "make": "Honda",
+    "model": "Amaze",
+    "variant": "VX CVT",
+    "year": 2022,
+    "kms": 18000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 920000,
+    "city": "Chennai",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1498,
+    "mileageKmpl": 24.7,
+    "description": "Well maintained 2022 Honda Amaze VX CVT for sale in Chennai.",
+    "valuation": {
+      "fairPrice": 874000,
+      "goodPrice": 966000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2017-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2017-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2017-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2017-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2018,
+    "make": "Tata",
+    "model": "Tigor",
+    "variant": "XZ Plus",
+    "year": 2021,
+    "kms": 27000,
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "priceINR": 680000,
+    "city": "Noida",
+    "bodyType": "Sedan",
+    "certified": true,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1199,
+    "mileageKmpl": 20.3,
+    "description": "Well maintained 2021 Tata Tigor XZ Plus for sale in Noida.",
+    "valuation": {
+      "fairPrice": 646000,
+      "goodPrice": 714000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2018-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2018-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2018-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2018-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  },
+  {
+    "id": 2019,
+    "make": "Skoda",
+    "model": "Octavia",
+    "variant": "L&K",
+    "year": 2021,
+    "kms": 21000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 2450000,
+    "city": "Kolkata",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1984,
+    "mileageKmpl": 15.8,
+    "description": "Well maintained 2021 Skoda Octavia L&K for sale in Kolkata.",
+    "valuation": {
+      "fairPrice": 2327500,
+      "goodPrice": 2572500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2019-f",
+        "type": "exterior-front",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2019-b",
+        "type": "exterior-back",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2019-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2019-s",
+        "type": "exterior-side",
+        "src": "/cars/luxury.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2020,
+    "make": "Mahindra",
+    "model": "XUV700",
+    "variant": "AX7 L Diesel AT AWD",
+    "year": 2022,
+    "kms": 18000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 2550000,
+    "city": "New Delhi",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 2198,
+    "mileageKmpl": 16.5,
+    "description": "Well maintained 2022 Mahindra XUV700 AX7 L Diesel AT AWD for sale in New Delhi.",
+    "valuation": {
+      "fairPrice": 2422500,
+      "goodPrice": 2677500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 2040000,
+      "currentBid": 2167500,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.847Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 2167500,
+          "timestamp": "2026-01-29T09:05:11.847Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2020-f",
+        "type": "exterior-front",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2020-b",
+        "type": "exterior-back",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2020-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2020-s",
+        "type": "exterior-side",
+        "src": "/cars/fortuner.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2021,
+    "make": "Tata",
+    "model": "Nexon",
+    "variant": "XZ Plus (S)",
+    "year": 2021,
+    "kms": 31000,
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "priceINR": 1050000,
+    "city": "Mumbai",
+    "bodyType": "Compact SUV",
+    "certified": true,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1199,
+    "mileageKmpl": 17.5,
+    "description": "Well maintained 2021 Tata Nexon XZ Plus (S) for sale in Mumbai.",
+    "valuation": {
+      "fairPrice": 997500,
+      "goodPrice": 1102500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2021-f",
+        "type": "exterior-front",
+        "src": "/cars/nexon.jpg"
+      },
+      {
+        "id": "2021-b",
+        "type": "exterior-back",
+        "src": "/cars/nexon.jpg"
+      },
+      {
+        "id": "2021-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2021-s",
+        "type": "exterior-side",
+        "src": "/cars/nexon.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2022,
+    "make": "Hyundai",
+    "model": "Creta",
+    "variant": "SX (O) Diesel AT",
+    "year": 2020,
+    "kms": 45000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 1580000,
+    "city": "Bangalore",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1493,
+    "mileageKmpl": 18.5,
+    "description": "Well maintained 2020 Hyundai Creta SX (O) Diesel AT for sale in Bangalore.",
+    "valuation": {
+      "fairPrice": 1501000,
+      "goodPrice": 1659000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2022-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2022-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2022-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2022-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2023,
+    "make": "Kia",
+    "model": "Seltos",
+    "variant": "GTX Plus",
+    "year": 2021,
+    "kms": 29000,
+    "fuel": "Petrol",
+    "transmission": "DCT",
+    "priceINR": 1620000,
+    "city": "Pune",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1353,
+    "mileageKmpl": 16.5,
+    "description": "Well maintained 2021 Kia Seltos GTX Plus for sale in Pune.",
+    "valuation": {
+      "fairPrice": 1539000,
+      "goodPrice": 1701000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2023-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2023-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2023-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2023-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2024,
+    "make": "Maruti Suzuki",
+    "model": "Brezza",
+    "variant": "ZXI Plus",
+    "year": 2022,
+    "kms": 14000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1150000,
+    "city": "Hyderabad",
+    "bodyType": "Compact SUV",
+    "certified": true,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1462,
+    "mileageKmpl": 19.8,
+    "description": "Well maintained 2022 Maruti Suzuki Brezza ZXI Plus for sale in Hyderabad.",
+    "valuation": {
+      "fairPrice": 1092500,
+      "goodPrice": 1207500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2024-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2024-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2024-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2024-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2025,
+    "make": "Tata",
+    "model": "Harrier",
+    "variant": "XZA Plus Dark Edition",
+    "year": 2021,
+    "kms": 26000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 1950000,
+    "city": "Ahmedabad",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1956,
+    "mileageKmpl": 14.6,
+    "description": "Well maintained 2021 Tata Harrier XZA Plus Dark Edition for sale in Ahmedabad.",
+    "valuation": {
+      "fairPrice": 1852500,
+      "goodPrice": 2047500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 1560000,
+      "currentBid": 1657500,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.857Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 1657500,
+          "timestamp": "2026-01-29T09:05:11.857Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2025-f",
+        "type": "exterior-front",
+        "src": "/cars/harrier.jpg"
+      },
+      {
+        "id": "2025-b",
+        "type": "exterior-back",
+        "src": "/cars/harrier.jpg"
+      },
+      {
+        "id": "2025-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2025-s",
+        "type": "exterior-side",
+        "src": "/cars/harrier.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2026,
+    "make": "Mahindra",
+    "model": "Thar",
+    "variant": "LX Hard Top Diesel AT",
+    "year": 2021,
+    "kms": 22000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 1680000,
+    "city": "Gurgaon",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 2184,
+    "mileageKmpl": 13,
+    "description": "Well maintained 2021 Mahindra Thar LX Hard Top Diesel AT for sale in Gurgaon.",
+    "valuation": {
+      "fairPrice": 1596000,
+      "goodPrice": 1764000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2026-f",
+        "type": "exterior-front",
+        "src": "/cars/thar.png"
+      },
+      {
+        "id": "2026-b",
+        "type": "exterior-back",
+        "src": "/cars/thar.png"
+      },
+      {
+        "id": "2026-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2026-s",
+        "type": "exterior-side",
+        "src": "/cars/thar.png"
+      }
+    ]
+  },
+  {
+    "id": 2027,
+    "make": "Toyota",
+    "model": "Fortuner",
+    "variant": "Legender 4x4",
+    "year": 2022,
+    "kms": 18000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 4500000,
+    "city": "Chennai",
+    "bodyType": "SUV",
+    "certified": true,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 2755,
+    "mileageKmpl": 12,
+    "description": "Well maintained 2022 Toyota Fortuner Legender 4x4 for sale in Chennai.",
+    "valuation": {
+      "fairPrice": 4275000,
+      "goodPrice": 4725000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2027-f",
+        "type": "exterior-front",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2027-b",
+        "type": "exterior-back",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2027-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2027-s",
+        "type": "exterior-side",
+        "src": "/cars/fortuner.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2028,
+    "make": "MG",
+    "model": "Hector",
+    "variant": "Sharp CVT",
+    "year": 2021,
+    "kms": 24000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1750000,
+    "city": "Noida",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1451,
+    "mileageKmpl": 13.9,
+    "description": "Well maintained 2021 MG Hector Sharp CVT for sale in Noida.",
+    "valuation": {
+      "fairPrice": 1662500,
+      "goodPrice": 1837500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2028-f",
+        "type": "exterior-front",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2028-b",
+        "type": "exterior-back",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2028-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2028-s",
+        "type": "exterior-side",
+        "src": "/cars/fortuner.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2029,
+    "make": "Jeep",
+    "model": "Compass",
+    "variant": "Model S 4x4",
+    "year": 2020,
+    "kms": 36000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 2300000,
+    "city": "Kolkata",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1956,
+    "mileageKmpl": 14.9,
+    "description": "Well maintained 2020 Jeep Compass Model S 4x4 for sale in Kolkata.",
+    "valuation": {
+      "fairPrice": 2185000,
+      "goodPrice": 2415000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2029-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2029-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2029-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2029-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2030,
+    "make": "Tata",
+    "model": "Punch",
+    "variant": "Creative",
+    "year": 2022,
+    "kms": 12000,
+    "fuel": "Petrol",
+    "transmission": "AMT",
+    "priceINR": 850000,
+    "city": "New Delhi",
+    "bodyType": "Micro SUV",
+    "certified": true,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1199,
+    "mileageKmpl": 18.9,
+    "description": "Well maintained 2022 Tata Punch Creative for sale in New Delhi.",
+    "valuation": {
+      "fairPrice": 807500,
+      "goodPrice": 892500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 680000,
+      "currentBid": 722500,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.867Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 722500,
+          "timestamp": "2026-01-29T09:05:11.867Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2030-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2030-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2030-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2030-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2031,
+    "make": "Nissan",
+    "model": "Magnite",
+    "variant": "XV Premium Turbo",
+    "year": 2021,
+    "kms": 27000,
+    "fuel": "Petrol",
+    "transmission": "CVT",
+    "priceINR": 920000,
+    "city": "Mumbai",
+    "bodyType": "Compact SUV",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 999,
+    "mileageKmpl": 17.7,
+    "description": "Well maintained 2021 Nissan Magnite XV Premium Turbo for sale in Mumbai.",
+    "valuation": {
+      "fairPrice": 874000,
+      "goodPrice": 966000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2031-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2031-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2031-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2031-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2032,
+    "make": "Renault",
+    "model": "Kiger",
+    "variant": "RXZ Turbo",
+    "year": 2021,
+    "kms": 25000,
+    "fuel": "Petrol",
+    "transmission": "CVT",
+    "priceINR": 910000,
+    "city": "Bangalore",
+    "bodyType": "Compact SUV",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 999,
+    "mileageKmpl": 18.2,
+    "description": "Well maintained 2021 Renault Kiger RXZ Turbo for sale in Bangalore.",
+    "valuation": {
+      "fairPrice": 864500,
+      "goodPrice": 955500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2032-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2032-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2032-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2032-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2033,
+    "make": "Maruti Suzuki",
+    "model": "Fronx",
+    "variant": "Alpha Turbo",
+    "year": 2023,
+    "kms": 4000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1120000,
+    "city": "Pune",
+    "bodyType": "Compact SUV",
+    "certified": true,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 998,
+    "mileageKmpl": 20,
+    "description": "Well maintained 2023 Maruti Suzuki Fronx Alpha Turbo for sale in Pune.",
+    "valuation": {
+      "fairPrice": 1064000,
+      "goodPrice": 1176000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2033-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2033-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2033-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2033-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2034,
+    "make": "Hyundai",
+    "model": "Venue",
+    "variant": "SX (O) DCT",
+    "year": 2021,
+    "kms": 30000,
+    "fuel": "Petrol",
+    "transmission": "DCT",
+    "priceINR": 1180000,
+    "city": "Hyderabad",
+    "bodyType": "Compact SUV",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 998,
+    "mileageKmpl": 17.8,
+    "description": "Well maintained 2021 Hyundai Venue SX (O) DCT for sale in Hyderabad.",
+    "valuation": {
+      "fairPrice": 1121000,
+      "goodPrice": 1239000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2034-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2034-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2034-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2034-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2035,
+    "make": "Toyota",
+    "model": "Innova Crysta",
+    "variant": "2.4 ZX",
+    "year": 2019,
+    "kms": 65000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 2100000,
+    "city": "Ahmedabad",
+    "bodyType": "MPV",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 2393,
+    "mileageKmpl": 13,
+    "description": "Well maintained 2019 Toyota Innova Crysta 2.4 ZX for sale in Ahmedabad.",
+    "valuation": {
+      "fairPrice": 1995000,
+      "goodPrice": 2205000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 1680000,
+      "currentBid": 1785000,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.877Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 1785000,
+          "timestamp": "2026-01-29T09:05:11.878Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2035-f",
+        "type": "exterior-front",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2035-b",
+        "type": "exterior-back",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2035-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2035-s",
+        "type": "exterior-side",
+        "src": "/cars/innova.png"
+      }
+    ]
+  },
+  {
+    "id": 2036,
+    "make": "Toyota",
+    "model": "Innova Hycross",
+    "variant": "ZX (O) Hybrid",
+    "year": 2023,
+    "kms": 8000,
+    "fuel": "Hybrid",
+    "transmission": "e-CVT",
+    "priceINR": 3200000,
+    "city": "Gurgaon",
+    "bodyType": "MPV",
+    "certified": true,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1987,
+    "mileageKmpl": 23.2,
+    "description": "Well maintained 2023 Toyota Innova Hycross ZX (O) Hybrid for sale in Gurgaon.",
+    "valuation": {
+      "fairPrice": 3040000,
+      "goodPrice": 3360000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2036-f",
+        "type": "exterior-front",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2036-b",
+        "type": "exterior-back",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2036-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2036-s",
+        "type": "exterior-side",
+        "src": "/cars/innova.png"
+      }
+    ]
+  },
+  {
+    "id": 2037,
+    "make": "Maruti Suzuki",
+    "model": "Ertiga",
+    "variant": "ZXI Plus",
+    "year": 2021,
+    "kms": 38000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1050000,
+    "city": "Chennai",
+    "bodyType": "MPV",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1462,
+    "mileageKmpl": 19,
+    "description": "Well maintained 2021 Maruti Suzuki Ertiga ZXI Plus for sale in Chennai.",
+    "valuation": {
+      "fairPrice": 997500,
+      "goodPrice": 1102500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2037-f",
+        "type": "exterior-front",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2037-b",
+        "type": "exterior-back",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2037-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2037-s",
+        "type": "exterior-side",
+        "src": "/cars/innova.png"
+      }
+    ]
+  },
+  {
+    "id": 2038,
+    "make": "Kia",
+    "model": "Carens",
+    "variant": "Luxury Plus",
+    "year": 2022,
+    "kms": 15000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 1680000,
+    "city": "Noida",
+    "bodyType": "MPV",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1493,
+    "mileageKmpl": 18.4,
+    "description": "Well maintained 2022 Kia Carens Luxury Plus for sale in Noida.",
+    "valuation": {
+      "fairPrice": 1596000,
+      "goodPrice": 1764000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2038-f",
+        "type": "exterior-front",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2038-b",
+        "type": "exterior-back",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2038-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2038-s",
+        "type": "exterior-side",
+        "src": "/cars/innova.png"
+      }
+    ]
+  },
+  {
+    "id": 2039,
+    "make": "Maruti Suzuki",
+    "model": "XL6",
+    "variant": "Alpha Plus",
+    "year": 2022,
+    "kms": 19000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 1320000,
+    "city": "Kolkata",
+    "bodyType": "MPV",
+    "certified": true,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1462,
+    "mileageKmpl": 19,
+    "description": "Well maintained 2022 Maruti Suzuki XL6 Alpha Plus for sale in Kolkata.",
+    "valuation": {
+      "fairPrice": 1254000,
+      "goodPrice": 1386000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2039-f",
+        "type": "exterior-front",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2039-b",
+        "type": "exterior-back",
+        "src": "/cars/innova.png"
+      },
+      {
+        "id": "2039-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2039-s",
+        "type": "exterior-side",
+        "src": "/cars/innova.png"
+      }
+    ]
+  },
+  {
+    "id": 2040,
+    "make": "BMW",
+    "model": "3 Series",
+    "variant": "330i M Sport",
+    "year": 2019,
+    "kms": 42000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 3800000,
+    "city": "New Delhi",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1998,
+    "mileageKmpl": 16.1,
+    "description": "Well maintained 2019 BMW 3 Series 330i M Sport for sale in New Delhi.",
+    "valuation": {
+      "fairPrice": 3610000,
+      "goodPrice": 3990000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 3040000,
+      "currentBid": 3230000,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.888Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 3230000,
+          "timestamp": "2026-01-29T09:05:11.888Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2040-f",
+        "type": "exterior-front",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2040-b",
+        "type": "exterior-back",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2040-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2040-s",
+        "type": "exterior-side",
+        "src": "/cars/luxury.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2041,
+    "make": "Mercedes-Benz",
+    "model": "C-Class",
+    "variant": "C220d",
+    "year": 2018,
+    "kms": 50000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 3500000,
+    "city": "Mumbai",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1950,
+    "mileageKmpl": 17,
+    "description": "Well maintained 2018 Mercedes-Benz C-Class C220d for sale in Mumbai.",
+    "valuation": {
+      "fairPrice": 3325000,
+      "goodPrice": 3675000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2041-f",
+        "type": "exterior-front",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2041-b",
+        "type": "exterior-back",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2041-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2041-s",
+        "type": "exterior-side",
+        "src": "/cars/luxury.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2042,
+    "make": "Audi",
+    "model": "A4",
+    "variant": "Premium Plus",
+    "year": 2021,
+    "kms": 22000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 3900000,
+    "city": "Bangalore",
+    "bodyType": "Sedan",
+    "certified": true,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1984,
+    "mileageKmpl": 17.4,
+    "description": "Well maintained 2021 Audi A4 Premium Plus for sale in Bangalore.",
+    "valuation": {
+      "fairPrice": 3705000,
+      "goodPrice": 4095000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2042-f",
+        "type": "exterior-front",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2042-b",
+        "type": "exterior-back",
+        "src": "/cars/luxury.jpg"
+      },
+      {
+        "id": "2042-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2042-s",
+        "type": "exterior-side",
+        "src": "/cars/luxury.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2043,
+    "make": "Volvo",
+    "model": "XC40",
+    "variant": "T4 R-Design",
+    "year": 2020,
+    "kms": 28000,
+    "fuel": "Petrol",
+    "transmission": "Automatic",
+    "priceINR": 3400000,
+    "city": "Pune",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1969,
+    "mileageKmpl": 14.5,
+    "description": "Well maintained 2020 Volvo XC40 T4 R-Design for sale in Pune.",
+    "valuation": {
+      "fairPrice": 3230000,
+      "goodPrice": 3570000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2043-f",
+        "type": "exterior-front",
+        "src": "/cars/luxury_suv.jpg"
+      },
+      {
+        "id": "2043-b",
+        "type": "exterior-back",
+        "src": "/cars/luxury_suv.jpg"
+      },
+      {
+        "id": "2043-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2043-s",
+        "type": "exterior-side",
+        "src": "/cars/luxury_suv.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2044,
+    "make": "Toyota",
+    "model": "Fortuner",
+    "variant": "4x4 MT",
+    "year": 2018,
+    "kms": 75000,
+    "fuel": "Diesel",
+    "transmission": "Manual",
+    "priceINR": 2800000,
+    "city": "Hyderabad",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 2755,
+    "mileageKmpl": 12,
+    "description": "Well maintained 2018 Toyota Fortuner 4x4 MT for sale in Hyderabad.",
+    "valuation": {
+      "fairPrice": 2660000,
+      "goodPrice": 2940000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2044-f",
+        "type": "exterior-front",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2044-b",
+        "type": "exterior-back",
+        "src": "/cars/fortuner.jpg"
+      },
+      {
+        "id": "2044-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2044-s",
+        "type": "exterior-side",
+        "src": "/cars/fortuner.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2045,
+    "make": "Mahindra",
+    "model": "Scorpio N",
+    "variant": "Z8 L 4x4",
+    "year": 2022,
+    "kms": 16000,
+    "fuel": "Diesel",
+    "transmission": "Automatic",
+    "priceINR": 2300000,
+    "city": "Ahmedabad",
+    "bodyType": "SUV",
+    "certified": true,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 2184,
+    "mileageKmpl": 14,
+    "description": "Well maintained 2022 Mahindra Scorpio N Z8 L 4x4 for sale in Ahmedabad.",
+    "valuation": {
+      "fairPrice": 2185000,
+      "goodPrice": 2415000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen",
+      "Leather Seats",
+      "360 Camera",
+      "ADAS"
+    ],
+    "auction": {
+      "isAuction": true,
+      "startingBid": 1840000,
+      "currentBid": 1955000,
+      "highestBidder": "user@vroomvalue.in",
+      "endTime": "2026-01-31T09:05:11.898Z",
+      "bids": [
+        {
+          "userId": "user@vroomvalue.in",
+          "amount": 1955000,
+          "timestamp": "2026-01-29T09:05:11.898Z"
+        }
+      ]
+    },
+    "images": [
+      {
+        "id": "2045-f",
+        "type": "exterior-front",
+        "src": "/cars/thar.png"
+      },
+      {
+        "id": "2045-b",
+        "type": "exterior-back",
+        "src": "/cars/thar.png"
+      },
+      {
+        "id": "2045-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2045-s",
+        "type": "exterior-side",
+        "src": "/cars/thar.png"
+      }
+    ]
+  },
+  {
+    "id": 2046,
+    "make": "Mahindra",
+    "model": "Bolero",
+    "variant": "B6 Opt",
+    "year": 2021,
+    "kms": 45000,
+    "fuel": "Diesel",
+    "transmission": "Manual",
+    "priceINR": 950000,
+    "city": "Gurgaon",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 3,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1493,
+    "mileageKmpl": 16,
+    "description": "Well maintained 2021 Mahindra Bolero B6 Opt for sale in Gurgaon.",
+    "valuation": {
+      "fairPrice": 902500,
+      "goodPrice": 997500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2046-f",
+        "type": "exterior-front",
+        "src": "/cars/thar.png"
+      },
+      {
+        "id": "2046-b",
+        "type": "exterior-back",
+        "src": "/cars/thar.png"
+      },
+      {
+        "id": "2046-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2046-s",
+        "type": "exterior-side",
+        "src": "/cars/thar.png"
+      }
+    ]
+  },
+  {
+    "id": 2047,
+    "make": "Skoda",
+    "model": "Kushaq",
+    "variant": "Monte Carlo 1.5",
+    "year": 2022,
+    "kms": 14000,
+    "fuel": "Petrol",
+    "transmission": "DSG",
+    "priceINR": 1780000,
+    "city": "Chennai",
+    "bodyType": "SUV",
+    "certified": false,
+    "owner": 4,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1498,
+    "mileageKmpl": 17.8,
+    "description": "Well maintained 2022 Skoda Kushaq Monte Carlo 1.5 for sale in Chennai.",
+    "valuation": {
+      "fairPrice": 1691000,
+      "goodPrice": 1869000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2047-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2047-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2047-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2047-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2048,
+    "make": "Volkswagen",
+    "model": "Taigun",
+    "variant": "GT Plus",
+    "year": 2021,
+    "kms": 21000,
+    "fuel": "Petrol",
+    "transmission": "DSG",
+    "priceINR": 1690000,
+    "city": "Noida",
+    "bodyType": "SUV",
+    "certified": true,
+    "owner": 1,
+    "status": "approved",
+    "sellerType": "Individual",
+    "engineCapacity": 1498,
+    "mileageKmpl": 17.8,
+    "description": "Well maintained 2021 Volkswagen Taigun GT Plus for sale in Noida.",
+    "valuation": {
+      "fairPrice": 1605500,
+      "goodPrice": 1774500
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2048-f",
+        "type": "exterior-front",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2048-b",
+        "type": "exterior-back",
+        "src": "/cars/fronx.png"
+      },
+      {
+        "id": "2048-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2048-s",
+        "type": "exterior-side",
+        "src": "/cars/fronx.png"
+      }
+    ]
+  },
+  {
+    "id": 2049,
+    "make": "Honda",
+    "model": "City",
+    "variant": "Hybrid ZX",
+    "year": 2022,
+    "kms": 15000,
+    "fuel": "Hybrid",
+    "transmission": "e-CVT",
+    "priceINR": 1900000,
+    "city": "Kolkata",
+    "bodyType": "Sedan",
+    "certified": false,
+    "owner": 2,
+    "status": "approved",
+    "sellerType": "Dealer",
+    "engineCapacity": 1498,
+    "mileageKmpl": 27.1,
+    "description": "Well maintained 2022 Honda City Hybrid ZX for sale in Kolkata.",
+    "valuation": {
+      "fairPrice": 1805000,
+      "goodPrice": 1995000
+    },
+    "features": [
+      "Airbags",
+      "ABS",
+      "Power Steering",
+      "Power Windows",
+      "Sunroof",
+      "Alloy Wheels",
+      "Touchscreen"
+    ],
+    "auction": {
+      "isAuction": false
+    },
+    "images": [
+      {
+        "id": "2049-f",
+        "type": "exterior-front",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2049-b",
+        "type": "exterior-back",
+        "src": "/cars/city.png"
+      },
+      {
+        "id": "2049-i",
+        "type": "interior",
+        "src": "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        "id": "2049-s",
+        "type": "exterior-side",
+        "src": "/cars/city.png"
+      }
+    ]
+  }
+]

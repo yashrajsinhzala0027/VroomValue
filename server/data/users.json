@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "email": "admin@vroomvalue.in",
+    "password": "admin",
+    "name": "VroomValue Admin",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "email": "user@vroomvalue.in",
+    "password": "user",
+    "name": "John Doe",
+    "role": "user"
+  },
+  {
+    "id": 1767856366486,
+    "email": "tester2@example.com",
+    "password": "Password123",
+    "name": "Tester User",
+    "dob": "1995-05-20",
+    "phone": "+91 99999 77777",
+    "role": "user"
+  },
+  {
+    "id": 1767857567753,
+    "email": "yy@gmail.com",
+    "password": "yy",
+    "name": "jgn b",
+    "dob": "2006-01-09",
+    "phone": "+91957417189",
+    "role": "user"
+  },
+  {
+    "id": 1767858222144,
+    "email": "",
+    "password": "",
+    "name": "",
+    "dob": "",
+    "phone": "",
+    "role": "user"
+  }
+]

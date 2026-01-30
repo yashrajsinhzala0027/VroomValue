@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1767858041655,
+    "make": "Hyundai",
+    "model": "Creta",
+    "year": "2021",
+    "fuel": "Diesel",
+    "transmission": "Manual",
+    "kms": "55698",
+    "owner": 1,
+    "city": "Ahmedabad",
+    "status": "pending",
+    "requestDate": "2026-01-08T07:40:41.655Z",
+    "valuation": {
+      "fairPrice": 877194,
+      "goodPrice": 969530
+    }
+  },
+  {
+    "id": 1767858775629,
+    "make": "Maruti Suzuki",
+    "model": "Swift",
+    "year": "2020",
+    "fuel": "Petrol",
+    "transmission": "Manual",
+    "kms": "35000",
+    "owner": 1,
+    "city": "New Delhi",
+    "status": "pending",
+    "requestDate": "2026-01-08T07:52:55.629Z",
+    "valuation": {
+      "fairPrice": 360217,
+      "goodPrice": 398134
+    }
+  }
+]
