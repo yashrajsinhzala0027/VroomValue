@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import FiltersSidebar from '../components/FiltersSidebar';
 import ListingsGrid from '../components/ListingsGrid';
 import { getCars } from '../api/mockApi';
@@ -49,12 +49,17 @@ const Listings = () => {
     }, [location.search]);
 
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const carsPerPage = 12;
+
     useEffect(() => {
         let isCurrent = true;
         setLoading(true);
 
         const searchParams = new URLSearchParams(location.search);
         const currentSort = searchParams.get('sort') || 'relevance';
+        const pageParam = parseInt(searchParams.get('page')) || 1;
+        setCurrentPage(pageParam);
 
         // Build fresh filters directly from URL to avoid stale state
         const freshFilters = {};
@@ -74,10 +79,9 @@ const Listings = () => {
         getCars(freshFilters).then(data => {
             if (!isCurrent) return;
 
-            // Backend already filters by status and auction
             let results = Array.isArray(data) ? data : [];
 
-            // Ultra-Robust Number Parser (Strips ₹, commas, kms, etc.)
+            // Ultra-Robust Number Parser
             const parseNum = (val) => {
                 if (typeof val === 'number') return val;
                 if (!val) return 0;
@@ -85,9 +89,8 @@ const Listings = () => {
                 return Number(cleaned) || 0;
             };
 
-            // Apply Sorting - Work on a fresh copy
+            // Apply Sorting
             const sortedResults = [...results];
-
             switch (currentSort) {
                 case 'price_asc':
                     sortedResults.sort((a, b) => parseNum(a.priceINR) - parseNum(b.priceINR));
@@ -113,10 +116,11 @@ const Listings = () => {
 
             setCars(sortedResults);
             setLoading(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         return () => { isCurrent = false; };
-    }, [location.search]); // Simplified: Only depend on location.search
+    }, [location.search]);
 
     const handleFilterChange = React.useCallback((name, value) => {
         const params = new URLSearchParams(location.search);
@@ -151,161 +155,141 @@ const Listings = () => {
         navigate(`/listings?${params.toString()}`, { replace: true });
     }, [location.search, navigate]);
 
+    const startIndex = (currentPage - 1) * carsPerPage;
+    const paginatedCars = cars.slice(startIndex, startIndex + carsPerPage);
+    const totalPages = Math.ceil(cars.length / carsPerPage);
+
+    const handlePageChange = (newPage) => {
+        const params = new URLSearchParams(location.search);
+        params.set('page', newPage);
+        navigate(`/listings?${params.toString()}`, { replace: true });
+    };
+
+    useEffect(() => {
+        if (isSidebarOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [isSidebarOpen]);
+
     return (
-        <div style={{ background: 'var(--bg-deep)' }}>
-            <div className="container listings-layout">
-                {/* Mobile Sidebar Toggle */}
-                {/* Mobile Sidebar Toggle */}
-                <div className="mobile-only" style={{ marginBottom: '20px' }}>
-                    <button
-                        className="btn btn-outline"
-                        style={{ width: '100%', justifyContent: 'center' }}
-                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    >
-                        {isSidebarOpen ? 'Close Filters' : 'Show Filters'} 🌪️
-                    </button>
-                </div>
+        <>
+            {isSidebarOpen && (
+                <div
+                    className="filters-overlay active"
+                    onClick={() => setIsSidebarOpen(false)}
+                    style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)', zIndex: 1090 }}
+                ></div>
+            )}
 
-                <FiltersSidebar className={isSidebarOpen ? 'active' : ''} filters={filters} onChange={handleFilterChange} />
+            <div style={{ background: 'var(--bg-main)', minHeight: '100vh', paddingBottom: '60px' }} className="page-enter">
+                <div className="container listings-layout">
+                    <FiltersSidebar
+                        className={isSidebarOpen ? 'active' : ''}
+                        filters={filters}
+                        onChange={handleFilterChange}
+                        onClose={() => setIsSidebarOpen(false)}
+                    />
 
-                <div className="listings-content">
-                    {/* Breadcrumb Navigation */}
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        marginBottom: '20px',
-                        fontSize: '0.9rem',
-                        fontWeight: 600
-                    }}>
-                        <a href="/" style={{
-                            color: '#1f2937',
-                            textDecoration: 'none',
-                            transition: 'color 0.2s'
-                        }}
-                            onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                            onMouseOut={(e) => e.currentTarget.style.color = '#1f2937'}
-                        >
-                            HOME
-                        </a>
-                        <span style={{ color: '#9ca3af' }}>›</span>
-                        <a href="/listings" style={{
-                            color: '#1f2937',
-                            textDecoration: 'none',
-                            transition: 'color 0.2s'
-                        }}
-                            onMouseOver={(e) => e.currentTarget.style.color = 'var(--primary)'}
-                            onMouseOut={(e) => e.currentTarget.style.color = '#1f2937'}
-                        >
-                            USED CARS
-                        </a>
-                        {filters.city && (
-                            <>
-                                <span style={{ color: '#9ca3af' }}>›</span>
-                                <span style={{ color: '#9ca3af', textTransform: 'uppercase' }}>
-                                    USED CARS IN {filters.city}
-                                </span>
-                            </>
+                    <div className="listings-content">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px' }}>
+                            <Link to="/" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>HOME</Link>
+                            <span style={{ color: 'var(--border)' }}>/</span>
+                            <span style={{ color: 'var(--primary)' }}>LISTINGS</span>
+                        </div>
+
+                        <div className="listings-header">
+                            <div>
+                                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 900, color: 'var(--secondary)', marginBottom: '8px', lineHeight: 1 }}>Premium Inventory</h1>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Showing {cars.length} elite certified vehicles</p>
+                            </div>
+                            <div className="desktop-only" style={{ width: '280px' }}>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '1px' }}>Sort Logistics</div>
+                                <CustomSelect
+                                    name="sort"
+                                    value={sortBy}
+                                    options={sortOptions}
+                                    onChange={handleSortChange}
+                                />
+                            </div>
+                        </div>
+
+                        <ListingsGrid cars={paginatedCars} loading={loading} />
+
+                        {/* Pro Pagination Bar */}
+                        {!loading && totalPages > 1 && (
+                            <div style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '12px',
+                                marginTop: '48px',
+                                padding: 'clamp(16px, 4vw, 24px)',
+                                background: 'var(--bg-surface)',
+                                borderRadius: 'var(--radius-lg)',
+                                boxShadow: 'var(--shadow-sm)',
+                                border: '1px solid var(--border)'
+                            }}>
+                                <button
+                                    className="btn btn-outline"
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    style={{ padding: '8px 16px', borderRadius: '8px', flex: '1 1 auto', maxWidth: '120px' }}
+                                >
+                                    &larr; Prev
+                                </button>
+
+                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                    {[...Array(totalPages)].map((_, i) => {
+                                        const p = i + 1;
+                                        if (totalPages > 5 && Math.abs(p - currentPage) > 1 && p !== 1 && p !== totalPages) {
+                                            if (p === 2 || p === totalPages - 1) return <span key={p} style={{ alignSelf: 'center' }}>...</span>;
+                                            return null;
+                                        }
+                                        return (
+                                            <button
+                                                key={p}
+                                                onClick={() => handlePageChange(p)}
+                                                style={{
+                                                    minWidth: '36px',
+                                                    height: '36px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid',
+                                                    borderColor: currentPage === p ? 'var(--primary)' : 'var(--border)',
+                                                    background: currentPage === p ? 'var(--primary)' : 'transparent',
+                                                    color: currentPage === p ? 'white' : 'var(--text-main)',
+                                                    fontWeight: 700,
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s',
+                                                    fontSize: '0.85rem'
+                                                }}
+                                            >
+                                                {p}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                <button
+                                    className="btn btn-outline"
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    style={{ padding: '8px 16px', borderRadius: '8px', flex: '1 1 auto', maxWidth: '120px' }}
+                                >
+                                    Next &rarr;
+                                </button>
+                            </div>
                         )}
                     </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                        <h2 className="section-title" style={{ textAlign: 'left', fontSize: '1.8rem', marginBottom: 0 }}>Used Cars <span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 400 }}>({cars.length} Found)</span></h2>
-                        <div style={{ width: '260px' }}>
-                            <CustomSelect
-                                name="sort"
-                                value={sortBy}
-                                options={sortOptions}
-                                onChange={handleSortChange}
-                                prefix="Sort by : "
-                            />
-                        </div>
-                    </div>
-
-                    {/* Active Filters Display */}
-                    {Object.keys(filters).length > 0 && (
-                        <div style={{
-                            display: 'flex',
-                            gap: '12px',
-                            alignItems: 'center',
-                            marginBottom: '20px',
-                            flexWrap: 'wrap'
-                        }}>
-                            <button
-                                onClick={() => handleFilterChange('reset', true)}
-                                style={{
-                                    background: '#7c3aed',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '8px',
-                                    padding: '10px 20px',
-                                    fontSize: '0.95rem',
-                                    fontWeight: 600,
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    transition: 'all 0.2s'
-                                }}
-                                onMouseOver={(e) => e.currentTarget.style.background = '#6d28d9'}
-                                onMouseOut={(e) => e.currentTarget.style.background = '#7c3aed'}
-                            >
-                                <span style={{ fontSize: '1.1rem' }}>↻</span> Clear All
-                            </button>
-
-                            {Object.entries(filters).map(([key, value]) => {
-                                if (!value || (Array.isArray(value) && value.length === 0)) return null;
-
-                                const values = Array.isArray(value) ? value : [value];
-                                return values.map((val, idx) => (
-                                    <div
-                                        key={`${key}-${idx}`}
-                                        style={{
-                                            background: '#f3f4f6',
-                                            border: '1px solid #e5e7eb',
-                                            borderRadius: '8px',
-                                            padding: '8px 16px',
-                                            fontSize: '0.9rem',
-                                            fontWeight: 500,
-                                            color: '#1f2937',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '8px'
-                                        }}
-                                    >
-                                        <span>{val}</span>
-                                        <button
-                                            onClick={() => {
-                                                if (Array.isArray(filters[key])) {
-                                                    const newValues = filters[key].filter(v => v !== val);
-                                                    handleFilterChange(key, newValues);
-                                                } else {
-                                                    handleFilterChange(key, '');
-                                                }
-                                            }}
-                                            style={{
-                                                background: 'none',
-                                                border: 'none',
-                                                color: '#6b7280',
-                                                cursor: 'pointer',
-                                                fontSize: '1.2rem',
-                                                padding: 0,
-                                                lineHeight: 1,
-                                                fontWeight: 700
-                                            }}
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ));
-                            })}
-                        </div>
-                    )}
-
-                    <ListingsGrid cars={cars} loading={loading} />
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

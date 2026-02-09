@@ -1,16 +1,18 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getCarById } from '../api/mockApi';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { getCarById, updateCarListing } from '../api/mockApi';
 import { formatPriceINR, formatKm } from '../utils/formatters';
 import { useToast } from './Toasts';
+import { useWishlist } from './WishlistContext';
+import { useAuth } from './AuthContext';
 import ImageGallery from './ImageGallery';
 import ValuationWidget from './ValuationWidget';
 import ScheduleTestDrive from './ScheduleTestDrive';
 import BiddingWidget from './BiddingWidget';
-import '../styles/components.css';
-
 import VirtualShowroom from './VirtualShowroom';
+import { CarHealthScore, ResalePredictor } from './IntelligenceCenter';
 
 const CarDetails = () => {
     const { id } = useParams();
@@ -19,213 +21,269 @@ const CarDetails = () => {
     const [loading, setLoading] = useState(true);
     const [show360, setShow360] = useState(false);
     const { addToast } = useToast();
+    const { toggleWishlist, isInWishlist } = useWishlist();
+    const { currentUser } = useAuth();
+
+    const handleSave = () => {
+        if (!car) return;
+        toggleWishlist(car);
+    };
+
+    const handleBuy = async () => {
+        if (!currentUser) {
+            addToast('Please log in to buy a car.', 'error');
+            navigate('/login');
+            return;
+        }
+        if (!car) return;
+
+        try {
+            setLoading(true);
+            await updateCarListing(car.id, {
+                status: 'sold',
+                buyerDetails: {
+                    name: currentUser.name || currentUser.displayName || 'Customer',
+                    email: currentUser.email,
+                    date: new Date().toISOString()
+                }
+            }, currentUser.token);
+            addToast('Car marked as sold successfully!', 'success');
+            // Refresh car data after update
+            getCarById(id).then(data => {
+                setCar(data);
+                setLoading(false);
+            });
+        } catch (error) {
+            addToast(`Error buying car: ${error.message}`, 'error');
+            setLoading(false);
+        }
+    };
+
+    const handleReserve = async () => {
+        if (!currentUser) {
+            addToast('Please log in to reserve a car.', 'error');
+            navigate('/login');
+            return;
+        }
+        if (!car) return;
+
+        try {
+            setLoading(true);
+            await updateCarListing(car.id, {
+                status: 'reserved',
+                reserveDetails: {
+                    name: currentUser.name || currentUser.displayName || 'Customer',
+                    email: currentUser.email,
+                    date: new Date().toISOString()
+                }
+            }, currentUser.token);
+            addToast('Car reserved successfully!', 'success');
+            // Refresh car data after update
+            getCarById(id).then(data => {
+                setCar(data);
+                setLoading(false);
+            });
+        } catch (error) {
+            addToast(`Error reserving car: ${error.message}`, 'error');
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
+        if (!id || id === 'undefined') return;
+
         getCarById(id).then(data => {
             setCar(data);
             setLoading(false);
+        }).catch(error => {
+            console.error("Failed to fetch car details:", error);
+            addToast("Failed to load car details.", "error");
+            setLoading(false);
         });
-    }, [id, navigate]);
+        window.scrollTo(0, 0);
+    }, [id, addToast]);
 
-    // Safe JSON Parse Helper
     const parseJSON = (data) => {
         if (!data) return null;
         if (typeof data === 'object') return data;
         try { return JSON.parse(data); } catch (e) { return null; }
     };
 
-    const images = car ? (parseJSON(car.images) || []) : [];
-    const valuation = car ? parseJSON(car.valuation) : null;
-    const auction = car ? parseJSON(car.auction) : null;
-    const features = car ? (parseJSON(car.features) || []) : [];
+    if (loading) return (
+        <div className="container details-skeleton-container">
+            <div className="pro-grid">
+                <div style={{ background: 'var(--border)', height: '400px', borderRadius: '20px' }} className="skeleton"></div>
+                <div>
+                    <div style={{ background: 'var(--border)', height: '60px', width: '80%', marginBottom: '20px' }} className="skeleton"></div>
+                    <div style={{ background: 'var(--border)', height: '100px', width: '100%', marginBottom: '20px' }} className="skeleton"></div>
+                </div>
+            </div>
+        </div>
+    );
 
-    const refreshData = () => {
-        getCarById(id).then(data => setCar(data));
-    };
+    if (!car) return <div className="container details-skeleton-container">Car not found</div>;
 
-    const handleSave = () => {
-        // Add to localstorage saved list
-        const saved = JSON.parse(localStorage.getItem('VroomValue_saved') || '[]');
-        if (car && !saved.some(c => c.id === car.id)) {
-            saved.push(car);
-            localStorage.setItem('VroomValue_saved', JSON.stringify(saved));
-            addToast("Car added to your shortlist!", "success");
-        } else {
-            addToast("Car is already active in your shortlist", "info");
-        }
-    };
+    const images = parseJSON(car.images) || [];
+    const valuation = parseJSON(car.valuation);
+    const auction = parseJSON(car.auction);
+    const features = parseJSON(car.features) || [];
 
-    if (loading) return <div className="container" style={{ paddingTop: '40px' }}>Loading details...</div>;
-    if (!car) return <div className="container" style={{ paddingTop: '40px' }}>Car not found</div>;
+    // Dynamic Health Calculations
+    const age = 2024 - (Number(car.year) || 2024);
+    const kms = Number(car.kms) || 0;
+    const healthScore = Math.max(78, Math.min(98, 100 - (age * 1.5) - (kms / 12000)));
 
     return (
-        <div className="container" style={{ padding: '160px 16px 40px', position: 'relative' }}>
-            <button
-                className="back-btn"
-                onClick={() => navigate(-1)}
-                style={{ top: '90px', left: '16px' }}
-                title="Go Back"
-            >
-                <span>❮</span>
-            </button>
-            {show360 && <VirtualShowroom car={car} onClose={() => setShow360(false)} />}
-
-            <div className="car-details-grid">
-                {/* Left Column: Gallery & Desc */}
-                <div>
-                    <div style={{ position: 'relative' }}>
-                        <ImageGallery images={images} />
-                        <button
-                            onClick={() => setShow360(true)}
-                            className="btn btn-primary"
-                            style={{
-                                position: 'absolute', top: '20px', right: '20px',
-                                zIndex: 10, display: 'flex', alignItems: 'center', gap: '8px',
-                                padding: '8px 16px', borderRadius: '30px', fontSize: '0.85rem'
-                            }}
-                        >
-                            <span>↻</span> View in 360°
-                        </button>
-                    </div>
-
-                    <div className="details-card" style={{ marginTop: '24px' }}>
-                        <h3>Vehicle Overview</h3>
-                        <p style={{ marginTop: '12px', lineHeight: '1.6', color: '#555' }}>
-                            {car.description}
-                        </p>
-                        <div style={{ marginTop: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                            {features.map(f => (
-                                <span key={f} style={{ background: '#e9ecef', padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem' }}>
-                                    {f}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="details-card" style={{ marginTop: '24px' }}>
-                        <h3>Technical Specifications</h3>
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: '1fr 1fr',
-                            gap: '20px',
-                            marginTop: '16px',
-                            background: '#f8fafc',
-                            padding: '20px',
-                            borderRadius: '12px',
-                            border: '1px solid #e2e8f0'
-                        }}>
-                            <div>
-                                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Engine Capacity</div>
-                                <div style={{ fontWeight: '600', marginTop: '4px' }}>{car.engineCapacity ? `${car.engineCapacity} cc` : 'N/A'}</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Mileage</div>
-                                <div style={{ fontWeight: '600', marginTop: '4px' }}>{car.mileageKmpl ? `${car.mileageKmpl} kmpl` : 'N/A'}</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>RTO Region</div>
-                                <div style={{ fontWeight: '600', marginTop: '4px' }}>{car.rto || 'N/A'}</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Insurance</div>
-                                <div style={{ fontWeight: '600', marginTop: '4px' }}>{car.insuranceValidity || 'Comprehensive'}</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Body Type</div>
-                                <div style={{ fontWeight: '600', marginTop: '4px' }}>{car.bodyType || 'SUV'}</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Color</div>
-                                <div style={{ fontWeight: '600', marginTop: '4px' }}>{car.color || 'White'}</div>
-                            </div>
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
-                            <div style={{
-                                display: 'flex', alignItems: 'center', gap: '8px',
-                                padding: '8px 12px', borderRadius: '8px',
-                                background: car.accidental === false || car.accidental === undefined ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                                color: car.accidental === false || car.accidental === undefined ? '#059669' : '#dc2626',
-                                fontSize: '0.85rem', fontWeight: '600'
-                            }}>
-                                <span>{car.accidental === false || car.accidental === undefined ? '✓' : '⚠'}</span>
-                                {car.accidental === false || car.accidental === undefined ? 'Accident Free' : 'Accident History'}
-                            </div>
-                            <div style={{
-                                display: 'flex', alignItems: 'center', gap: '8px',
-                                padding: '8px 12px', borderRadius: '8px',
-                                background: car.serviceHistory === false ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)',
-                                color: car.serviceHistory === false ? '#d97706' : '#059669',
-                                fontSize: '0.85rem', fontWeight: '600'
-                            }}>
-                                <span>{car.serviceHistory === false ? '⚠' : '✓'}</span>
-                                {car.serviceHistory === false ? 'Partial Service History' : 'Full Service History'}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="details-card">
-                        <h3>Service History</h3>
-                        <ul style={{ marginTop: '16px', borderLeft: '2px solid #eee', paddingLeft: '20px' }}>
-                            {(car.history && car.history.length > 0) ? car.history.map((h, i) => (
-                                <li key={i} style={{ marginBottom: '16px', position: 'relative' }}>
-                                    <div style={{ position: 'absolute', left: '-26px', top: '4px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--primary)' }}></div>
-                                    <strong>{h.date}</strong>
-                                    <div style={{ color: '#666' }}>{h.event}</div>
-                                </li>
-                            )) : (
-                                <li style={{ marginBottom: '16px', color: '#64748b' }}>
-                                    Standard 140-point quality check completed by VroomValue.
-                                </li>
-                            )}
-                        </ul>
-                    </div>
+        <div className="page-enter details-page-bg">
+            <Helmet>
+                <title>{`${car.year} ${car.make} ${car.model} | VroomValue`}</title>
+                <meta name="description" content={`Buy certified used ${car.year} ${car.make} ${car.model} in excellent condition. ${formatKm(car.kms)}, ${car.fuel}. VroomValue Certified with 140+ point check.`} />
+                <meta property="og:title" content={`${car.year} ${car.make} ${car.model} | VroomValue`} />
+                <meta property="og:image" content={images[0]?.src || ''} />
+                <meta property="og:price:amount" content={car.priceINR} />
+                <meta property="og:price:currency" content="INR" />
+            </Helmet>
+            <div className="container">
+                <div className="details-breadcrumb">
+                    <Link to="/">HOME</Link>
+                    <span>/</span>
+                    <Link to="/listings">LISTINGS</Link>
+                    <span>/</span>
+                    <span className="active">{car.make.toUpperCase()} {car.model.toUpperCase()}</span>
                 </div>
 
-                {/* Right Column: Key Details & CTAs */}
-                <div>
-                    <div className="details-card">
-                        <div style={{ marginBottom: '8px', color: '#666' }}>{car.year} • {car.fuel}</div>
-                        <h1 style={{ fontSize: '2rem', marginBottom: '16px' }}>{car.make} {car.model}</h1>
-                        <div className="price-block">
-                            <span className="main-price">{formatPriceINR(car.priceINR)}</span>
-                            <button
-                                onClick={handleSave}
-                                className="btn btn-outline"
-                            >
-                                ♥ Save
-                            </button>
-                        </div>
+                <button
+                    className="btn btn-outline back-gallery-btn"
+                    onClick={() => navigate(-1)}
+                >
+                    <span>&larr;</span> Back to Gallery
+                </button>
 
-                        <div className="feature-grid">
-                            <div className="feature-item">
-                                <span className="feature-label">Kilometers</span>
-                                <span className="feature-value">{formatKm(car.kms)}</span>
+                {show360 && <VirtualShowroom car={car} onClose={() => setShow360(false)} />}
+
+                <div className="car-details-layout">
+                    {/* Main Content Area */}
+                    <div className="flex-stack">
+                        <section style={{ position: 'relative' }}>
+                            <ImageGallery images={images} />
+                            <button
+                                onClick={() => setShow360(true)}
+                                className="btn btn-primary details-360-btn"
+                            >
+                                <span>↺</span> View in 360°
+                            </button>
+                        </section>
+
+                        <section className="glass-panel vehicle-overview">
+                            <h2>Vehicle Overview</h2>
+                            <p className="overview-text">
+                                {car.description}
+                            </p>
+                            <div className="feature-tag-list">
+                                {features.slice(0, 8).map(f => (
+                                    <span key={f} className="badge badge-outline">
+                                        {f}
+                                    </span>
+                                ))}
                             </div>
-                            <div className="feature-item">
-                                <span className="feature-label">Owner</span>
-                                <span className="feature-value">{car.owner === 1 ? '1st' : '2nd'} Owner</span>
+                        </section>
+
+                        <CarHealthScore
+                            score={healthScore}
+                            engine={healthScore + 2}
+                            body={healthScore - 3}
+                            interior={healthScore + 1}
+                        />
+
+                        <section className="glass-panel spec-grid-container">
+                            <h2>
+                                <span style={{ color: 'var(--primary)' }}>⚙️</span> Key Specifications
+                            </h2>
+                            <div className="spec-grid">
+                                {[
+                                    { label: 'Engine', val: car.engineCapacity ? `${car.engineCapacity} cc` : '1.2L dual-Jet' },
+                                    { label: 'Mileage', val: car.mileageKmpl ? `${car.mileageKmpl} kmpl` : '22.3 kmpl' },
+                                    { label: 'RTO', val: car.rto || 'DL-01' },
+                                    { label: 'Body', val: car.bodyType || 'Hatchback' },
+                                    { label: 'Trans', val: car.transmission },
+                                    { label: 'Fuel', val: car.fuel }
+                                ].map(spec => (
+                                    <div key={spec.label}>
+                                        <div className="spec-item-label">{spec.label}</div>
+                                        <div className="spec-item-value">{spec.val}</div>
+                                    </div>
+                                ))}
                             </div>
-                            <div className="feature-item">
-                                <span className="feature-label">Fuel Type</span>
-                                <span className="feature-value">{car.fuel}</span>
-                            </div>
-                            <div className="feature-item">
-                                <span className="feature-label">Transmission</span>
-                                <span className="feature-value">{car.transmission}</span>
-                            </div>
-                        </div>
+                        </section>
+
+                        <ResalePredictor currentPrice={car.priceINR} />
+
+                        <ScheduleTestDrive carTitle={`${car.year} ${car.make} ${car.model}`} />
                     </div>
 
-                    <ValuationWidget valuation={valuation || {}} currentPrice={car.priceINR} />
+                    {/* Desktop Sidebar / Sticky Panel */}
+                    <div className="sticky-panel desktop-only">
+                        <div className="glass-panel sidebar-panel">
+                            <div style={{ marginBottom: '8px', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>{car.year} • {car.kms} kms • {car.owner === 1 ? '1st' : '2nd'} Owner</div>
+                            <h1 className="sidebar-car-title">{car.make} {car.model}</h1>
 
-                    {auction && auction.isAuction && (
-                        <div style={{ marginTop: '24px' }}>
-                            <BiddingWidget car={{ ...car, auction }} onBidPlaced={refreshData} />
+                            <div className="price-display-wrapper">
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span className="price-main">{formatPriceINR(car.priceINR)}</span>
+                                    <span className="price-sub">Certified Market Price</span>
+                                </div>
+                                <button
+                                    onClick={handleSave}
+                                    className={`btn ${isInWishlist(car.id) ? 'btn-primary' : 'btn-outline'}`}
+                                    style={{ borderRadius: '12px', padding: '12px', minHeight: '50px', minWidth: '50px' }}
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill={isInWishlist(car.id) ? 'white' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                </button>
+                            </div>
+
+                            {auction && auction.isAuction ? (
+                                <BiddingWidget car={{ ...car, auction }} onBidPlaced={() => getCarById(id).then(setCar)} />
+                            ) : (
+                                <div className="flex-stack">
+                                    {car.status === 'sold' ? (
+                                        <div className="badge-sold badge-status-large">SOLD OUT</div>
+                                    ) : car.status === 'reserved' ? (
+                                        <div className="badge-reserved badge-status-large">RESERVED</div>
+                                    ) : (
+                                        <>
+                                            <button onClick={handleBuy} className="btn btn-primary" style={{ width: '100%', height: '60px', fontSize: '1.1rem', fontWeight: 800 }}>BUY THIS VEHICLE</button>
+                                            <button onClick={handleReserve} className="btn btn-outline" style={{ width: '100%', height: '54px', fontWeight: 700 }}>RESERVE NOW (₹10,000)</button>
+                                        </>
+                                    )}
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
+                </div>
+            </div>
 
-                    <ScheduleTestDrive carTitle={`${car.year} ${car.make} ${car.model}`} />
+            {/* Mobile Action Bar */}
+            <div className="mobile-action-bar">
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Total Price</span>
+                    <span style={{ color: 'var(--primary)', fontSize: '1.4rem', fontWeight: 900 }}>{formatPriceINR(car.priceINR)}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                        onClick={handleSave}
+                        className={`btn ${isInWishlist(car.id) ? 'btn-primary' : 'btn-outline'}`}
+                        style={{ padding: '8px', minWidth: '44px', minHeight: '44px' }}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill={isInWishlist(car.id) ? 'white' : 'none'} stroke="currentColor" strokeWidth="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    </button>
+                    {car.status === 'approved' && !auction?.isAuction && (
+                        <button onClick={handleBuy} className="btn btn-primary" style={{ padding: '0 20px', height: '44px', fontWeight: 800 }}>BUY NOW</button>
+                    )}
+                    {car.status === 'sold' && <span style={{ color: 'var(--danger)', fontWeight: 900, fontSize: '0.9rem' }}>SOLD</span>}
+                    {car.status === 'reserved' && <span style={{ color: 'var(--warning)', fontWeight: 900, fontSize: '0.9rem' }}>RESERVED</span>}
+                    {auction?.isAuction && (
+                        <button onClick={() => window.scrollTo({ top: 400, behavior: 'smooth' })} className="btn btn-primary" style={{ padding: '0 20px', height: '44px', fontWeight: 800 }}>BID NOW</button>
+                    )}
                 </div>
             </div>
         </div>

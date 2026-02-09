@@ -34,9 +34,13 @@ const Signup = () => {
 
         setLoading(true);
         try {
-            await signup({ email, password, name, dob, phone });
+            const user = await signup({ email, password, name, dob, phone });
             addToast("Account created! You can now login.", "success");
-            navigate('/login');
+            if (user && user.role === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/login');
+            }
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || "Failed to sign up";
             addToast(errorMessage, "error");
@@ -46,19 +50,27 @@ const Signup = () => {
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-card">
-                <Link to="/" style={{ display: 'block', textAlign: 'center', marginBottom: '10px', textDecoration: 'none', fontSize: '1.2rem', fontWeight: 800, color: 'var(--primary)' }}>
-                    VroomValue<span style={{ color: 'var(--text-color)' }}>Cars</span>
-                </Link>
-                <h1 className="auth-title">Create Account</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label className="form-label">Full Name</label>
+        <div className="auth-page-wrapper page-enter">
+            <div className="auth-bg-glow-1"></div>
+            <div className="auth-bg-glow-2"></div>
+
+            <div className="auth-card glass-panel" style={{ maxWidth: '520px' }}>
+                <div className="auth-header">
+                    <Link to="/" className="auth-logo">
+                        <span className="auth-logo-text-1">VROOM</span>
+                        <span className="auth-logo-text-2">VALUE</span>
+                    </Link>
+                    <h1 className="auth-title">Join the Elite</h1>
+                    <p className="auth-subtitle">Start your journey with India's most intelligent marketplace</p>
+                </div>
+
+                <form className="auth-form grid-2" onSubmit={handleSubmit}>
+                    <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                        <label>Full Name</label>
                         <input
                             type="text"
-                            className={`form-control ${errors.name ? 'error' : ''}`}
-                            placeholder="John Doe"
+                            className={`auth-input ${errors.name ? 'error' : ''}`}
+                            placeholder="e.g. Yashraj Zala"
                             value={name}
                             onChange={e => {
                                 setName(e.target.value);
@@ -66,12 +78,13 @@ const Signup = () => {
                             }}
                         />
                     </div>
-                    <div className="form-group">
-                        <label className="form-label">Email Address</label>
+
+                    <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                        <label>Email Address</label>
                         <input
                             type="email"
-                            className={`form-control ${errors.email ? 'error' : ''}`}
-                            placeholder="name@example.com"
+                            className={`auth-input ${errors.email ? 'error' : ''}`}
+                            placeholder="name@nexus.com"
                             value={email}
                             onChange={e => {
                                 setEmail(e.target.value);
@@ -79,12 +92,13 @@ const Signup = () => {
                             }}
                         />
                     </div>
+
                     <div className="form-group">
-                        <label className="form-label">Phone Number</label>
+                        <label>Mobile</label>
                         <input
                             type="tel"
-                            className={`form-control ${errors.phone ? 'error' : ''}`}
-                            placeholder="+91 98765 43210"
+                            className={`auth-input ${errors.phone ? 'error' : ''}`}
+                            placeholder="+91 ...."
                             value={phone}
                             onChange={e => {
                                 setPhone(e.target.value);
@@ -92,11 +106,12 @@ const Signup = () => {
                             }}
                         />
                     </div>
+
                     <div className="form-group">
-                        <label className="form-label">Date of Birth</label>
+                        <label>Birth Date</label>
                         <input
                             type="date"
-                            className={`form-control ${errors.dob ? 'error' : ''}`}
+                            className={`auth-input ${errors.dob ? 'error' : ''}`}
                             value={dob}
                             onChange={e => {
                                 setDob(e.target.value);
@@ -104,12 +119,13 @@ const Signup = () => {
                             }}
                         />
                     </div>
-                    <div className="form-group">
-                        <label className="form-label">Password</label>
+
+                    <div className="form-group" style={{ gridColumn: 'span 2', marginBottom: '12px' }}>
+                        <label>Password</label>
                         <input
                             type="password"
-                            className={`form-control ${errors.password ? 'error' : ''}`}
-                            placeholder="Create a password"
+                            className={`auth-input ${errors.password ? 'error' : ''}`}
+                            placeholder="Minimum 8 characters"
                             value={password}
                             onChange={e => {
                                 setPassword(e.target.value);
@@ -117,13 +133,22 @@ const Signup = () => {
                             }}
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', fontSize: '1rem', marginTop: '10px' }} disabled={loading}>
-                        {loading ? 'Creating Account...' : 'Sign Up'}
-                    </button>
 
-                    <p style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
-                        Already have an account? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>Log In</Link>
-                    </p>
+                    <div style={{ gridColumn: 'span 2' }}>
+                        <button
+                            type="submit"
+                            className="btn btn-primary auth-submit-btn"
+                            disabled={loading}
+                        >
+                            {loading ? 'INITIALIZING...' : 'CREATE ACCOUNT'}
+                        </button>
+                    </div>
+
+                    <div className="auth-footer" style={{ gridColumn: 'span 2' }}>
+                        <p>
+                            Already part of the network? <Link to="/login">Authenticate Here</Link>
+                        </p>
+                    </div>
                 </form>
             </div>
         </div>

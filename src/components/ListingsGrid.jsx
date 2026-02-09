@@ -1,13 +1,12 @@
-
 import React from 'react';
 import CarCard from './CarCard';
-import SkeletonCard from './SkeletonCard';
+import { CarCardSkeleton } from './SkeletonLoader';
 
 const ListingsGrid = ({ cars, loading }) => {
     if (loading) {
         return (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
-                {[1, 2, 3, 4, 5, 6].map(n => <SkeletonCard key={n} />)}
+            <div className="pro-grid">
+                {[1, 2, 3, 4, 5, 6].map(n => <CarCardSkeleton key={n} />)}
             </div>
         );
     }

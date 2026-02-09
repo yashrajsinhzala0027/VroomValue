@@ -28,9 +28,13 @@ const Login = () => {
 
         setLoading(true);
         try {
-            await login(email, password);
+            const user = await login(email, password);
             addToast("Logged in successfully!", "success");
-            navigate('/');
+            if (user && user.role === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/');
+            }
         } catch (err) {
             addToast(err.message || "Failed to login", "error");
         } finally {
@@ -39,19 +43,27 @@ const Login = () => {
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-card">
-                <Link to="/" style={{ display: 'block', textAlign: 'center', marginBottom: '10px', textDecoration: 'none', fontSize: '1.2rem', fontWeight: 800, color: 'var(--primary)' }}>
-                    VroomValue<span style={{ color: 'var(--text-color)' }}>Cars</span>
-                </Link>
-                <h1 className="auth-title">Welcome Back</h1>
-                <form onSubmit={handleSubmit} autoComplete="off">
-                    <div className="form-group">
-                        <label className="form-label">Email Address</label>
+        <div className="auth-page-wrapper page-enter">
+            <div className="auth-bg-glow-1"></div>
+            <div className="auth-bg-glow-2"></div>
+
+            <div className="auth-card glass-panel">
+                <div className="auth-header">
+                    <Link to="/" className="auth-logo">
+                        <span className="auth-logo-text-1">VROOM</span>
+                        <span className="auth-logo-text-2">VALUE</span>
+                    </Link>
+                    <h1 className="auth-title">Welcome back</h1>
+                    <p className="auth-subtitle">Access your premium automotive dashboard</p>
+                </div>
+
+                <form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
+                    <div className="form-group" style={{ marginBottom: '24px' }}>
+                        <label>Identity</label>
                         <input
                             type="email"
-                            className={`form-control ${errors.email ? 'error' : ''}`}
-                            placeholder="name@example.com"
+                            className={`auth-input ${errors.email ? 'error' : ''}`}
+                            placeholder="Email Address"
                             value={email}
                             autoComplete="new-password"
                             onChange={e => {
@@ -60,12 +72,16 @@ const Login = () => {
                             }}
                         />
                     </div>
-                    <div className="form-group">
-                        <label className="form-label">Password</label>
+
+                    <div className="form-group" style={{ marginBottom: '32px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                            <label style={{ marginBottom: 0 }}>Secret Key</label>
+                            <a href="#" style={{ fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>Forgot?</a>
+                        </div>
                         <input
                             type="password"
-                            className={`form-control ${errors.password ? 'error' : ''}`}
-                            placeholder="Enter your password"
+                            className={`auth-input ${errors.password ? 'error' : ''}`}
+                            placeholder="Password"
                             value={password}
                             autoComplete="new-password"
                             onChange={e => {
@@ -74,13 +90,20 @@ const Login = () => {
                             }}
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', fontSize: '1rem', marginTop: '10px' }} disabled={loading}>
-                        {loading ? 'Logging in...' : 'Sign In'}
+
+                    <button
+                        type="submit"
+                        className="btn btn-primary auth-submit-btn"
+                        disabled={loading}
+                    >
+                        {loading ? 'AUTHENTICATING...' : 'SECURE SIGN IN'}
                     </button>
 
-                    <p style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
-                        Don't have an account? <Link to="/signup" style={{ color: 'var(--primary)', fontWeight: 600 }}>Create Account</Link>
-                    </p>
+                    <div className="auth-footer">
+                        <p>
+                            New to the platform? <Link to="/signup">Initialize Account</Link>
+                        </p>
+                    </div>
                 </form>
             </div>
         </div>

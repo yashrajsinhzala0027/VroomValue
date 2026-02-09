@@ -219,6 +219,8 @@ const AdminDashboard = () => {
     }
 
     const auctionCars = cars.filter(c => c.auction && c.auction.isAuction);
+    const transactionCars = cars.filter(c => c.status === 'sold' || c.status === 'reserved');
+    const inventoryCars = cars.filter(c => c.status !== 'sold' && c.status !== 'reserved');
     const totalValue = cars.reduce((acc, car) => acc + car.priceINR, 0);
 
     return (
@@ -309,6 +311,12 @@ const AdminDashboard = () => {
                             >
                                 Test Drives ({testDrives.length})
                             </button>
+                            <button
+                                className={`admin-tab ${activeTab === 'transactions' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('transactions')}
+                            >
+                                Transactions ({transactionCars.length})
+                            </button>
                         </div>
 
                         {activeTab === 'inventory' && (
@@ -324,7 +332,7 @@ const AdminDashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {cars.map(car => (
+                                        {inventoryCars.map(car => (
                                             <tr key={car.id}>
                                                 <td>#{String(car.id).padStart(4, '0')}</td>
                                                 <td>
@@ -334,7 +342,7 @@ const AdminDashboard = () => {
                                                 <td style={{ fontWeight: 600 }}>{formatPriceINR(car.priceINR)}</td>
                                                 <td>
                                                     <span className={`badge ${car.sellerType === 'VroomValue Certified' ? 'badge-certified' : ''}`} style={{ fontSize: '0.75rem', padding: '6px 10px' }}>
-                                                        {car.sellerType}
+                                                        {car.status === 'approved' ? car.sellerType : car.status.toUpperCase()}
                                                     </span>
                                                 </td>
                                                 <td style={{ textAlign: 'right' }}>
@@ -474,13 +482,22 @@ const AdminDashboard = () => {
                                                     <td>#{String(car.id).padStart(4, '0')}</td>
                                                     <td>
                                                         <div style={{ fontWeight: 600, color: '#32325d' }}>{car.year} {car.make} {car.model}</div>
-                                                        <a href={`/car/${car.id}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>View Listing</a>
+                                                        <Link to={`/car/${car.id}`} target="_blank" style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>View Listing</Link>
                                                     </td>
-                                                    <td style={{ fontWeight: 600, color: 'var(--green)' }}>
+                                                    <td style={{ fontWeight: 600, color: 'var(--primary)' }}>
                                                         {formatPriceINR(car.auction.currentBid || car.auction.startingBid)}
                                                     </td>
                                                     <td>{car.auction.bidCount || 0}</td>
-                                                    <td>{car.auction.highestBidder || '-'}</td>
+                                                    <td>
+                                                        {car.auction.highestBidder ? (
+                                                            <div style={{ fontSize: '0.85rem' }}>
+                                                                <div style={{ fontWeight: 700 }}>{car.auction.highestBidder.split('@')[0]}</div>
+                                                                <div style={{ color: 'var(--text-muted)' }}>{car.auction.highestBidder}</div>
+                                                            </div>
+                                                        ) : (
+                                                            <span style={{ color: 'var(--text-muted)' }}>No bids</span>
+                                                        )}
+                                                    </td>
                                                     <td>
                                                         {isEnded ? (
                                                             <span className="badge" style={{ background: '#fee2e2', color: '#ef4444' }}>Ended</span>
@@ -494,12 +511,73 @@ const AdminDashboard = () => {
                                                         {!isEnded && (
                                                             <button
                                                                 onClick={() => handleEndAuction(car.id)}
-                                                                className="action-btn btn-delete"
-                                                                title="End Auction Early"
+                                                                className="action-btn"
+                                                                style={{ background: 'var(--primary)', color: 'white' }}
                                                             >
-                                                                Stop & Sell
+                                                                End & Sell
                                                             </button>
                                                         )}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+
+                        {activeTab === 'transactions' && (
+                            <div style={{ overflowX: 'auto' }}>
+                                <table className="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Vehicle Details</th>
+                                            <th>Amount</th>
+                                            <th>Customer Details</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {transactionCars.length === 0 && (
+                                            <tr>
+                                                <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#8898aa' }}>
+                                                    No transactions recorded yet.
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {transactionCars.map(car => {
+                                            // Determine customer details: either from direct purchase/reserve or highest bidder for sold auction cars
+                                            let details = car.status === 'sold' ? car.buyerDetails : car.reserveDetails;
+
+                                            if (!details && car.status === 'sold' && car.auction?.highestBidder) {
+                                                details = {
+                                                    name: car.auction.highestBidder.split('@')[0],
+                                                    email: car.auction.highestBidder,
+                                                    date: car.auction.endTime
+                                                };
+                                            }
+
+                                            return (
+                                                <tr key={car.id}>
+                                                    <td>
+                                                        <span className={`badge ${car.status === 'sold' ? 'badge-sold' : 'badge-reserved'}`} style={car.status === 'reserved' ? { background: '#fff7ed', color: '#c2410c' } : {}}>
+                                                            {car.status.toUpperCase()}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div style={{ fontWeight: 600, color: '#32325d' }}>{car.year} {car.make} {car.model}</div>
+                                                        <div style={{ fontSize: '0.8rem', color: '#8898aa' }}>#{car.id}</div>
+                                                    </td>
+                                                    <td style={{ fontWeight: 700, color: car.status === 'sold' ? 'var(--primary)' : 'var(--secondary)' }}>
+                                                        {formatPriceINR(car.priceINR)}
+                                                    </td>
+                                                    <td>
+                                                        <div style={{ fontWeight: 700, color: '#32325d' }}>{details?.name || 'VroomValue User'}</div>
+                                                        <div style={{ fontSize: '0.85rem', color: '#8898aa', wordBreak: 'break-all' }}>{details?.email || 'user@example.com'}</div>
+                                                    </td>
+                                                    <td>
+                                                        {details?.date ? new Date(details.date).toLocaleDateString() : 'Recent'}
                                                     </td>
                                                 </tr>
                                             );

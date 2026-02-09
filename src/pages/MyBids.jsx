@@ -45,8 +45,8 @@ const MyBids = () => {
                     </div>
                 ) : (
                     <div style={{ display: 'grid', gap: '20px' }}>
-                        {bids.map(bid => (
-                            <div key={bid.id} style={{
+                        {bids.map((bid, index) => (
+                            <div key={bid.id || index} style={{
                                 background: 'white',
                                 padding: '24px',
                                 borderRadius: '16px',
@@ -87,9 +87,15 @@ const MyBids = () => {
                                         {bid.status}
                                     </div>
                                     <br />
-                                    <Link to={`/car/${bid.carId}`} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
-                                        View Auction
-                                    </Link>
+                                    {bid.carId ? (
+                                        <Link to={`/car/${bid.carId}`} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+                                            View Auction
+                                        </Link>
+                                    ) : (
+                                        <span className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '0.85rem', opacity: 0.5, cursor: 'not-allowed' }}>
+                                            Unavailable
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         ))}

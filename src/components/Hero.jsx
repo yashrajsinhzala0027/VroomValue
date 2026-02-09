@@ -7,47 +7,41 @@ const Hero = () => {
     const navigate = useNavigate();
     return (
         <section className="hero-section">
-            <div className="container hero-container" style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: '60px', alignItems: 'center' }}>
-                <div className="hero-content" style={{ textAlign: 'left' }}>
-                    <h1 className="hero-title" style={{ margin: 0, textAlign: 'left' }}>Find Your <br />Perfect Drive</h1>
-                    <p className="hero-subtitle" style={{ margin: '24px 0', textAlign: 'left', marginLeft: 0 }}>
-                        Explore India's finest selection of quality used cars. Certified, inspected, and ready for the road.
+            <div className="container hero-container">
+                <div className="hero-content">
+                    <h1>
+                        DRIVE THE <br />
+                        <span className="hero-highlight">FUTURE</span> TODAY.
+                    </h1>
+                    <p className="hero-subtitle">
+                        India's elite destination for certified pre-owned vehicles. Engineered with high-intelligence trust reports and market-accurate valuation.
                     </p>
 
-                    <div style={{ display: 'flex', gap: '20px', justifyContent: 'flex-start', opacity: 0.8, marginBottom: '40px' }} className="text-muted">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ color: 'var(--primary)', fontWeight: 800 }}>✓</span> 150-point Inspection
+                    <div className="hero-trust-badges desktop-only">
+                        <div className="trust-badge-item">
+                            <div className="trust-badge-icon">✓</div>
+                            <span className="trust-badge-text">140+ Point Audit</span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={{ color: 'var(--primary)', fontWeight: 800 }}>✓</span> Instant Valuation
+                        <div className="trust-badge-item">
+                            <div className="trust-badge-icon">✓</div>
+                            <span className="trust-badge-text">Real-time Valuation</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="hero-sidebar-wrapper">
+                <div className="hero-form-card">
+                    <h3 className="hero-form-title">Find Your Vroom</h3>
                     <SearchBar vertical={true} />
-                    <div style={{ marginTop: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', width: '100%', marginBottom: '4px', fontWeight: 600 }}>Popular Searches:</span>
-                        <button
-                            className="btn popular-tag"
-                            style={{ padding: '6px 12px', fontSize: '0.75rem', textTransform: 'none', borderRadius: '8px' }}
-                            onClick={() => navigate('/listings?maxPrice=500000')}
-                        >Under ₹5L</button>
-                        <button
-                            className="btn popular-tag"
-                            style={{ padding: '6px 12px', fontSize: '0.75rem', textTransform: 'none', borderRadius: '8px' }}
-                            onClick={() => navigate('/listings?bodyType=SUV')}
-                        >SUVs</button>
-                        <button
-                            className="btn popular-tag"
-                            style={{ padding: '6px 12px', fontSize: '0.75rem', textTransform: 'none', borderRadius: '8px' }}
-                            onClick={() => navigate('/listings?make=Maruti+Suzuki')}
-                        >Swift</button>
-                        <button
-                            className="btn popular-tag"
-                            style={{ padding: '6px 12px', fontSize: '0.75rem', textTransform: 'none', borderRadius: '8px' }}
-                            onClick={() => navigate('/listings?certified=true')}
-                        >Certified</button>
+                    <div className="quick-filters">
+                        <span className="quick-filter-label">Quick Filter:</span>
+                        {['SUV', 'Luxury', 'Hatchback', 'Electric'].map(tag => (
+                            <button
+                                key={tag}
+                                className="badge"
+                                style={{ background: 'var(--bg-main)', cursor: 'pointer', border: '1px solid var(--border)' }}
+                                onClick={() => navigate(`/listings?bodyType=${tag}`)}
+                            >{tag}</button>
+                        ))}
                     </div>
                 </div>
             </div>

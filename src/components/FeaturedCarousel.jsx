@@ -3,58 +3,65 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCars } from '../api/mockApi';
 import CarCard from './CarCard';
-import SkeletonCard from './SkeletonCard';
+import { CarCardSkeleton } from './SkeletonLoader';
 
 const FeaturedCarousel = () => {
-    const [featuredCars, setFeaturedCars] = useState([]);
+    const [trendingCars, setTrendingCars] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadFeatured = async () => {
+        const loadTrending = async () => {
             try {
                 const all = await getCars();
-                const approved = Array.isArray(all) ? all.filter(c => c.status === 'approved') : [];
-                // Pick 4 random
-                const shuffled = [...approved].sort(() => 0.5 - Math.random()).slice(0, 4);
-                setFeaturedCars(shuffled);
+                if (Array.isArray(all)) {
+                    // Prioritize Auctions and Certified cars for "Trending"
+                    const auctions = all.filter(c => c.auction && c.auction.isAuction && c.status === 'approved');
+                    const certified = all.filter(c => c.certified === 1 && !auctions.includes(c) && c.status === 'approved');
+                    const others = all.filter(c => !auctions.includes(c) && !certified.includes(c) && c.status === 'approved').slice(0, 5);
+
+                    setTrendingCars([...auctions, ...certified, ...others].slice(0, 8)); // Show top 8
+                }
             } catch (err) {
-                console.error("Failed to load featured cars:", err);
-                setFeaturedCars([]);
+                console.error("Failed to load trending cars:", err);
             } finally {
                 setLoading(false);
             }
         };
-        loadFeatured();
+        loadTrending();
     }, []);
 
     if (loading) {
         return (
-            <div className="container" style={{ marginBottom: '40px' }}>
-                <h2 style={{ marginBottom: '20px' }}>Featured Cars</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
-                    {[1, 2, 3, 4].map(n => <SkeletonCard key={n} />)}
+            <div className="container section">
+                <div className="carousel-header">
+                    <h2>Hot Deals & Live Auctions</h2>
+                </div>
+                <div className="trending-slider">
+                    {[1, 2, 3, 4].map(n => (
+                        <div key={n}>
+                            <CarCardSkeleton />
+                        </div>
+                    ))}
                 </div>
             </div>
         );
     }
 
     return (
-        <section className="container" style={{ margin: '40px auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', marginBottom: '20px' }}>
+        <section className="container section">
+            <div className="carousel-header">
                 <div>
-                    <h2 style={{ fontSize: '1.8rem', fontWeight: 700 }}>Trending This Week</h2>
-                    <p style={{ color: '#666' }}>Handpicked quality cars for you</p>
+                    <h2>Hot Deals & Live Auctions</h2>
+                    <p>Bids ending soon • Certified Fresh Arrivals</p>
                 </div>
-                <Link to="/listings" className="text-primary" style={{ fontWeight: 600 }}>View All &rarr;</Link>
+                <Link to="/listings" className="section-link">
+                    View Inventory &rarr;
+                </Link>
             </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '24px'
-            }}>
-                {featuredCars.map(car => (
-                    <CarCard key={car.id} car={{ ...car, featured: true }} />
+            <div className="trending-slider">
+                {trendingCars.map(car => (
+                    <CarCard key={car.id} car={car} />
                 ))}
             </div>
         </section>

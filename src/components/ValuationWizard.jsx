@@ -140,16 +140,15 @@ const ValuationWizard = () => {
                                 className={`brand-item ${selection.make === make ? 'selected' : ''}`}
                                 onClick={() => handleSelect('make', make)}
                             >
-                                <BrandLogo make={make} size={60} />
+                                <BrandLogo make={make} size={selection.make === make ? 48 : 40} />
                                 <span>{make}</span>
                             </div>
                         ))}
                     </div>
                 );
             case 2:
-                // ... (Model grid remains same)
                 return (
-                    <div className="model-grid-container animate-in">
+                    <div className="animate-in">
                         <div className="model-grid">
                             {getModelsForMake(selection.make).map(model => (
                                 <div
@@ -160,11 +159,11 @@ const ValuationWizard = () => {
                                         setTimeout(() => setStep(3), 300);
                                     }}
                                 >
-                                    <span className="model-name">{model}</span>
+                                    <span style={{ fontSize: '1rem' }}>{model}</span>
                                 </div>
                             ))}
                         </div>
-                        <button className="btn-back-link" onClick={() => setStep(1)}>← Change Brand</button>
+                        <button className="btn-back-link" onClick={() => setStep(1)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontWeight: 700, padding: '10px 0' }}>← Change Brand</button>
                     </div>
                 );
             case 3:
@@ -197,12 +196,20 @@ const ValuationWizard = () => {
 
                         <div className="form-group">
                             <label className="form-label">Fuel Type</label>
-                            <div className={`chips-container ${errors.fuel ? 'error-border' : ''}`} style={errors.fuel ? { border: '1px solid #ef4444', padding: '8px', borderRadius: '12px', background: '#fef2f2' } : {}}>
+                            <div className="chips-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {FUEL_TYPES.map(f => (
                                     <div
                                         key={f}
                                         className={`chip ${selection.fuel === f ? 'active' : ''}`}
                                         onClick={() => handleSelect('fuel', f)}
+                                        style={{
+                                            padding: '10px 20px',
+                                            borderRadius: '12px',
+                                            border: '1px solid var(--border)',
+                                            background: selection.fuel === f ? 'var(--primary)' : 'var(--bg-surface)',
+                                            color: selection.fuel === f ? 'white' : 'var(--text-main)',
+                                            fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer'
+                                        }}
                                     >
                                         {f}
                                     </div>
@@ -212,12 +219,20 @@ const ValuationWizard = () => {
 
                         <div className="form-group">
                             <label className="form-label">Transmission</label>
-                            <div className={`chips-container ${errors.transmission ? 'error-border' : ''}`} style={errors.transmission ? { border: '1px solid #ef4444', padding: '8px', borderRadius: '12px', background: '#fef2f2' } : {}}>
+                            <div className="chips-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {TRANSMISSIONS.map(t => (
                                     <div
                                         key={t}
                                         className={`chip ${selection.transmission === t ? 'active' : ''}`}
                                         onClick={() => handleSelect('transmission', t)}
+                                        style={{
+                                            padding: '10px 20px',
+                                            borderRadius: '12px',
+                                            border: '1px solid var(--border)',
+                                            background: selection.transmission === t ? 'var(--primary)' : 'var(--bg-surface)',
+                                            color: selection.transmission === t ? 'white' : 'var(--text-main)',
+                                            fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer'
+                                        }}
                                     >
                                         {t}
                                     </div>
@@ -251,12 +266,20 @@ const ValuationWizard = () => {
                         </div>
                         <div className="form-group">
                             <label className="form-label">Ownership Status</label>
-                            <div className="chips-container">
+                            <div className="chips-container" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {OWNERS.map(o => (
                                     <div
                                         key={o}
                                         className={`chip ${selection.owner === o ? 'active' : ''}`}
                                         onClick={() => handleSelect('owner', o)}
+                                        style={{
+                                            padding: '10px 20px',
+                                            borderRadius: '12px',
+                                            border: '1px solid var(--border)',
+                                            background: selection.owner === o ? 'var(--primary)' : 'var(--bg-surface)',
+                                            color: selection.owner === o ? 'white' : 'var(--text-main)',
+                                            fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer'
+                                        }}
                                     >
                                         {o}
                                     </div>
@@ -304,8 +327,8 @@ const ValuationWizard = () => {
                     </div>
                 )}
 
-                <div className="wizard-body">
-                    {step < 5 && <h2 className="step-title-display">{steps[step - 1].title}</h2>}
+                <div className="wizard-body" style={{ padding: step === 5 ? 0 : 'clamp(20px, 5vw, 40px)' }}>
+                    {step < 5 && <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: 900, color: 'var(--secondary)', marginBottom: '32px', textAlign: 'center' }}>{steps[step - 1].title}</h2>}
                     {renderStep()}
                 </div>
             </div>

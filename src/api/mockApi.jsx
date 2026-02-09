@@ -161,7 +161,24 @@ export const getCars = async (filters = {}) => {
     if (IS_MOCK) {
         // Create deep copy to avoid mutation issues
         const mockData = JSON.parse(JSON.stringify(INITIAL_CARS));
-        let results = filterCars(mockData, filters);
+
+        // Enrich some cars with auction data for the Auction page
+        const enrichedData = mockData.map((car, idx) => {
+            if (idx % 4 === 0) { // Every 4th car is an auction car
+                return {
+                    ...car,
+                    auction: {
+                        isAuction: true,
+                        currentBid: car.priceINR * 0.8,
+                        endTime: new Date(Date.now() + 86400000).toISOString(), // 24h from now
+                        bids: []
+                    }
+                };
+            }
+            return car;
+        });
+
+        let results = filterCars(enrichedData, filters);
 
         // Sorting
         if (filters.sort) {
@@ -285,9 +302,16 @@ export const getMyBids = async (userId) => {
         if (car.auction && car.auction.bids) {
             const myBids = car.auction.bids.filter(b => b.userId === userId);
             if (myBids.length > 0) {
+                // Find the highest bid and its timestamp
+                const highestBidObj = myBids.reduce((prev, current) => (prev.amount > current.amount) ? prev : current);
+
                 userBids.push({
+                    id: highestBidObj.id || `${car.id}-${userId}`,
                     car,
-                    myHighestBid: Math.max(...myBids.map(b => b.amount)),
+                    carId: car.id,
+                    amount: highestBidObj.amount,
+                    timestamp: highestBidObj.timestamp || new Date().toISOString(),
+                    myHighestBid: highestBidObj.amount,
                     isWinning: car.auction.highestBidder === userId,
                     status: car.status === 'sold' ? (car.auction.highestBidder === userId ? 'won' : 'lost') : 'active'
                 });

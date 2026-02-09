@@ -226,8 +226,12 @@ app.get('/api/cars', async (req, res) => {
             params.push(...vals);
         };
 
-        // Status filter: Public should ONLY see approved cars
-        query += ' AND `status` = "approved"';
+        // Status filter: Public should ONLY see approved cars. Admin (includeExpired) should see all.
+        if (includeExpired) {
+            query += ' AND `status` IN ("approved", "sold", "reserved")';
+        } else {
+            query += ' AND `status` = "approved"';
+        }
 
         if (!includeExpired) {
             query += ' AND (auction IS NULL OR JSON_EXTRACT(auction, "$.endTime") > NOW() OR status = "approved")';
@@ -312,14 +316,28 @@ app.get('/api/cars', async (req, res) => {
         const [cars] = await db.execute(query, params);
         console.log(`[GET /api/cars] Found ${cars.length} results.`);
 
-        // Parse JSON fields
-        const parsedCars = cars.map(car => ({
-            ...car,
-            images: typeof car.images === 'string' ? JSON.parse(car.images) : car.images,
-            features: typeof car.features === 'string' ? JSON.parse(car.features) : car.features,
-            valuation: typeof car.valuation === 'string' ? JSON.parse(car.valuation) : car.valuation,
-            auction: typeof car.auction === 'string' ? JSON.parse(car.auction) : car.auction
-        }));
+        // Parse JSON fields safely
+        const parsedCars = cars.map(car => {
+            const safeParse = (str, fallback = []) => {
+                if (!str || typeof str !== 'string') return fallback;
+                try {
+                    return JSON.parse(str);
+                } catch (e) {
+                    console.error(`JSON Parse Error for field on car ${car.id}:`, e);
+                    return fallback;
+                }
+            };
+
+            return {
+                ...car,
+                images: safeParse(car.images),
+                features: safeParse(car.features),
+                valuation: safeParse(car.valuation, {}),
+                auction: safeParse(car.auction, null),
+                buyerDetails: safeParse(car.buyerDetails, null),
+                reserveDetails: safeParse(car.reserveDetails, null)
+            };
+        });
 
         res.json(parsedCars);
     } catch (err) {
@@ -330,23 +348,46 @@ app.get('/api/cars', async (req, res) => {
 
 // 2. GET Single Car
 app.get('/api/cars/:id', async (req, res) => {
+    const carId = parseInt(req.params.id);
+    if (isNaN(carId)) {
+        return res.status(400).json({ message: "Invalid Car ID format" });
+    }
+
     try {
-        const [rows] = await db.execute('SELECT * FROM cars WHERE id = ?', [req.params.id]);
-        if (rows.length === 0) return res.status(404).json({ message: "Car not found" });
+        const [rows] = await db.execute('SELECT * FROM cars WHERE id = ?', [carId]);
+        if (rows.length === 0) {
+            console.log(`[GET /api/cars/${carId}] NOT FOUND`);
+            return res.status(404).json({ message: "Car not found" });
+        }
 
         const car = rows[0];
-        // Parse JSON fields
+        console.log(`[GET /api/cars/${carId}] Raw row retrieved successfully`);
+
+        const safeParse = (str, fallback = []) => {
+            if (!str || typeof str !== 'string') return fallback;
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                console.error(`JSON Parse Error for car ${req.params.id}:`, e);
+                return fallback;
+            }
+        };
+
         const parsedCar = {
             ...car,
-            images: typeof car.images === 'string' ? JSON.parse(car.images) : car.images,
-            features: typeof car.features === 'string' ? JSON.parse(car.features) : car.features,
-            valuation: typeof car.valuation === 'string' ? JSON.parse(car.valuation) : car.valuation,
-            auction: typeof car.auction === 'string' ? JSON.parse(car.auction) : car.auction
+            images: safeParse(car.images),
+            features: safeParse(car.features),
+            valuation: safeParse(car.valuation, {}),
+            auction: safeParse(car.auction, null),
+            buyerDetails: safeParse(car.buyerDetails, null),
+            reserveDetails: safeParse(car.reserveDetails, null)
         };
 
         res.json(parsedCar);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(`💥 [GET /api/cars/${req.params.id}] ERROR:`, err.stack);
+        fs.appendFileSync(path.join(__dirname, 'server_log.txt'), `${new Date().toISOString()} - ERROR /api/cars/${req.params.id}: ${err.stack}\n`);
+        res.status(500).json({ message: "Internal Server Error", details: err.message });
     }
 });
 
@@ -358,7 +399,17 @@ app.post('/api/cars/:id/bid', async (req, res) => {
         if (rows.length === 0) return res.status(404).json({ message: "Car not found" });
 
         const car = rows[0];
-        let auction = typeof car.auction === 'string' ? JSON.parse(car.auction) : car.auction;
+        const safeParse = (str, fallback = []) => {
+            if (!str || typeof str !== 'string') return fallback;
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                console.error(`JSON Parse Error:`, e);
+                return fallback;
+            }
+        };
+
+        let auction = safeParse(car.auction, null);
 
         if (!auction || !auction.isAuction) return res.status(400).json({ message: "Not an auction" });
         if (new Date(auction.endTime) < new Date()) return res.status(400).json({ message: "Auction ended" });
@@ -381,10 +432,20 @@ app.post('/api/cars/:id/bid', async (req, res) => {
 app.get('/api/sell-requests', async (req, res) => {
     try {
         const [rows] = await db.execute('SELECT * FROM sell_requests WHERE status = "pending"');
+        const safeParse = (str, fallback = []) => {
+            if (!str || typeof str !== 'string') return fallback;
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                console.error(`JSON Parse Error in sell-requests:`, e);
+                return fallback;
+            }
+        };
+
         const parsed = rows.map(r => ({
             ...r,
-            valuation: typeof r.valuation === 'string' ? JSON.parse(r.valuation) : r.valuation,
-            images: (typeof r.images === 'string' ? JSON.parse(r.images) : r.images) || []
+            valuation: safeParse(r.valuation, {}),
+            images: safeParse(r.images, [])
         }));
         res.json(parsed);
     } catch (err) {
@@ -493,7 +554,7 @@ app.post('/api/sell-requests/:id/approve', async (req, res) => {
             'priceINR', 'city', 'bodyType', 'certified', 'owner', 'status', 'sellerType',
             'engineCapacity', 'mileageKmpl', 'description', 'valuation', 'features',
             'auction', 'images', 'seats', 'color', 'rto', 'insuranceValidity',
-            'accidental', 'serviceHistory'
+            'accidental', 'serviceHistory', 'buyerDetails', 'reserveDetails'
         ];
 
         const filteredCar = {};
@@ -548,8 +609,16 @@ app.post('/api/cars/:id/end-auction', async (req, res) => {
         if (rows.length === 0) return res.status(404).json({ message: "Car not found" });
 
         const car = rows[0];
-        let auction = typeof car.auction === 'string' ? JSON.parse(car.auction) : car.auction;
-        if (!auction) auction = { isAuction: false };
+        const safeParse = (str, fallback = []) => {
+            if (!str || typeof str !== 'string') return fallback;
+            try {
+                return JSON.parse(str);
+            } catch (e) {
+                console.error(`JSON Parse Error:`, e);
+                return fallback;
+            }
+        };
+        let auction = safeParse(car.auction, { isAuction: false });
 
         auction.isAuction = false;
         auction.ended = true;
@@ -570,7 +639,9 @@ app.post('/api/cars', async (req, res) => {
             images: JSON.stringify(req.body.images || []),
             features: JSON.stringify(req.body.features || []),
             valuation: JSON.stringify(req.body.valuation || {}),
-            auction: JSON.stringify(req.body.auction || { isAuction: false })
+            auction: JSON.stringify(req.body.auction || { isAuction: false }),
+            buyerDetails: JSON.stringify(req.body.buyerDetails || null),
+            reserveDetails: JSON.stringify(req.body.reserveDetails || null)
         };
         const keys = Object.keys(carData);
         const placeholders = keys.map(() => '?').join(', ');
@@ -647,7 +718,7 @@ app.post('/api/test-drives', async (req, res) => {
             id: Date.now(),
             ...req.body,
             status: 'pending',
-            date: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            requestedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
         };
         const keys = Object.keys(newDrive);
         const placeholders = keys.map(() => '?').join(', ');

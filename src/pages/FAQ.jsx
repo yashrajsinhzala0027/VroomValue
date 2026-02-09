@@ -51,12 +51,12 @@ const FAQ = () => {
     };
 
     return (
-        <div className="container" style={{ padding: '60px 20px' }}>
+        <div className="container" style={{ padding: 'clamp(80px, 12vw, 120px) 20px' }}>
             <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-                <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '16px', color: 'var(--text-main)', textAlign: 'center' }}>
+                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, marginBottom: '16px', color: 'var(--text-main)', textAlign: 'center', lineHeight: 1 }}>
                     Frequently Asked Questions
                 </h1>
-                <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginBottom: '50px', textAlign: 'center' }}>
+                <p style={{ fontSize: 'clamp(1rem, 2vw, 1.1rem)', color: 'var(--text-muted)', marginBottom: 'clamp(32px, 8vw, 60px)', textAlign: 'center' }}>
                     Find answers to common questions about buying and selling cars with VroomValue
                 </p>
 
@@ -65,9 +65,9 @@ const FAQ = () => {
                         <div
                             key={index}
                             style={{
-                                background: 'white',
+                                background: 'var(--bg-surface)',
                                 borderRadius: '16px',
-                                border: '1px solid rgba(0,0,0,0.05)',
+                                border: '1px solid var(--border)',
                                 overflow: 'hidden',
                                 boxShadow: openIndex === index ? '0 8px 24px rgba(79, 70, 229, 0.12)' : '0 2px 8px rgba(0,0,0,0.04)',
                                 transition: 'all 0.3s ease'
@@ -77,7 +77,7 @@ const FAQ = () => {
                                 onClick={() => toggleFAQ(index)}
                                 style={{
                                     width: '100%',
-                                    padding: '20px 24px',
+                                    padding: 'clamp(16px, 3vw, 24px)',
                                     background: 'transparent',
                                     border: 'none',
                                     textAlign: 'left',
@@ -85,25 +85,26 @@ const FAQ = () => {
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    fontSize: '1.1rem',
+                                    fontSize: 'clamp(1rem, 2.5vw, 1.1rem)',
                                     fontWeight: 700,
                                     color: openIndex === index ? 'var(--primary)' : 'var(--text-main)',
                                     transition: 'color 0.3s ease'
                                 }}
                             >
-                                <span>{faq.question}</span>
+                                <span style={{ paddingRight: '12px' }}>{faq.question}</span>
                                 <span style={{
                                     fontSize: '1.5rem',
                                     transform: openIndex === index ? 'rotate(45deg)' : 'rotate(0deg)',
                                     transition: 'transform 0.3s ease',
-                                    color: 'var(--primary)'
+                                    color: 'var(--primary)',
+                                    flexShrink: 0
                                 }}>
                                     +
                                 </span>
                             </button>
                             {openIndex === index && (
                                 <div style={{
-                                    padding: '0 24px 24px 24px',
+                                    padding: '0 clamp(16px, 3vw, 24px) clamp(16px, 3vw, 24px)',
                                     color: 'var(--text-muted)',
                                     lineHeight: '1.7',
                                     fontSize: '1rem',
@@ -118,29 +119,31 @@ const FAQ = () => {
 
                 <div style={{
                     marginTop: '60px',
-                    padding: '32px',
+                    padding: 'clamp(24px, 5vw, 40px)',
                     background: 'linear-gradient(135deg, var(--primary) 0%, #6366f1 100%)',
-                    borderRadius: '20px',
+                    borderRadius: '24px',
                     textAlign: 'center',
-                    color: 'white'
+                    color: 'white',
+                    boxShadow: '0 20px 40px rgba(79, 70, 229, 0.2)'
                 }}>
                     <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '12px' }}>
                         Still have questions?
                     </h3>
-                    <p style={{ marginBottom: '20px', opacity: 0.9 }}>
+                    <p style={{ marginBottom: '24px', opacity: 0.9 }}>
                         Our support team is here to help you
                     </p>
                     <a
                         href="/contact"
                         style={{
                             display: 'inline-block',
-                            padding: '14px 32px',
+                            padding: '14px 40px',
                             background: 'white',
                             color: 'var(--primary)',
-                            borderRadius: '12px',
-                            fontWeight: 700,
+                            borderRadius: '50px',
+                            fontWeight: 800,
                             textDecoration: 'none',
-                            transition: 'transform 0.3s ease',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
                         }}
                         onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
                         onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}

@@ -11,9 +11,9 @@ async function checkUsers() {
             port: process.env.DB_PORT || 3306
         });
 
-        const [rows] = await db.execute('SELECT email, password FROM users');
+        const [rows] = await db.execute('SELECT email, password, name FROM users');
         console.log('--- USERS IN DB ---');
-        rows.forEach(row => console.log(`${row.email} / ${row.password}`));
+        rows.forEach(row => console.log(`${row.email} / ${row.password} / ${row.name}`));
         console.log('-------------------');
         await db.end();
     } catch (err) {

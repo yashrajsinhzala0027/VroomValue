@@ -208,21 +208,21 @@ const SellCarForm = () => {
     }
 
     return (
-        <div className="form-card-integrated" style={{ maxWidth: '800px', position: 'relative' }}>
-            <div className="form-header-container">
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <h2 style={{ fontSize: '1.8rem', fontWeight: '800' }}>Sell Your Car</h2>
-                    <div style={{ color: 'var(--primary)', fontWeight: '700', fontSize: '0.9rem' }}>Step {step} of 5</div>
+        <div className="form-card-integrated" style={{ width: '100%', maxWidth: '800px', position: 'relative', padding: 'clamp(16px, 4vw, 32px)', borderRadius: 'var(--radius-lg)' }}>
+            <div className="form-header-container" style={{ marginBottom: 'clamp(20px, 5vw, 32px)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                    <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', fontWeight: '900', color: 'var(--secondary)' }}>Sell Your Car</h2>
+                    <div style={{ color: 'var(--primary)', fontWeight: '800', fontSize: '0.85rem', background: 'var(--primary-glow)', padding: '4px 12px', borderRadius: '20px' }}>Step {step} of 5</div>
                 </div>
-                <div className="form-progress-bar">
-                    <div className="form-progress-fill" style={{ width: `${(step / 5) * 100}%` }}></div>
+                <div className="form-progress-bar" style={{ height: '6px', background: 'var(--bg-main)', borderRadius: '10px', overflow: 'hidden' }}>
+                    <div className="form-progress-fill" style={{ width: `${(step / 5) * 100}%`, height: '100%', background: 'var(--primary)', transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}></div>
                 </div>
             </div>
 
             {step === 1 && (
-                <div className="step-content">
-                    <h3 style={{ marginBottom: '20px', color: 'var(--primary)' }}>Basic Information</h3>
-                    <div className="form-group">
+                <div className="step-content animate-in">
+                    <h3 style={{ marginBottom: '20px', color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 800 }}>Basic Information</h3>
+                    <div className="form-group" style={{ marginBottom: '20px' }}>
                         <label className="form-label">Make</label>
                         <CustomSelect
                             name="make"
@@ -232,26 +232,23 @@ const SellCarForm = () => {
                             placeholder="Select Make"
                             error={errors.make}
                         />
-                        {errors.make && <div className="error-msg">{errors.make}</div>}
                     </div>
 
-                    <div className="form-grid-2">
+                    <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '20px' }}>
                         <div className="form-group">
                             <label className="form-label">Model</label>
-                            <input name="model" className={`form-control ${errors.model ? 'error' : ''}`} value={formData.model} onChange={handleChange} placeholder="e.g. Swift, City" />
-                            {errors.model && <div className="error-msg">{errors.model}</div>}
+                            <input name="model" className={`form-control ${errors.model ? 'error' : ''}`} value={formData.model} onChange={handleChange} placeholder="e.g. Swift, City" style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid var(--border)' }} />
                         </div>
                         <div className="form-group">
                             <label className="form-label">Variant</label>
-                            <input name="variant" className={`form-control ${errors.variant ? 'error' : ''}`} value={formData.variant} onChange={handleChange} placeholder="e.g. VXI, SX" />
-                            {errors.variant && <div className="error-msg">{errors.variant}</div>}
+                            <input name="variant" className={`form-control ${errors.variant ? 'error' : ''}`} value={formData.variant} onChange={handleChange} placeholder="e.g. VXI, SX" style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid var(--border)' }} />
                         </div>
                     </div>
 
-                    <div className="form-grid-mixed">
+                    <div className="form-grid-mixed" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                         <div className="form-group">
                             <label className="form-label">Year</label>
-                            <input type="number" name="year" className="form-control" value={formData.year} onChange={handleChange} />
+                            <input type="number" name="year" className="form-control" value={formData.year} onChange={handleChange} style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid var(--border)' }} />
                         </div>
                         <div className="form-group">
                             <label className="form-label">City</label>
@@ -266,7 +263,7 @@ const SellCarForm = () => {
                         </div>
                     </div>
 
-                    <button className="btn btn-primary" onClick={nextStep} style={{ width: '100%', marginTop: '20px' }}>Next: Specifications</button>
+                    <button className="btn btn-primary" onClick={nextStep} style={{ width: '100%', marginTop: '32px', height: '54px', fontWeight: 800 }}>Next: Specifications</button>
                 </div>
             )}
 
@@ -391,15 +388,15 @@ const SellCarForm = () => {
             )}
 
             {step === 4 && (
-                <div className="step-content">
-                    <h3 style={{ marginBottom: '20px', color: 'var(--primary)' }}>Vehicle Photos</h3>
-                    <p style={{ marginBottom: '16px', color: '#666' }}>Upload clear photos for better reach.</p>
+                <div className="step-content animate-in">
+                    <h3 style={{ marginBottom: '8px', color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 800 }}>Vehicle Photos</h3>
+                    <p style={{ marginBottom: '24px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Upload clear photos for better reach.</p>
 
-                    <div className="form-grid-2" style={{ gap: '20px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '16px' }}>
                         {['exterior-front', 'exterior-rear', 'exterior-left', 'exterior-right', 'interior-dashboard', 'interior-front-cabin'].map(type => (
                             <div key={type} className="form-group">
-                                <label className="form-label" style={{ fontSize: '0.8rem', color: '#64748b' }}>{type.replace(/-/g, ' ').toUpperCase()}</label>
-                                <label className="premium-upload-zone">
+                                <label className="form-label" style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 800 }}>{type.replace(/-/g, ' ').toUpperCase()}</label>
+                                <label className="premium-upload-zone" style={{ minHeight: '120px' }}>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -407,13 +404,14 @@ const SellCarForm = () => {
                                         onChange={(e) => handleImageUpload(e, type)}
                                     />
                                     <div className="upload-icon">📸</div>
-                                    <div className="upload-text">Click to Upload</div>
+                                    <div className="upload-text" style={{ fontSize: '0.7rem' }}>Tap to Upload</div>
 
                                     {formData.images.find(img => img.type === type) && (
                                         <div className="upload-preview-overlay">
                                             <img
                                                 src={formData.images.find(img => img.type === type).src}
                                                 alt="Preview"
+                                                style={{ objectFit: 'cover' }}
                                             />
                                             <div className="upload-check-badge">✓</div>
                                         </div>
@@ -422,11 +420,11 @@ const SellCarForm = () => {
                             </div>
                         ))}
                     </div>
-                    {errors.images && <div className="error-msg" style={{ marginBottom: '16px' }}>{errors.images}</div>}
+                    {errors.images && <div className="error-msg" style={{ marginTop: '16px' }}>{errors.images}</div>}
 
-                    <div style={{ display: 'flex', gap: '16px', marginTop: '20px' }}>
-                        <button className="btn btn-outline" onClick={() => setStep(3)} style={{ flex: 1 }}>Back</button>
-                        <button className="btn btn-primary" onClick={nextStep} style={{ flex: 1 }}>Next: Price</button>
+                    <div style={{ display: 'flex', gap: '16px', marginTop: '32px' }}>
+                        <button className="btn btn-outline" onClick={() => setStep(3)} style={{ flex: 1, height: '54px', fontWeight: 700 }}>Back</button>
+                        <button className="btn btn-primary" onClick={nextStep} style={{ flex: 1, height: '54px', fontWeight: 800 }}>Next: Price</button>
                     </div>
                 </div>
             )}
