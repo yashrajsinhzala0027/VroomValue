@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MAKES, MODEL_PROFILES, FUEL_TYPES, TRANSMISSIONS, CITIES, BODY_TYPES, COLORS, FEATURES, SEATS, OWNERS, RTO_REGIONS, INSURANCE_TYPES } from '../utils/constants';
@@ -234,21 +233,21 @@ const SellCarForm = () => {
                         />
                     </div>
 
-                    <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '20px' }}>
+                    <div className="form-grid-2">
                         <div className="form-group">
                             <label className="form-label">Model</label>
-                            <input name="model" className={`form-control ${errors.model ? 'error' : ''}`} value={formData.model} onChange={handleChange} placeholder="e.g. Swift, City" style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid var(--border)' }} />
+                            <input name="model" className={`form-control ${errors.model ? 'error' : ''}`} value={formData.model} onChange={handleChange} placeholder="e.g. Swift, City" />
                         </div>
                         <div className="form-group">
                             <label className="form-label">Variant</label>
-                            <input name="variant" className={`form-control ${errors.variant ? 'error' : ''}`} value={formData.variant} onChange={handleChange} placeholder="e.g. VXI, SX" style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid var(--border)' }} />
+                            <input name="variant" className={`form-control ${errors.variant ? 'error' : ''}`} value={formData.variant} onChange={handleChange} placeholder="e.g. VXI, SX" />
                         </div>
                     </div>
 
                     <div className="form-grid-mixed" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                         <div className="form-group">
                             <label className="form-label">Year</label>
-                            <input type="number" name="year" className="form-control" value={formData.year} onChange={handleChange} style={{ width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid var(--border)' }} />
+                            <input type="number" name="year" className="form-control" value={formData.year} onChange={handleChange} />
                         </div>
                         <div className="form-group">
                             <label className="form-label">City</label>
@@ -268,8 +267,8 @@ const SellCarForm = () => {
             )}
 
             {step === 2 && (
-                <div className="step-content">
-                    <h3 style={{ marginBottom: '20px', color: 'var(--primary)' }}>Technical Specifications</h3>
+                <div className="step-content animate-in">
+                    <h3 style={{ marginBottom: '20px', color: 'var(--primary)', fontSize: '1.2rem', fontWeight: 800 }}>Technical Specifications</h3>
 
                     <div className="form-grid-2">
                         <div className="form-group">
@@ -307,17 +306,31 @@ const SellCarForm = () => {
                     <div className="form-grid-2">
                         <div className="form-group">
                             <label className="form-label">Engine Capacity (CC)</label>
-                            <input type="number" name="engineCapacity" className="form-control" value={formData.engineCapacity} onChange={handleChange} placeholder="e.g. 1197" />
+                            <input
+                                type="number"
+                                name="engineCapacity"
+                                className="form-control"
+                                value={formData.engineCapacity}
+                                onChange={handleChange}
+                                placeholder="e.g. 1197"
+                            />
                         </div>
                         <div className="form-group">
-                            <label className="form-label">Mileage (kmpl)</label>
-                            <input type="number" name="mileageKmpl" className="form-control" value={formData.mileageKmpl} onChange={handleChange} placeholder="e.g. 21" />
+                            <label className="form-label">Mileage (KMPL)</label>
+                            <input
+                                type="number"
+                                name="mileageKmpl"
+                                className="form-control"
+                                value={formData.mileageKmpl}
+                                onChange={handleChange}
+                                placeholder="e.g. 21"
+                            />
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '16px', marginTop: '20px' }}>
-                        <button className="btn btn-outline" onClick={() => setStep(1)} style={{ flex: 1 }}>Back</button>
-                        <button className="btn btn-primary" onClick={nextStep} style={{ flex: 1 }}>Next: History</button>
+                    <div style={{ display: 'flex', gap: '16px', marginTop: '32px' }}>
+                        <button className="btn btn-outline" onClick={() => setStep(1)} style={{ flex: 1, height: '54px', fontWeight: 700 }}>Back</button>
+                        <button className="btn btn-primary" onClick={nextStep} style={{ flex: 1, height: '54px', fontWeight: 800 }}>Next: History</button>
                     </div>
                 </div>
             )}

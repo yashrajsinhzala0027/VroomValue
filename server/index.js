@@ -15,7 +15,7 @@ require('dotenv').config({ path: envPath });
 const app = express();
 const PORT = process.env.PORT || 5005;
 
-const db = require('./db/db');
+const supabase = require('./db/supabaseClient');
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -128,10 +128,11 @@ const calculateRealMarketPrice = (car) => {
 app.listen(PORT, '0.0.0.0', async () => {
     console.log(`Server running on http://localhost:${PORT}`);
     try {
-        await db.execute('SELECT 1');
-        console.log('✅ Database connected successfully');
+        const { error } = await supabase.from('cars').select('id').limit(1);
+        if (error) throw error;
+        console.log('✅ Supabase connected successfully');
     } catch (err) {
-        console.error('❌ Database connection failed:', err.message);
+        console.error('❌ Supabase connection failed:', err.message);
     }
 });
 
@@ -139,8 +140,14 @@ app.listen(PORT, '0.0.0.0', async () => {
 app.post('/api/signup', async (req, res) => {
     try {
         const { email, password, name, dob, phone } = req.body;
-        const [existing] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
-        if (existing.length > 0) return res.status(400).json({ message: "User already exists" });
+
+        const { data: existing, error: checkError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email);
+
+        if (checkError) throw checkError;
+        if (existing && existing.length > 0) return res.status(400).json({ message: "User already exists" });
 
         const newUser = {
             id: Date.now(),
@@ -152,10 +159,11 @@ app.post('/api/signup', async (req, res) => {
             role: email.includes('admin') ? 'admin' : 'user'
         };
 
-        await db.execute(
-            'INSERT INTO users (id, email, password, name, dob, phone, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [newUser.id, email, password, name, dob, phone, newUser.role]
-        );
+        const { error: insertError } = await supabase
+            .from('users')
+            .insert([newUser]);
+
+        if (insertError) throw insertError;
 
         const { password: _, ...userWithoutPass } = newUser;
         res.status(201).json(userWithoutPass);
@@ -172,9 +180,15 @@ app.post('/api/login', async (req, res) => {
         const logMsg = `${new Date().toISOString()} - 🔑 Login attempt: ${email} / ${password}\n`;
         fs.appendFileSync(path.join(__dirname, 'login_debug.log'), logMsg);
 
-        const [users] = await db.execute('SELECT * FROM users WHERE email = ? AND password = ?', [email, password]);
+        const { data: users, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .eq('password', password);
 
-        if (users.length === 0) {
+        if (error) throw error;
+
+        if (!users || users.length === 0) {
             fs.appendFileSync(path.join(__dirname, 'login_debug.log'), `${new Date().toISOString()} - ❌ Failed\n`);
             return res.status(401).json({ message: "Invalid credentials" });
         }
@@ -189,13 +203,42 @@ app.post('/api/login', async (req, res) => {
 });
 
 // 1. GET All Cars (Advanced Filtering via SQL)
+// Helper to map lowercase DB keys to camelCase for frontend
+const camelize = (obj) => {
+    if (!obj || typeof obj !== 'object') return obj;
+    if (Array.isArray(obj)) return obj.map(camelize);
+
+    const mapping = {
+        priceinr: 'priceINR',
+        bodytype: 'bodyType',
+        sellertype: 'sellerType',
+        enginecapacity: 'engineCapacity',
+        mileagekmpl: 'mileageKmpl',
+        insurancevalidity: 'insuranceValidity',
+        requestdate: 'requestDate',
+        customername: 'customerName',
+        customerphone: 'customerPhone',
+        customeremail: 'customerEmail',
+        requestedat: 'requestedAt',
+        carid: 'carId',
+        userid: 'userId',
+        buyerdetails: 'buyerDetails',
+        reservedetails: 'reserveDetails'
+    };
+
+    const newObj = {};
+    for (const key in obj) {
+        const mappedKey = mapping[key] || key;
+        newObj[mappedKey] = camelize(obj[key]);
+    }
+    return newObj;
+};
+
 app.get('/api/cars', async (req, res) => {
     console.log(`[GET /api/cars] URL: ${req.url}`);
     try {
-        let query = 'SELECT * FROM cars WHERE 1=1';
-        let params = [];
+        let sbQuery = supabase.from('cars').select('*');
 
-        // Helper to get param regardless of key or key[]
         const getParam = (key) => req.query[key] || req.query[`${key}[]`];
 
         const city = getParam('city');
@@ -215,131 +258,77 @@ app.get('/api/cars', async (req, res) => {
         const seats = getParam('seats');
         const owner = getParam('owner');
 
-        // Helper for multi-value filters
-        const addMultiFilter = (column, values, mapper = null) => {
-            if (!values) return;
-            let vals = Array.isArray(values) ? values : [values];
-            if (vals.length === 0) return;
-            if (mapper) vals = vals.map(mapper);
-
-            query += ` AND \`${column}\` IN (${vals.map(() => '?').join(',')})`;
-            params.push(...vals);
-        };
-
-        // Status filter: Public should ONLY see approved cars. Admin (includeExpired) should see all.
+        // Status filter
         if (includeExpired) {
-            query += ' AND `status` IN ("approved", "sold", "reserved")';
+            sbQuery = sbQuery.in('status', ['approved', 'sold', 'reserved']);
         } else {
-            query += ' AND `status` = "approved"';
-        }
-
-        if (!includeExpired) {
-            query += ' AND (auction IS NULL OR JSON_EXTRACT(auction, "$.endTime") > NOW() OR status = "approved")';
+            sbQuery = sbQuery.eq('status', 'approved');
         }
 
         if (city) {
-            query += ' AND LOWER(`city`) LIKE ?';
-            params.push(`%${city.toLowerCase()}%`);
+            sbQuery = sbQuery.ilike('city', `%${city}%`);
         }
 
-        addMultiFilter('make', make);
-        addMultiFilter('fuel', fuel);
-        addMultiFilter('transmission', transmission);
-        addMultiFilter('bodyType', bodyType);
-        addMultiFilter('color', color);
+        if (make) sbQuery = sbQuery.in('make', Array.isArray(make) ? make : [make]);
+        if (fuel) sbQuery = sbQuery.in('fuel', Array.isArray(fuel) ? fuel : [fuel]);
+        if (transmission) sbQuery = sbQuery.in('transmission', Array.isArray(transmission) ? transmission : [transmission]);
+        if (bodyType) sbQuery = sbQuery.in('bodyType', Array.isArray(bodyType) ? bodyType : [bodyType]);
+        if (color) sbQuery = sbQuery.in('color', Array.isArray(color) ? color : [color]);
 
-        // Map string filters to DB types - Handle "1st owner" -> 1
-        addMultiFilter('owner', owner, (o) => {
-            if (typeof o === 'number') return o;
-            const match = String(o).match(/\d+/);
-            return parseInt(match ? match[0] : o);
-        });
+        const parseNumFilter = (column, value, op) => {
+            if (!value) return;
+            const vals = Array.isArray(value) ? value : [value];
+            vals.forEach(val => {
+                const num = parseInt(String(val).match(/\d+/)?.[0] || val);
+                if (!isNaN(num)) {
+                    if (op === 'eq') sbQuery = sbQuery.eq(column, num);
+                    if (op === 'gte') sbQuery = sbQuery.gte(column, num);
+                    if (op === 'lte') sbQuery = sbQuery.lte(column, num);
+                }
+            });
+        };
 
-        // Handle "5 seater" -> 5
-        addMultiFilter('seats', seats, (s) => {
-            if (typeof s === 'number') return s;
-            const match = String(s).match(/\d+/);
-            return parseInt(match ? match[0] : s);
-        });
+        if (owner) parseNumFilter('owner', owner, 'eq');
+        if (seats) parseNumFilter('seats', seats, 'eq');
+        if (minPrice) sbQuery = sbQuery.gte('priceinr', parseInt(minPrice));
+        if (maxPrice) sbQuery = sbQuery.lte('priceinr', parseInt(maxPrice));
 
-        if (minPrice) {
-            query += ' AND `priceINR` >= ?';
-            params.push(parseInt(minPrice));
-        }
-        if (maxPrice) {
-            query += ' AND `priceINR` <= ?';
-            params.push(parseInt(maxPrice));
-        }
-
-        // Handle maxKms as array (OR logic - match ANY selected KMS range)
         if (maxKms) {
-            const kmsValues = Array.isArray(maxKms) ? maxKms : [maxKms];
-            if (kmsValues.length > 0) {
-                const kmsConditions = kmsValues.map(() => '`kms` <= ?');
-                query += ` AND (${kmsConditions.join(' OR ')})`;
-                params.push(...kmsValues.map(k => parseInt(k)));
-            }
+            const kms = Array.isArray(maxKms) ? maxKms : [maxKms];
+            sbQuery = sbQuery.lte('kms', Math.max(...kms.map(k => parseInt(k))));
         }
 
-        // Handle year as array (OR logic - match ANY selected year range)
         if (year) {
-            const yearValues = Array.isArray(year) ? year : [year];
-            if (yearValues.length > 0) {
-                const yearConditions = yearValues.map(() => '`year` >= ?');
-                query += ` AND (${yearConditions.join(' OR ')})`;
-                params.push(...yearValues.map(y => parseInt(y)));
-            }
+            const years = Array.isArray(year) ? year : [year];
+            sbQuery = sbQuery.gte('year', Math.min(...years.map(y => parseInt(y))));
         }
-
 
         if (isAuction === 'true') {
-            query += ' AND JSON_EXTRACT(`auction`, "$.isAuction") = true';
+            sbQuery = sbQuery.eq('auction->>isAuction', 'true');
         }
 
         if (features) {
             const featList = Array.isArray(features) ? features : [features];
-            if (featList.length > 0) {
-                const featConditions = featList.map(() => 'JSON_CONTAINS(`features`, ?)');
-                query += ` AND (${featConditions.join(' OR ')})`; // Match ANY, not ALL
-                params.push(...featList.map(f => JSON.stringify(f)));
-            }
+            // Match ANY feature using or
+            const orConditions = featList.map(f => `features->>contains.${f}`).join(',');
+            // Supabase doesn't have a direct 'contains in array' for or-any easily without filter 
+            // Simplified: Filter by first feature if or is complex, or use raw filter if needed.
+            // Using a simpler approach for now: eq search in JSONB
+            featList.forEach(f => {
+                sbQuery = sbQuery.filter('features', 'cs', JSON.stringify([f]));
+            });
         }
 
         if (search) {
-            query += ' AND (LOWER(`model`) LIKE ? OR LOWER(`make`) LIKE ? OR LOWER(`city`) LIKE ?)';
-            params.push(`%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`);
+            sbQuery = sbQuery.or(`model.ilike.%${search}%,make.ilike.%${search}%,city.ilike.%${search}%`);
         }
 
-        console.log(`[GET /api/cars] Executing SQL: ${query}`);
-        console.log(`[GET /api/cars] With Params:`, params);
+        const { data: cars, error } = await sbQuery;
 
-        const [cars] = await db.execute(query, params);
-        console.log(`[GET /api/cars] Found ${cars.length} results.`);
+        if (error) throw error;
+        console.log(`[GET /api/cars] Found ${cars ? cars.length : 0} results.`);
 
-        // Parse JSON fields safely
-        const parsedCars = cars.map(car => {
-            const safeParse = (str, fallback = []) => {
-                if (!str || typeof str !== 'string') return fallback;
-                try {
-                    return JSON.parse(str);
-                } catch (e) {
-                    console.error(`JSON Parse Error for field on car ${car.id}:`, e);
-                    return fallback;
-                }
-            };
-
-            return {
-                ...car,
-                images: safeParse(car.images),
-                features: safeParse(car.features),
-                valuation: safeParse(car.valuation, {}),
-                auction: safeParse(car.auction, null),
-                buyerDetails: safeParse(car.buyerDetails, null),
-                reserveDetails: safeParse(car.reserveDetails, null)
-            };
-        });
-
-        res.json(parsedCars);
+        res.json(camelize(cars) || []);
     } catch (err) {
         console.error("FILTER ERROR:", err);
         res.status(500).json({ message: err.message });
@@ -349,44 +338,24 @@ app.get('/api/cars', async (req, res) => {
 // 2. GET Single Car
 app.get('/api/cars/:id', async (req, res) => {
     const carId = parseInt(req.params.id);
-    if (isNaN(carId)) {
-        return res.status(400).json({ message: "Invalid Car ID format" });
-    }
+    if (isNaN(carId)) return res.status(400).json({ message: "Invalid Car ID format" });
 
     try {
-        const [rows] = await db.execute('SELECT * FROM cars WHERE id = ?', [carId]);
-        if (rows.length === 0) {
+        const { data, error } = await supabase
+            .from('cars')
+            .select('*')
+            .eq('id', carId)
+            .single();
+
+        if (error || !data) {
             console.log(`[GET /api/cars/${carId}] NOT FOUND`);
             return res.status(404).json({ message: "Car not found" });
         }
 
-        const car = rows[0];
-        console.log(`[GET /api/cars/${carId}] Raw row retrieved successfully`);
-
-        const safeParse = (str, fallback = []) => {
-            if (!str || typeof str !== 'string') return fallback;
-            try {
-                return JSON.parse(str);
-            } catch (e) {
-                console.error(`JSON Parse Error for car ${req.params.id}:`, e);
-                return fallback;
-            }
-        };
-
-        const parsedCar = {
-            ...car,
-            images: safeParse(car.images),
-            features: safeParse(car.features),
-            valuation: safeParse(car.valuation, {}),
-            auction: safeParse(car.auction, null),
-            buyerDetails: safeParse(car.buyerDetails, null),
-            reserveDetails: safeParse(car.reserveDetails, null)
-        };
-
-        res.json(parsedCar);
+        console.log(`[GET /api/cars/${carId}] Car retrieved successfully`);
+        res.json(camelize(data));
     } catch (err) {
         console.error(`💥 [GET /api/cars/${req.params.id}] ERROR:`, err.stack);
-        fs.appendFileSync(path.join(__dirname, 'server_log.txt'), `${new Date().toISOString()} - ERROR /api/cars/${req.params.id}: ${err.stack}\n`);
         res.status(500).json({ message: "Internal Server Error", details: err.message });
     }
 });
@@ -395,21 +364,17 @@ app.get('/api/cars/:id', async (req, res) => {
 app.post('/api/cars/:id/bid', async (req, res) => {
     try {
         const { userId, amount } = req.body;
-        const [rows] = await db.execute('SELECT * FROM cars WHERE id = ?', [req.params.id]);
-        if (rows.length === 0) return res.status(404).json({ message: "Car not found" });
+        const carId = req.params.id;
 
-        const car = rows[0];
-        const safeParse = (str, fallback = []) => {
-            if (!str || typeof str !== 'string') return fallback;
-            try {
-                return JSON.parse(str);
-            } catch (e) {
-                console.error(`JSON Parse Error:`, e);
-                return fallback;
-            }
-        };
+        const { data: car, error: fetchError } = await supabase
+            .from('cars')
+            .select('*')
+            .eq('id', carId)
+            .single();
 
-        let auction = safeParse(car.auction, null);
+        if (fetchError || !car) return res.status(404).json({ message: "Car not found" });
+
+        let auction = car.auction;
 
         if (!auction || !auction.isAuction) return res.status(400).json({ message: "Not an auction" });
         if (new Date(auction.endTime) < new Date()) return res.status(400).json({ message: "Auction ended" });
@@ -421,8 +386,13 @@ app.post('/api/cars/:id/bid', async (req, res) => {
         auction.bids = auction.bids || [];
         auction.bids.unshift({ id: Date.now(), carId: car.id, userId, amount, timestamp: new Date().toISOString() });
 
-        await db.execute('UPDATE cars SET auction = ? WHERE id = ?', [JSON.stringify(auction), car.id]);
-        res.json({ ...car, auction });
+        const { error: updateError } = await supabase
+            .from('cars')
+            .update({ auction })
+            .eq('id', carId);
+
+        if (updateError) throw updateError;
+        res.json(camelize({ ...car, auction }));
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -431,23 +401,13 @@ app.post('/api/cars/:id/bid', async (req, res) => {
 // 4. GET Sell Requests
 app.get('/api/sell-requests', async (req, res) => {
     try {
-        const [rows] = await db.execute('SELECT * FROM sell_requests WHERE status = "pending"');
-        const safeParse = (str, fallback = []) => {
-            if (!str || typeof str !== 'string') return fallback;
-            try {
-                return JSON.parse(str);
-            } catch (e) {
-                console.error(`JSON Parse Error in sell-requests:`, e);
-                return fallback;
-            }
-        };
+        const { data, error } = await supabase
+            .from('sell_requests')
+            .select('*')
+            .eq('status', 'pending');
 
-        const parsed = rows.map(r => ({
-            ...r,
-            valuation: safeParse(r.valuation, {}),
-            images: safeParse(r.images, [])
-        }));
-        res.json(parsed);
+        if (error) throw error;
+        res.json(camelize(data) || []);
     } catch (err) {
         fs.appendFileSync(path.join(__dirname, 'error.log'), `${new Date().toISOString()} - ${err.stack}\n`);
         res.status(500).json({ message: err.message });
@@ -469,27 +429,26 @@ app.post('/api/sell-requests', async (req, res) => {
             kms: Number(req.body.kms) || 0,
             owner: typeof req.body.owner === 'string' ? (parseInt(req.body.owner) || 1) : (req.body.owner || 1),
             city: req.body.city || 'Default',
-            engineCapacity: Number(req.body.engineCapacity) || 0,
-            mileageKmpl: Number(req.body.mileageKmpl) || 0,
+            enginecapacity: Number(req.body.engineCapacity) || 0,
+            mileagekmpl: Number(req.body.mileageKmpl) || 0,
             seats: typeof req.body.seats === 'string' ? (parseInt(req.body.seats) || 5) : (req.body.seats || 5),
             color: req.body.color || 'White',
             rto: req.body.rto || '',
-            insuranceValidity: req.body.insuranceValidity || '',
-            accidental: req.body.accidental ? 1 : 0,
-            serviceHistory: req.body.serviceHistory ? 1 : 0,
+            insurancevalidity: req.body.insuranceValidity || '',
+            accidental: req.body.accidental ? true : false,
+            servicehistory: req.body.serviceHistory ? true : false,
             description: req.body.description || '',
             status: 'pending',
-            requestDate: new Date().toISOString().slice(0, 19).replace('T', ' '),
-            valuation: JSON.stringify(valuation),
-            images: JSON.stringify(req.body.images || [])
+            requestdate: new Date().toISOString(),
+            valuation: valuation,
+            images: req.body.images || []
         };
 
-        const keys = Object.keys(newRequest);
-        const placeholders = keys.map(() => '?').join(', ');
-        const sql = `INSERT INTO sell_requests (${keys.join(', ')}) VALUES (${placeholders})`;
-        const values = keys.map(k => newRequest[k]);
+        const { error } = await supabase
+            .from('sell_requests')
+            .insert([newRequest]);
 
-        await db.execute(sql, values);
+        if (error) throw error;
         res.status(201).json(newRequest);
     } catch (err) {
         fs.appendFileSync(path.join(__dirname, 'error.log'), `${new Date().toISOString()} - SELL_REQ ERROR: ${err.stack}\n`);
@@ -507,54 +466,48 @@ app.post('/api/valuation', (req, res) => {
 app.post('/api/sell-requests/:id/approve', async (req, res) => {
     console.log(`[APPROVE] Starting approval for request ID: ${req.params.id}`);
     try {
-        console.log(`[APPROVE] Fetching request...`);
-        const [requests] = await db.execute('SELECT * FROM sell_requests WHERE id = ?', [req.params.id]);
-        if (requests.length === 0) {
+        const { data: request, error: fetchError } = await supabase
+            .from('sell_requests')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+
+        if (fetchError || !request) {
             console.log(`[APPROVE] Request not found: ${req.params.id}`);
             return res.status(404).json({ message: "Request not found" });
         }
 
-        const request = requests[0];
         const overrides = req.body || {};
-        console.log(`[APPROVE] Request data found for ${request.make} ${request.model}`);
-        console.log(`[APPROVE] Overrides:`, JSON.stringify(overrides));
-
-        // Update request status
-        console.log(`[APPROVE] Updating status to approved...`);
-        await db.execute('UPDATE sell_requests SET status = "approved" WHERE id = ?', [req.params.id]);
-
-        // Parse valuation for price fallback
-        let valuationData = {};
-        try {
-            valuationData = typeof request.valuation === 'string' ? JSON.parse(request.valuation) : (request.valuation || {});
-        } catch (e) {
-            console.log(`[APPROVE] Valuation parse error, using defaults`);
-            valuationData = { fairPrice: 0 };
-        }
+        const valuationData = request.valuation || { fairPrice: 0 };
         const fairPrice = valuationData.fairPrice || 0;
 
-        // Move to cars table with filtering
+        // Update request status
+        await supabase
+            .from('sell_requests')
+            .update({ status: 'approved' })
+            .eq('id', req.params.id);
+
         const newCarData = {
             ...request,
-            priceINR: overrides.priceINR ? Number(overrides.priceINR) : (request.priceINR || fairPrice),
+            priceinr: overrides.priceINR ? Number(overrides.priceINR) : (request.priceinr || fairPrice),
             kms: overrides.kms ? Number(overrides.kms) : request.kms,
             id: Date.now(),
             status: 'approved',
-            valuation: JSON.stringify(valuationData),
-            features: JSON.stringify([]),
-            auction: JSON.stringify({ isAuction: false }),
-            images: typeof request.images === 'string' ? request.images : JSON.stringify(request.images || []),
-            bodyType: request.bodyType || 'SUV',
-            certified: 0,
-            sellerType: 'Individual'
+            valuation: valuationData,
+            features: [],
+            auction: { isAuction: false },
+            images: request.images || [],
+            bodytype: request.bodytype || 'SUV',
+            certified: false,
+            sellertype: 'Individual'
         };
 
         const validCols = [
             'id', 'make', 'model', 'variant', 'year', 'kms', 'fuel', 'transmission',
-            'priceINR', 'city', 'bodyType', 'certified', 'owner', 'status', 'sellerType',
-            'engineCapacity', 'mileageKmpl', 'description', 'valuation', 'features',
-            'auction', 'images', 'seats', 'color', 'rto', 'insuranceValidity',
-            'accidental', 'serviceHistory', 'buyerDetails', 'reserveDetails'
+            'priceinr', 'city', 'bodytype', 'certified', 'owner', 'status', 'sellertype',
+            'enginecapacity', 'mileagekmpl', 'description', 'valuation', 'features',
+            'auction', 'images', 'seats', 'color', 'rto', 'insurancevalidity',
+            'accidental', 'servicehistory', 'buyerdetails', 'reservedetails'
         ];
 
         const filteredCar = {};
@@ -562,40 +515,27 @@ app.post('/api/sell-requests/:id/approve', async (req, res) => {
             if (newCarData[col] !== undefined) filteredCar[col] = newCarData[col];
         });
 
-        const keys = Object.keys(filteredCar);
-        const placeholders = keys.map(() => '?').join(', ');
-        const sql = `INSERT INTO cars (${keys.join(', ')}) VALUES (${placeholders})`;
-        const values = keys.map(k => (typeof filteredCar[k] === 'object' && filteredCar[k] !== null) ? JSON.stringify(filteredCar[k]) : filteredCar[k]);
+        const { error: insertError } = await supabase
+            .from('cars')
+            .insert([filteredCar]);
 
-        console.log(`[APPROVE] Executing SQL INSERT...`);
-
-        try {
-            await db.execute(sql, values);
-            console.log(`[APPROVE] Car inserted successfully!`);
-        } catch (insertErr) {
-            console.error(`[APPROVE] INSERT FAILED:`, insertErr);
-            throw insertErr;
-        }
+        if (insertError) throw insertError;
 
         res.json({ message: "Request approved and car moved to inventory", carId: newCarData.id });
     } catch (err) {
         console.error("APPROVE ERROR:", err);
-        try {
-            fs.appendFileSync(path.join(__dirname, 'error.log'), `${new Date().toISOString()} - APPROVE ERROR: ${err.message}\n${err.stack}\n`);
-        } catch (logErr) {
-            console.error("LOGGING ERROR:", logErr);
-        }
-        res.status(500).json({
-            message: err.message,
-            stack: err.stack,
-            step: "Final catch"
-        });
+        res.status(500).json({ message: err.message });
     }
 });
 
 app.post('/api/sell-requests/:id/reject', async (req, res) => {
     try {
-        await db.execute('UPDATE sell_requests SET status = "rejected" WHERE id = ?', [req.params.id]);
+        const { error } = await supabase
+            .from('sell_requests')
+            .update({ status: 'rejected' })
+            .eq('id', req.params.id);
+
+        if (error) throw error;
         res.json({ message: "Request rejected" });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -605,26 +545,25 @@ app.post('/api/sell-requests/:id/reject', async (req, res) => {
 // 7. Auction Management
 app.post('/api/cars/:id/end-auction', async (req, res) => {
     try {
-        const [rows] = await db.execute('SELECT * FROM cars WHERE id = ?', [req.params.id]);
-        if (rows.length === 0) return res.status(404).json({ message: "Car not found" });
+        const { data: car, error: fetchError } = await supabase
+            .from('cars')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
 
-        const car = rows[0];
-        const safeParse = (str, fallback = []) => {
-            if (!str || typeof str !== 'string') return fallback;
-            try {
-                return JSON.parse(str);
-            } catch (e) {
-                console.error(`JSON Parse Error:`, e);
-                return fallback;
-            }
-        };
-        let auction = safeParse(car.auction, { isAuction: false });
+        if (fetchError || !car) return res.status(404).json({ message: "Car not found" });
 
+        let auction = car.auction || { isAuction: false };
         auction.isAuction = false;
         auction.ended = true;
 
-        await db.execute('UPDATE cars SET status = "sold", auction = ? WHERE id = ?', [JSON.stringify(auction), car.id]);
-        res.json({ ...car, auction });
+        const { error: updateError } = await supabase
+            .from('cars')
+            .update({ status: 'sold', auction })
+            .eq('id', req.params.id);
+
+        if (updateError) throw updateError;
+        res.json(camelize({ ...car, auction }));
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -636,18 +575,19 @@ app.post('/api/cars', async (req, res) => {
             id: Date.now(),
             ...req.body,
             status: req.body.status || 'approved',
-            images: JSON.stringify(req.body.images || []),
-            features: JSON.stringify(req.body.features || []),
-            valuation: JSON.stringify(req.body.valuation || {}),
-            auction: JSON.stringify(req.body.auction || { isAuction: false }),
-            buyerDetails: JSON.stringify(req.body.buyerDetails || null),
-            reserveDetails: JSON.stringify(req.body.reserveDetails || null)
+            images: req.body.images || [],
+            features: req.body.features || [],
+            valuation: req.body.valuation || {},
+            auction: req.body.auction || { isAuction: false },
+            buyerdetails: req.body.buyerDetails || null,
+            reservedetails: req.body.reserveDetails || null
         };
-        const keys = Object.keys(carData);
-        const placeholders = keys.map(() => '?').join(', ');
-        const sql = `INSERT INTO cars (${keys.join(', ')}) VALUES (${placeholders})`;
-        const values = keys.map(k => carData[k]);
-        await db.execute(sql, values);
+
+        const { error } = await supabase
+            .from('cars')
+            .insert([carData]);
+
+        if (error) throw error;
         res.status(201).json(carData);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -657,15 +597,12 @@ app.post('/api/cars', async (req, res) => {
 app.put('/api/cars/:id', async (req, res) => {
     try {
         const updates = req.body;
-        const keys = Object.keys(updates);
-        if (keys.length === 0) return res.status(400).json({ message: "No fields to update" });
+        const { error } = await supabase
+            .from('cars')
+            .update(updates)
+            .eq('id', req.params.id);
 
-        const setClause = keys.map(k => `${k} = ?`).join(', ');
-        const values = keys.map(k => (typeof updates[k] === 'object' && updates[k] !== null) ? JSON.stringify(updates[k]) : updates[k]);
-        values.push(req.params.id);
-
-        const sql = `UPDATE cars SET ${setClause} WHERE id = ?`;
-        await db.execute(sql, values);
+        if (error) throw error;
         res.json({ message: "Car updated successfully" });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -674,7 +611,12 @@ app.put('/api/cars/:id', async (req, res) => {
 
 app.delete('/api/cars/:id', async (req, res) => {
     try {
-        await db.execute('DELETE FROM cars WHERE id = ?', [req.params.id]);
+        const { error } = await supabase
+            .from('cars')
+            .delete()
+            .eq('id', req.params.id);
+
+        if (error) throw error;
         res.json({ message: "Car deleted successfully" });
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -683,9 +625,6 @@ app.delete('/api/cars/:id', async (req, res) => {
 
 app.post('/api/cars/:id/start-auction', async (req, res) => {
     try {
-        const [rows] = await db.execute('SELECT * FROM cars WHERE id = ?', [req.params.id]);
-        if (rows.length === 0) return res.status(404).json({ message: "Car not found" });
-
         const auction = {
             isAuction: true,
             ...req.body,
@@ -694,8 +633,13 @@ app.post('/api/cars/:id/start-auction', async (req, res) => {
             bids: []
         };
 
-        await db.execute('UPDATE cars SET auction = ? WHERE id = ?', [JSON.stringify(auction), req.params.id]);
-        res.json({ ...rows[0], auction });
+        const { error } = await supabase
+            .from('cars')
+            .update({ auction })
+            .eq('id', req.params.id);
+
+        if (error) throw error;
+        res.json({ message: "Auction started", auction });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -704,8 +648,12 @@ app.post('/api/cars/:id/start-auction', async (req, res) => {
 // Test Drives
 app.get('/api/test-drives', async (req, res) => {
     try {
-        const [rows] = await db.execute('SELECT * FROM test_drives');
-        res.json(rows);
+        const { data, error } = await supabase
+            .from('test_drives')
+            .select('*');
+
+        if (error) throw error;
+        res.json(camelize(data) || []);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -713,19 +661,18 @@ app.get('/api/test-drives', async (req, res) => {
 
 app.post('/api/test-drives', async (req, res) => {
     try {
-        console.log("Create Test Drive Payload:", req.body);
         const newDrive = {
             id: Date.now(),
             ...req.body,
             status: 'pending',
-            requestedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+            requestedat: new Date().toISOString()
         };
-        const keys = Object.keys(newDrive);
-        const placeholders = keys.map(() => '?').join(', ');
-        const sql = `INSERT INTO test_drives (${keys.join(', ')}) VALUES (${placeholders})`;
-        const values = keys.map(k => newDrive[k]);
 
-        await db.execute(sql, values);
+        const { error } = await supabase
+            .from('test_drives')
+            .insert([newDrive]);
+
+        if (error) throw error;
         res.status(201).json(newDrive);
     } catch (err) {
         res.status(500).json({ message: err.message });

@@ -1913,6 +1913,111 @@ input[type="checkbox"]:checked::after {
     border: 1px solid #f1f5f9;
 }
 
+/* Global Form Elements for VroomValue */
+.form-card-integrated .form-group {
+    margin-bottom: 24px !important;
+    width: 100% !important;
+}
+
+.form-card-integrated .form-label {
+    display: block !important;
+    font-size: 0.8rem !important;
+    font-weight: 800 !important;
+    color: #475569 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    margin-bottom: 12px !important;
+}
+
+.form-card-integrated input.form-control,
+.form-card-integrated textarea.form-control {
+    width: 100% !important;
+    height: 54px !important;
+    padding: 0 20px !important;
+    background: #fcfdfe !important;
+    border: 2px solid #eef2f6 !important;
+    border-radius: 14px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    transition: all 0.3s ease !important;
+    outline: none !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+.form-card-integrated textarea.form-control {
+    height: auto !important;
+    padding: 16px 20px !important;
+    min-height: 120px !important;
+}
+
+.form-card-integrated .form-control:focus {
+    border-color: var(--primary) !important;
+    background: white !important;
+    box-shadow: 0 0 0 4px var(--primary-glow) !important;
+}
+
+.form-card-integrated .form-grid-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    width: 100% !important;
+}
+
+@media (max-width: 600px) {
+    .form-card-integrated .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+
+.form-control {
+    width: 100% !important;
+    padding: 14px 18px !important;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1e293b;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
 /* --- Sell Car Form Premium UI --- */
 .form-header-container {
     margin-bottom: 32px;
