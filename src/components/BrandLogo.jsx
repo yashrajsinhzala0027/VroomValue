@@ -5,20 +5,20 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
 
     const brandStyles = {
         'VroomValue': { bg: 'transparent', color: 'var(--primary)', logo: '/assets/logo_new.png', initial: 'V' },
-        'Maruti Suzuki': { bg: '#fff', color: '#2563eb', initial: 'MS', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/maruti-suzuki.png?v=1629973397992&q=80' },
+        'Maruti Suzuki': { bg: '#fff', color: '#2563eb', initial: 'MS', logo: '/assets/brands/maruti.svg' },
         'Hyundai': { bg: '#fff', color: '#1e3a8a', initial: 'H', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/hyundai.png?v=1629973397992&q=80' },
         'Tata': { bg: '#fff', color: '#0369a1', initial: 'T', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/tata.png?v=1629973397992&q=80' },
-        'Mahindra': { bg: '#fff', color: '#dc2626', initial: 'M', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/mahindra.png?v=1630303080000&q=80' },
+        'Mahindra': { bg: '#fff', color: '#dc2626', initial: 'M', logo: '/assets/brands/mahindra.png' },
         'Honda': { bg: '#fff', color: '#ef4444', initial: 'H', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/honda.png?v=1629973397992&q=80' },
         'Toyota': { bg: '#fff', color: '#b91c1c', initial: 'T', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/toyota.png?v=1629973397992&q=80' },
         'Kia': { bg: '#fff', color: '#991b1b', initial: 'K', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/kia.png?v=1630500263590&q=80' },
         'Renault': { bg: '#fff', color: '#1e293b', initial: 'R', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/renault.png?v=1629973397992&q=80' },
         'Volkswagen': { bg: '#fff', color: '#0284c7', initial: 'V', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/volkswagen.png?v=1629973397992&q=80' },
-        'Skoda': { bg: '#fff', color: '#15803d', initial: 'S', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/skoda.png?v=1629973397992&q=80' },
-        'MG': { bg: '#fff', color: '#dc2626', initial: 'MG', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/91/MG_Motor_logo.svg' },
-        'Nissan': { bg: '#fff', color: '#475569', initial: 'N', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/nissan.png?v=1629973397992&q=80' },
-        'Ford': { bg: '#fff', color: '#1d4ed8', initial: 'F', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/ford.png?v=1629973397992&q=80' },
-        'Jeep': { bg: '#fff', color: '#334155', initial: 'J', logo: 'https://imgd.aeplcdn.com/0x0/cw/brands/logos/jeep.png?v=1629973397992&q=80' },
+        'Skoda': { bg: '#fff', color: '#15803d', initial: 'S', logo: '/assets/brands/skoda.png' },
+        'MG': { bg: '#fff', color: '#dc2626', initial: 'MG', logo: '/assets/brands/mg.png' },
+        'Nissan': { bg: '#fff', color: '#475569', initial: 'N', logo: '/assets/brands/nissan.png' },
+        'Ford': { bg: '#fff', color: '#1d4ed8', initial: 'F', logo: '/assets/brands/ford.png' },
+        'Jeep': { bg: '#fff', color: '#334155', initial: 'J', logo: '/assets/brands/jeep.png' },
     };
 
     const isMainLogo = !make || make === 'VroomValue';

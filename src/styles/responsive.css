@@ -121,7 +121,7 @@
 
     /* Valuation Wizard / Forms */
     .valuation-wizard-container {
-        padding: 10px;
+        padding: calc(var(--header-height) + 10px) 10px 10px;
         height: 100vh;
         display: flex;
         flex-direction: column;

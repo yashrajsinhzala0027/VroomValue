@@ -51,6 +51,13 @@
   /* Wider for 1440p/1920p desktop support */
   --section-spacing: 80px;
   --gutter: 40px;
+
+  /* Layout Variables */
+  --header-height: 80px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
 }
 
 /* Dark Mode Overrides */

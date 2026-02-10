@@ -11,7 +11,7 @@ const Footer = () => {
                 <div className="footer-grid">
                     <div className="footer-col brand-col">
                         <Link to="/" className="footer-logo-link" style={{ display: 'inline-block', marginBottom: '24px', textDecoration: 'none' }}>
-                            <BrandLogo size={140} />
+                            <BrandLogo size={140} className="footer-logo-invert" />
                         </Link>
                         <p className="footer-description">
                             India's premier digital marketplace for certified pre-owned vehicles. Experience trust, transparency, and high-intelligence commerce.

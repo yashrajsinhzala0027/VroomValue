@@ -2433,11 +2433,11 @@ input[type="checkbox"]:checked::after {
    ========================================================================== */
 
 .valuation-wizard-container {
-    min-height: calc(100vh - var(--header-height));
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-8) var(--space-4);
+    padding: calc(var(--header-height) + 0.5px) var(--space-4) var(--space-8);
     background: radial-gradient(circle at top right, rgba(79, 70, 229, 0.05), transparent 40%),
         radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.05), transparent 40%);
 }

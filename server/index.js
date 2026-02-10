@@ -13,7 +13,7 @@ const envPath = fs.existsSync(path.join(__dirname, '.env'))
 require('dotenv').config({ path: envPath });
 
 const app = express();
-const PORT = 5005;
+const PORT = process.env.PORT || 5005;
 
 const db = require('./db/db');
 

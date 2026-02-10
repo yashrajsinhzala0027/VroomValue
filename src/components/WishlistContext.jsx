@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 import { useToast } from './Toasts';
 
 const WishlistContext = createContext();
@@ -10,16 +11,32 @@ export const WishlistProvider = ({ children }) => {
     const [wishlist, setWishlist] = useState([]);
     const { addToast } = useToast();
 
-    // Load from local storage on mount
+
+
+
+
+    const { currentUser } = useAuth();
+
+    // Load from local storage whenever currentUser changes
     useEffect(() => {
-        const saved = JSON.parse(localStorage.getItem('VroomValue_saved') || '[]');
-        setWishlist(saved);
-    }, []);
+        if (currentUser) {
+            // User logged in: Load their specific list
+            const userKey = `VroomValue_wishlist_${currentUser.id}`;
+            const saved = JSON.parse(localStorage.getItem(userKey) || '[]');
+            setWishlist(saved);
+        } else {
+            // User logged out: Clear list or load guest list (optional, here we clear for security)
+            setWishlist([]);
+        }
+    }, [currentUser]);
 
     // Sync to local storage whenever wishlist changes
     useEffect(() => {
-        localStorage.setItem('VroomValue_saved', JSON.stringify(wishlist));
-    }, [wishlist]);
+        if (currentUser) {
+            const userKey = `VroomValue_wishlist_${currentUser.id}`;
+            localStorage.setItem(userKey, JSON.stringify(wishlist));
+        }
+    }, [wishlist, currentUser]);
 
     const addToWishlist = (car) => {
         if (wishlist.find(c => c.id === car.id)) return;

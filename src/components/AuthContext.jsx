@@ -22,6 +22,9 @@ export const AuthProvider = ({ children }) => {
 
     const login = React.useCallback(async (email, password) => {
         const user = await loginUser({ email, password });
+        if (!user) {
+            throw new Error("Invalid email or password");
+        }
         localStorage.setItem('VroomValue_user', JSON.stringify(user));
         setCurrentUser(user);
         return user;

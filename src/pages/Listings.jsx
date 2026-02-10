@@ -206,7 +206,7 @@ const Listings = () => {
                                 <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Showing {cars.length} elite certified vehicles</p>
                             </div>
                             <div className="desktop-only" style={{ width: '280px' }}>
-                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '1px' }}>Sort Logistics</div>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '20px', letterSpacing: '1px' }}>Sort Logistics</div>
                                 <CustomSelect
                                     name="sort"
                                     value={sortBy}

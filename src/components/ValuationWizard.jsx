@@ -18,6 +18,11 @@ const ValuationWizard = () => {
     const [result, setResult] = useState(null);
     const [showCancelModal, setShowCancelModal] = useState(false);
 
+    // Scroll to top when step changes
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [step]);
+
     const [selection, setSelection] = useState({
         make: '',
         model: '',
