@@ -198,7 +198,14 @@ app.post('/api/login', async (req, res) => {
         res.json(userWithoutPass);
     } catch (err) {
         fs.appendFileSync(path.join(__dirname, 'login_debug.log'), `${new Date().toISOString()} - 💥 Error: ${err.stack || err}\n`);
-        res.status(500).json({ message: err.message || "Internal Server Error" });
+
+        // Helpful hint for the user
+        const isMissingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const msg = isMissingKey
+            ? "Login failed: SUPABASE_SERVICE_ROLE_KEY is missing in your server/.env. Please follow the instructions I gave you to add it!"
+            : (err.message || "Internal Server Error");
+
+        res.status(500).json({ message: msg });
     }
 });
 
