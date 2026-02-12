@@ -76,48 +76,56 @@ const Listings = () => {
             }
         });
 
-        getCars(freshFilters).then(data => {
-            if (!isCurrent) return;
+        getCars(freshFilters)
+            .then(data => {
+                if (!isCurrent) return;
 
-            let results = Array.isArray(data) ? data : [];
+                let results = Array.isArray(data) ? data : [];
 
-            // Ultra-Robust Number Parser
-            const parseNum = (val) => {
-                if (typeof val === 'number') return val;
-                if (!val) return 0;
-                const cleaned = val.toString().replace(/[^0-9.]/g, '');
-                return Number(cleaned) || 0;
-            };
+                // Ultra-Robust Number Parser
+                const parseNum = (val) => {
+                    if (typeof val === 'number') return val;
+                    if (!val) return 0;
+                    const cleaned = val.toString().replace(/[^0-9.]/g, '');
+                    return Number(cleaned) || 0;
+                };
 
-            // Apply Sorting
-            const sortedResults = [...results];
-            switch (currentSort) {
-                case 'price_asc':
-                    sortedResults.sort((a, b) => parseNum(a.priceINR) - parseNum(b.priceINR));
-                    break;
-                case 'price_desc':
-                    sortedResults.sort((a, b) => parseNum(b.priceINR) - parseNum(a.priceINR));
-                    break;
-                case 'km_asc':
-                    sortedResults.sort((a, b) => parseNum(a.kms) - parseNum(b.kms));
-                    break;
-                case 'year_desc':
-                    sortedResults.sort((a, b) => parseNum(b.year) - parseNum(a.year));
-                    break;
-                case 'newest':
-                    sortedResults.sort((a, b) => parseNum(b.id) - parseNum(a.id));
-                    break;
-                default: // relevance
-                    sortedResults.sort((a, b) => {
-                        if (a.certified !== b.certified) return a.certified ? -1 : 1;
-                        return parseNum(b.year) - parseNum(a.year);
-                    });
-            }
+                // Apply Sorting
+                const sortedResults = [...results];
+                switch (currentSort) {
+                    case 'price_asc':
+                        sortedResults.sort((a, b) => parseNum(a.priceINR) - parseNum(b.priceINR));
+                        break;
+                    case 'price_desc':
+                        sortedResults.sort((a, b) => parseNum(b.priceINR) - parseNum(a.priceINR));
+                        break;
+                    case 'km_asc':
+                        sortedResults.sort((a, b) => parseNum(a.kms) - parseNum(b.kms));
+                        break;
+                    case 'year_desc':
+                        sortedResults.sort((a, b) => parseNum(b.year) - parseNum(a.year));
+                        break;
+                    case 'newest':
+                        sortedResults.sort((a, b) => parseNum(b.id) - parseNum(a.id));
+                        break;
+                    default: // relevance
+                        sortedResults.sort((a, b) => {
+                            if (a.certified !== b.certified) return a.certified ? -1 : 1;
+                            return parseNum(b.year) - parseNum(a.year);
+                        });
+                }
 
-            setCars(sortedResults);
-            setLoading(false);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+                setCars(sortedResults);
+                setLoading(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            })
+            .catch(err => {
+                console.error("Failed to fetch cars:", err);
+                if (isCurrent) {
+                    setCars([]);
+                    setLoading(false);
+                }
+            });
 
         return () => { isCurrent = false; };
     }, [location.search]);

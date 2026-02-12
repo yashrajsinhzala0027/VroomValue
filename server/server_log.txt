@@ -1335,3 +1335,7 @@
 2026-02-10T12:15:37.575Z - GET /api/cars?isAuction=true
 2026-02-10T12:18:38.839Z - GET /api/cars
 2026-02-10T12:19:03.739Z - GET /api/cars
+2026-02-12T08:28:42.528Z - GET /api/cars
+2026-02-12T08:28:43.887Z - GET /api/cars
+2026-02-12T08:28:53.597Z - GET /api/cars
+2026-02-12T08:28:53.976Z - GET /api/cars
