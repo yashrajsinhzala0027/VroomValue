@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getCars, deleteCarListing, getTestDrives, updateCarListing, getSellRequests, approveSellRequest, rejectSellRequest, resetApp, endAuction, startAuction } from '../api/mockApi';
+import { getCars, deleteCarListing, getTestDrives, updateCarListing, getSellRequests, approveSellRequest, rejectSellRequest, resetApp, endAuction, startAuction, unreserveCar } from '../api/mockApi';
 import ConfirmModal from './ConfirmModal';
 import { useAuth } from './AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,27 +11,30 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
     const { addToast } = useToast();
     const [cars, setCars] = useState([]);
-    const [testDrives, setTestDrives] = useState([]);
     const [sellRequests, setSellRequests] = useState([]);
+    const [testDrives, setTestDrives] = useState([]);
+    const [activeTab, setActiveTab] = useState('inventory');
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('inventory'); // inventory | test-drives | sell-requests
+
+    // Stats
+    const totalInventory = cars.filter(c => c.status === 'approved' && !c.auction?.isAuction).length;
+    const pendingRequests = sellRequests.length;
+    const activeAuctions = cars.filter(c => c.auction?.isAuction && new Date(c.auction.endTime) > new Date()).length;
 
     const refreshData = async () => {
+        setLoading(true);
         try {
-            const [carsData, tdData, sellData] = await Promise.all([
-                getCars({ includeExpired: true }),
-                getTestDrives(),
-                getSellRequests()
+            const [carsData, requestsData, drivesData] = await Promise.all([
+                getCars(),
+                getSellRequests(),
+                getTestDrives()
             ]);
-
-            // Filter: Inventory = Approved/Active cars. Sell Requests comes from separate API.
-            const approvedCars = carsData.filter(c => c.status !== 'pending'); // Just in case
-
-            setCars(approvedCars);
-            setTestDrives(tdData);
-            setSellRequests(sellData);
-        } catch (err) {
-            console.error("Error loading admin data");
+            setCars(carsData);
+            setSellRequests(requestsData);
+            setTestDrives(drivesData);
+        } catch (error) {
+            console.error("Error loading admin data:", error);
+            addToast("Failed to load dashboard data.", "error");
         } finally {
             setLoading(false);
         }
@@ -39,7 +42,22 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         refreshData();
+        const interval = setInterval(refreshData, 30000); // Auto-refresh every 30s
+        return () => clearInterval(interval);
     }, []);
+
+    const handleUnreserve = async (carId) => {
+        if (!window.confirm('Are you sure you want to unreserve this car? It will go back on sale.')) return;
+
+        try {
+            await unreserveCar(carId);
+            addToast('Car unreserved successfully', 'success');
+            refreshData();
+        } catch (error) {
+            console.error('Error unreserving car:', error);
+            addToast('Failed to unreserve car', 'error');
+        }
+    };
 
     const [editingCar, setEditingCar] = useState(null);
     const [editPriceValue, setEditPriceValue] = useState('');
@@ -225,6 +243,9 @@ const AdminDashboard = () => {
 
     return (
         <div style={{ minHeight: '100vh', paddingBottom: '60px', position: 'relative' }}>
+            <div style={{ background: 'red', color: 'white', padding: '10px', textAlign: 'center', fontWeight: 'bold', position: 'sticky', top: 0, zIndex: 9999 }}>
+                ⚠️ DEBUG MODE ACTIVE - IF YOU SEE THIS, THE UPDATE WORKED ⚠️
+            </div>
             <button
                 className="back-btn"
                 onClick={() => navigate(-1)}
@@ -531,17 +552,18 @@ const AdminDashboard = () => {
                                 <table className="admin-table">
                                     <thead>
                                         <tr>
-                                            <th>Type</th>
-                                            <th>Vehicle Details</th>
+                                            <th>Status</th>
+                                            <th>Vehicle</th>
                                             <th>Amount</th>
                                             <th>Customer Details</th>
                                             <th>Date</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {transactionCars.length === 0 && (
                                             <tr>
-                                                <td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#8898aa' }}>
+                                                <td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: '#8898aa' }}>
                                                     No transactions recorded yet.
                                                 </td>
                                             </tr>
@@ -578,6 +600,17 @@ const AdminDashboard = () => {
                                                     </td>
                                                     <td>
                                                         {details?.date ? new Date(details.date).toLocaleDateString() : 'Recent'}
+                                                    </td>
+                                                    <td>
+                                                        {car.status.toLowerCase() === 'reserved' && (
+                                                            <button
+                                                                onClick={() => handleUnreserve(car.id)}
+                                                                className="action-btn"
+                                                                style={{ background: '#dc3545', color: 'white', border: 'none' }}
+                                                            >
+                                                                Unreserve
+                                                            </button>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             );

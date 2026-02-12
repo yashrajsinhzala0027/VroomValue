@@ -1373,3 +1373,52 @@
 2026-02-12T10:19:13.088Z - PUT /api/cars/2014
 2026-02-12T10:29:18.989Z - PUT /api/cars/2014
 2026-02-12T10:29:20.050Z - PUT /api/cars/2014 ERROR: Could not find the 'buyerDetails' column of 'cars' in the schema cache
+2026-02-12T10:29:55.902Z - GET /api/cars/2014
+2026-02-12T10:29:59.187Z - PUT /api/cars/2014
+2026-02-12T10:29:59.435Z - PUT /api/cars/2014 ERROR: Could not find the 'buyerDetails' column of 'cars' in the schema cache
+2026-02-12T10:30:08.518Z - PUT /api/cars/2014
+2026-02-12T10:30:08.911Z - PUT /api/cars/2014 ERROR: Could not find the 'reserveDetails' column of 'cars' in the schema cache
+2026-02-12T10:37:57.777Z - GET /api/cars/2014
+2026-02-12T10:38:00.952Z - PUT /api/cars/2014
+2026-02-12T10:38:01.323Z - PUT /api/cars/2014 ERROR: Could not find the 'buyerDetails' column of 'cars' in the schema cache
+2026-02-12T10:38:03.020Z - PUT /api/cars/2014
+2026-02-12T10:38:03.263Z - PUT /api/cars/2014 ERROR: Could not find the 'reserveDetails' column of 'cars' in the schema cache
+2026-02-12T10:38:11.014Z - GET /api/cars
+2026-02-12T10:38:12.824Z - GET /api/cars/2033
+2026-02-12T10:38:15.293Z - PUT /api/cars/2033
+2026-02-12T10:38:15.628Z - PUT /api/cars/2033 ERROR: Could not find the 'buyerDetails' column of 'cars' in the schema cache
+2026-02-12T11:18:00.807Z - GET /api/cars/2033
+2026-02-12T11:18:05.413Z - PUT /api/cars/2033
+2026-02-12T11:18:05.731Z - GET /api/cars/2033
+2026-02-12T11:18:11.806Z - GET /api/cars?includeExpired=true
+2026-02-12T11:18:11.810Z - GET /api/test-drives
+2026-02-12T11:18:12.114Z - GET /api/sell-requests
+2026-02-12T11:18:24.813Z - GET /api/cars
+2026-02-12T11:18:26.892Z - GET /api/cars/2013
+2026-02-12T11:18:28.004Z - PUT /api/cars/2013
+2026-02-12T11:18:28.245Z - GET /api/cars/2013
+2026-02-12T11:18:31.321Z - GET /api/cars?includeExpired=true
+2026-02-12T11:18:31.328Z - GET /api/test-drives
+2026-02-12T11:18:31.568Z - GET /api/sell-requests
+2026-02-12T11:32:53.536Z - GET /api/cars?limit=1
+2026-02-12T11:36:29.131Z - GET /api/cars?includeExpired=true
+2026-02-12T11:36:29.136Z - GET /api/test-drives
+2026-02-12T11:36:29.140Z - GET /api/sell-requests
+2026-02-12T11:41:07.687Z - GET /api/cars?includeExpired=true
+2026-02-12T11:41:07.691Z - GET /api/sell-requests
+2026-02-12T11:41:07.695Z - GET /api/test-drives
+2026-02-12T11:43:31.116Z - GET /api/cars?includeExpired=true
+2026-02-12T11:43:31.123Z - GET /api/sell-requests
+2026-02-12T11:43:31.127Z - GET /api/test-drives
+2026-02-12T11:44:07.223Z - GET /api/cars?includeExpired=true
+2026-02-12T11:44:09.782Z - GET /api/cars?isAuction=true
+2026-02-12T11:44:12.346Z - GET /api/cars/2020
+2026-02-12T11:44:29.235Z - GET /api/cars?includeExpired=true
+2026-02-12T11:44:29.238Z - GET /api/test-drives
+2026-02-12T11:44:29.243Z - GET /api/sell-requests
+2026-02-12T11:48:05.071Z - GET /api/cars?includeExpired=true
+2026-02-12T11:48:05.078Z - GET /api/test-drives
+2026-02-12T11:48:05.082Z - GET /api/sell-requests
+2026-02-12T11:51:16.181Z - GET /api/test-drives
+2026-02-12T11:51:16.196Z - GET /api/cars?includeExpired=true
+2026-02-12T11:51:16.200Z - GET /api/sell-requests

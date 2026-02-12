@@ -234,6 +234,12 @@ export const updateCarListing = async (id, updates) => {
     return response.data;
 };
 
+export const unreserveCar = async (id) => {
+    if (IS_MOCK) { await delay(500); return { id, status: 'approved' }; }
+    const response = await api.post(`/cars/${id}/unreserve`);
+    return response.data;
+};
+
 export const bookTestDrive = async (data) => {
     if (IS_MOCK) { await delay(1000); return { success: true, id: 999 }; }
     const response = await api.post('/test-drives', data);

@@ -236,14 +236,47 @@ const camelize = (obj) => {
         requestedat: 'requestedAt',
         carid: 'carId',
         userid: 'userId',
-        buyerdetails: 'buyerDetails',
-        reservedetails: 'reserveDetails'
+        buyer_details: 'buyerDetails',
+        reserve_details: 'reserveDetails',
+        buyerdetails: 'buyerDetails', // legacy/fallback
+        reservedetails: 'reserveDetails' // legacy/fallback
     };
 
     const newObj = {};
     for (const key in obj) {
         const mappedKey = mapping[key] || key;
         newObj[mappedKey] = camelize(obj[key]);
+    }
+    return newObj;
+};
+
+// Reverse mapping: camelCase to snake_case for database writes
+const decamelize = (obj) => {
+    if (!obj || typeof obj !== 'object') return obj;
+    if (Array.isArray(obj)) return obj.map(decamelize);
+
+    const reverseMapping = {
+        'priceINR': 'priceinr',
+        'bodyType': 'bodytype',
+        'sellerType': 'sellertype',
+        'engineCapacity': 'enginecapacity',
+        'mileageKmpl': 'mileagekmpl',
+        'insuranceValidity': 'insurancevalidity',
+        'requestDate': 'requestdate',
+        'customerName': 'customername',
+        'customerPhone': 'customerphone',
+        'customerEmail': 'customeremail',
+        'requestedAt': 'requestedat',
+        'carId': 'carid',
+        'userId': 'userid',
+        'buyerDetails': 'buyer_details',
+        'reserveDetails': 'reserve_details'
+    };
+
+    const newObj = {};
+    for (const key in obj) {
+        const mappedKey = reverseMapping[key] || key;
+        newObj[mappedKey] = decamelize(obj[key]);
     }
     return newObj;
 };
@@ -408,6 +441,35 @@ app.post('/api/cars/:id/bid', async (req, res) => {
         if (updateError) throw updateError;
         res.json(camelize({ ...car, auction }));
     } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Unreserve a car (Admin only)
+app.post('/api/cars/:id/unreserve', async (req, res) => {
+    try {
+        const carId = req.params.id;
+
+        console.log(`[POST /api/cars/${carId}/unreserve] Unreserving car`);
+
+        const { data, error } = await supabase
+            .from('cars')
+            .update({
+                status: 'approved',
+                reserve_details: null
+            })
+            .eq('id', carId)
+            .select();
+
+        if (error) {
+            console.error(`[POST /api/cars/${carId}/unreserve] Error:`, error);
+            throw error;
+        }
+
+        console.log(`[POST /api/cars/${carId}/unreserve] Successfully unreserved`);
+        res.json({ message: "Car unreserved successfully", data: camelize(data[0]) });
+    } catch (err) {
+        console.error(`[POST /api/cars/${req.params.id}/unreserve] ERROR:`, err.message);
         res.status(500).json({ message: err.message });
     }
 });
@@ -615,9 +677,13 @@ app.put('/api/cars/:id', async (req, res) => {
 
         console.log(`[PUT /api/cars/${carId}] Attempting update with:`, Object.keys(updates));
 
+        // Convert camelCase to snake_case for database
+        const dbUpdates = decamelize(updates);
+        console.log(`[PUT /api/cars/${carId}] Converted to DB format:`, Object.keys(dbUpdates));
+
         const { data, error } = await supabase
             .from('cars')
-            .update(updates)
+            .update(dbUpdates)
             .eq('id', carId)
             .select();
 
@@ -627,7 +693,7 @@ app.put('/api/cars/:id', async (req, res) => {
         }
 
         console.log(`[PUT /api/cars/${carId}] Update successful`);
-        res.json({ message: "Car updated successfully", data });
+        res.json({ message: "Car updated successfully", data: camelize(data) });
     } catch (err) {
         console.error(`[PUT /api/cars/${req.params.id}] ERROR:`, err.message);
         fs.appendFileSync(path.join(__dirname, 'server_log.txt'), `${new Date().toISOString()} - PUT /api/cars/${req.params.id} ERROR: ${err.message}\n`);
