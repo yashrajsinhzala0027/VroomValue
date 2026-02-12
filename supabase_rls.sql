@@ -4,12 +4,20 @@ ALTER TABLE cars ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sell_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE test_drives ENABLE ROW LEVEL SECURITY;
 
--- 2. "cars" table: Allow public read-only access (Common and accepted)
+-- 2. "cars" table policies
+-- Allow public read-only access
 DROP POLICY IF EXISTS "Allow public select on cars" ON cars;
 CREATE POLICY "Allow public select on cars" 
 ON cars FOR SELECT 
 TO public 
 USING (true);
+
+-- Remove old permissive policies (if they exist)
+DROP POLICY IF EXISTS "Allow backend update on cars" ON cars;
+DROP POLICY IF EXISTS "Allow backend insert on cars" ON cars;
+
+-- Note: UPDATE and INSERT operations are handled by the backend using the service_role key,
+-- which automatically bypasses RLS. No additional policies needed.
 
 -- 3. tables with STRICT restrictions (Deny Public Access)
 -- These satisfy the Supabase "Policy must exist" check without allowing public access.

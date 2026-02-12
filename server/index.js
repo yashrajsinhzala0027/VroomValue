@@ -170,7 +170,14 @@ app.post('/api/signup', async (req, res) => {
     } catch (err) {
         const errorDetails = JSON.stringify(err, Object.getOwnPropertyNames(err));
         fs.appendFileSync(path.join(__dirname, 'signup_debug.log'), `${new Date().toISOString()} - 💥 Signup Error: ${errorDetails}\n`);
-        res.status(500).json({ message: err.message });
+
+        // Helpful hint for the user
+        const isMissingKey = !process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const msg = isMissingKey
+            ? "Signup failed: SUPABASE_SERVICE_ROLE_KEY is missing in your server/.env. Please follow the instructions I gave you to add it!"
+            : (err.message || "Internal Server Error");
+
+        res.status(500).json({ message: msg });
     }
 });
 
@@ -603,15 +610,27 @@ app.post('/api/cars', async (req, res) => {
 
 app.put('/api/cars/:id', async (req, res) => {
     try {
+        const carId = req.params.id;
         const updates = req.body;
-        const { error } = await supabase
+
+        console.log(`[PUT /api/cars/${carId}] Attempting update with:`, Object.keys(updates));
+
+        const { data, error } = await supabase
             .from('cars')
             .update(updates)
-            .eq('id', req.params.id);
+            .eq('id', carId)
+            .select();
 
-        if (error) throw error;
-        res.json({ message: "Car updated successfully" });
+        if (error) {
+            console.error(`[PUT /api/cars/${carId}] Supabase error:`, error);
+            throw error;
+        }
+
+        console.log(`[PUT /api/cars/${carId}] Update successful`);
+        res.json({ message: "Car updated successfully", data });
     } catch (err) {
+        console.error(`[PUT /api/cars/${req.params.id}] ERROR:`, err.message);
+        fs.appendFileSync(path.join(__dirname, 'server_log.txt'), `${new Date().toISOString()} - PUT /api/cars/${req.params.id} ERROR: ${err.message}\n`);
         res.status(500).json({ message: err.message });
     }
 });
