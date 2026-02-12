@@ -493,7 +493,9 @@ app.get('/api/sell-requests', async (req, res) => {
 // 5. POST Submit Sell Request
 app.post('/api/sell-requests', async (req, res) => {
     try {
+        console.log("DEBUG: Incoming Sell Request Body:", JSON.stringify(req.body, null, 2));
         const valuation = calculateRealMarketPrice(req.body);
+        console.log("DEBUG: Calculated Valuation:", valuation);
         const newRequest = {
             id: Date.now(),
             make: req.body.make || 'Unknown',
@@ -520,6 +522,8 @@ app.post('/api/sell-requests', async (req, res) => {
             valuation: valuation,
             images: req.body.images || []
         };
+
+        console.log("DEBUG: Final Insert Object:", JSON.stringify(newRequest, null, 2));
 
         const { error } = await supabase
             .from('sell_requests')
