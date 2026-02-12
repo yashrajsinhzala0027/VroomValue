@@ -12,6 +12,7 @@ const AdminDashboard = () => {
     const { addToast } = useToast();
     const [cars, setCars] = useState([]);
     const [sellRequests, setSellRequests] = useState([]);
+
     const [testDrives, setTestDrives] = useState([]);
     const [activeTab, setActiveTab] = useState('inventory');
     const [loading, setLoading] = useState(true);
@@ -243,9 +244,6 @@ const AdminDashboard = () => {
 
     return (
         <div style={{ minHeight: '100vh', paddingBottom: '60px', position: 'relative' }}>
-            <div style={{ background: 'red', color: 'white', padding: '10px', textAlign: 'center', fontWeight: 'bold', position: 'sticky', top: 0, zIndex: 9999 }}>
-                ⚠️ DEBUG MODE ACTIVE - IF YOU SEE THIS, THE UPDATE WORKED ⚠️
-            </div>
             <button
                 className="back-btn"
                 onClick={() => navigate(-1)}
