@@ -498,6 +498,7 @@ app.post('/api/sell-requests', async (req, res) => {
             id: Date.now(),
             make: req.body.make || 'Unknown',
             model: req.body.model || 'Unknown',
+            priceinr: Number(req.body.priceINR) || 0, // Added price field
             variant: req.body.variant || '',
             year: Number(req.body.year) || new Date().getFullYear(),
             fuel: req.body.fuel || 'Petrol',
