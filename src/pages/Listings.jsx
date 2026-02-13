@@ -28,7 +28,7 @@ const Listings = () => {
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const nextFilters = {};
-        const arrayFilters = ['make', 'fuel', 'bodyType', 'transmission', 'color', 'features', 'seats', 'owner', 'maxKms', 'year'];
+        const arrayFilters = ['make', 'model', 'fuel', 'bodyType', 'transmission', 'color', 'features', 'seats', 'owner', 'maxKms', 'year'];
 
         arrayFilters.forEach(key => {
             const values = searchParams.getAll(key);
@@ -63,7 +63,7 @@ const Listings = () => {
 
         // Build fresh filters directly from URL to avoid stale state
         const freshFilters = {};
-        const arrayFilters = ['make', 'fuel', 'bodyType', 'transmission', 'color', 'features', 'seats', 'owner', 'maxKms', 'year'];
+        const arrayFilters = ['make', 'model', 'fuel', 'bodyType', 'transmission', 'color', 'features', 'seats', 'owner', 'maxKms', 'year'];
 
         arrayFilters.forEach(key => {
             const values = searchParams.getAll(key);
@@ -137,7 +137,7 @@ const Listings = () => {
             return;
         }
 
-        const arrayFilters = ['make', 'fuel', 'bodyType', 'transmission', 'color', 'features', 'seats', 'owner', 'maxKms', 'year'];
+        const arrayFilters = ['make', 'model', 'fuel', 'bodyType', 'transmission', 'color', 'features', 'seats', 'owner', 'maxKms', 'year'];
         if (arrayFilters.includes(name)) {
             params.delete(name);
             if (Array.isArray(value)) {

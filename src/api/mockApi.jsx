@@ -67,7 +67,38 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 export const getCars = async (filters = {}) => {
     if (IS_MOCK) {
         await delay(800);
-        return INITIAL_CARS;
+        let filtered = [...INITIAL_CARS];
+
+        if (filters.make && filters.make.length > 0) {
+            const makes = Array.isArray(filters.make) ? filters.make : [filters.make];
+            filtered = filtered.filter(c => makes.includes(c.make));
+        }
+        if (filters.model && filters.model.length > 0) {
+            const models = Array.isArray(filters.model) ? filters.model : [filters.model];
+            filtered = filtered.filter(c => models.includes(c.model));
+        }
+        if (filters.fuel && filters.fuel.length > 0) {
+            const fuels = Array.isArray(filters.fuel) ? filters.fuel : [filters.fuel];
+            filtered = filtered.filter(c => fuels.includes(c.fuel));
+        }
+        if (filters.transmission && filters.transmission.length > 0) {
+            const trans = Array.isArray(filters.transmission) ? filters.transmission : [filters.transmission];
+            filtered = filtered.filter(c => trans.includes(c.transmission));
+        }
+        if (filters.bodyType && filters.bodyType.length > 0) {
+            const types = Array.isArray(filters.bodyType) ? filters.bodyType : [filters.bodyType];
+            filtered = filtered.filter(c => types.includes(c.bodyType));
+        }
+        if (filters.maxKms && filters.maxKms.length > 0) {
+            const maxKms = Math.max(...filters.maxKms.map(Number));
+            filtered = filtered.filter(c => c.kms <= maxKms);
+        }
+        if (filters.year && filters.year.length > 0) {
+            const minYear = Math.min(...filters.year.map(Number));
+            filtered = filtered.filter(c => c.year >= minYear);
+        }
+
+        return filtered;
     }
 
     try {
@@ -78,6 +109,10 @@ export const getCars = async (filters = {}) => {
         if (filters.make && filters.make.length > 0) {
             const makes = Array.isArray(filters.make) ? filters.make : [filters.make];
             query = query.in('make', makes);
+        }
+        if (filters.model && filters.model.length > 0) {
+            const models = Array.isArray(filters.model) ? filters.model : [filters.model];
+            query = query.in('model', models);
         }
         if (filters.fuel && filters.fuel.length > 0) {
             const fuels = Array.isArray(filters.fuel) ? filters.fuel : [filters.fuel];

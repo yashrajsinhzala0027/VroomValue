@@ -7,6 +7,14 @@ import {
 } from '../utils/constants';
 import { formatPriceShort } from '../utils/formatters';
 import BrandLogo from './BrandLogo';
+import { MODEL_TO_MAKE_MAP } from '../utils/modelMapping';
+
+// Invert the map for grouping
+const MAKE_TO_MODELS_MAP = {};
+Object.entries(MODEL_TO_MAKE_MAP).forEach(([model, make]) => {
+    if (!MAKE_TO_MODELS_MAP[make]) MAKE_TO_MODELS_MAP[make] = [];
+    MAKE_TO_MODELS_MAP[make].push(model);
+});
 
 const FilterAccordion = memo(({ title, children, isOpen, onToggle }) => {
     return (
@@ -69,6 +77,7 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
     });
 
     const [brandSearch, setBrandSearch] = useState("");
+    const [expandedBrands, setExpandedBrands] = useState({});
 
     const toggleSection = (section) => {
         setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -155,21 +164,70 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                         className="filter-search-input"
                         style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '10px 16px', fontSize: '0.85rem', width: '100%', marginBottom: '16px' }}
                     />
-                    <div className="checkbox-group" style={{ maxHeight: '250px', overflowY: 'auto', paddingRight: '8px' }}>
-                        {filteredMakes.map(make => (
-                            <label key={make} className="checkbox-label" style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
-                                <input
-                                    type="checkbox"
-                                    name="make"
-                                    checked={(filters.make || []).includes(make)}
-                                    onChange={() => handleCheckboxChange('make', make)}
-                                    style={{ display: 'none' }}
-                                />
-                                <span className="checkbox-premium"></span>
-                                <BrandLogo make={make} size={28} />
-                                <span style={{ fontWeight: (filters.make || []).includes(make) ? 800 : 500, transition: 'all 0.2s' }}>{make}</span>
-                            </label>
-                        ))}
+                    <div className="checkbox-group" style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '8px' }}>
+                        {filteredMakes.map(make => {
+                            const isBrandSelected = (filters.make || []).includes(make);
+                            const brandModels = MAKE_TO_MODELS_MAP[make] || [];
+                            const isExpanded = expandedBrands[make];
+                            const selectedModels = filters.model || [];
+
+                            return (
+                                <div key={make} style={{ marginBottom: '16px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', flex: 1 }}>
+                                            <input
+                                                type="checkbox"
+                                                name="make"
+                                                checked={isBrandSelected}
+                                                onChange={() => handleCheckboxChange('make', make)}
+                                                style={{ display: 'none' }}
+                                            />
+                                            <span className="checkbox-premium"></span>
+                                            <BrandLogo make={make} size={24} />
+                                            <span style={{ fontWeight: isBrandSelected ? 800 : 500, fontSize: '0.9rem' }}>{make}</span>
+                                        </label>
+                                        {brandModels.length > 0 && (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setExpandedBrands(prev => ({ ...prev, [make]: !prev[make] }));
+                                                }}
+                                                style={{
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    color: 'var(--primary)',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: 700,
+                                                    cursor: 'pointer',
+                                                    padding: '4px 8px',
+                                                    borderRadius: '4px'
+                                                }}
+                                            >
+                                                {isExpanded ? 'Hide Models' : `Show ${brandModels.length} Models`}
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {isExpanded && brandModels.length > 0 && (
+                                        <div style={{ paddingLeft: '36px', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            {brandModels.map(model => (
+                                                <label key={model} className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        name="model"
+                                                        checked={selectedModels.includes(model)}
+                                                        onChange={() => handleCheckboxChange('model', model)}
+                                                        style={{ display: 'none' }}
+                                                    />
+                                                    <span className="checkbox-premium" style={{ width: '16px', height: '16px' }}></span>
+                                                    <span style={{ fontSize: '0.8rem', fontWeight: selectedModels.includes(model) ? 700 : 400 }}>{model}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </FilterAccordion>
 
