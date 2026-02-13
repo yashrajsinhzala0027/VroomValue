@@ -36,6 +36,8 @@ const Login = () => {
                 navigate('/');
             }
         } catch (err) {
+            console.error("Login component error:", err);
+            // Show the actual error message from Supabase if available
             addToast(err.message || "Failed to login", "error");
         } finally {
             setLoading(false);
