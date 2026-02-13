@@ -1,7 +1,7 @@
 
 import { INITIAL_CARS, MODEL_PROFILES } from '../utils/constants';
 import { supabase } from './supabaseClient';
-import { calculateRealMarketPrice } from '../utils/valuation';
+export { calculateRealMarketPrice } from '../utils/valuation';
 
 // Helper to map lowercase DB keys to camelCase for frontend
 const camelize = (data) => {
@@ -132,6 +132,24 @@ export const getCarById = async (id) => {
         return camelize(data);
     } catch (err) {
         console.error("Supabase getCarById error:", err);
+        throw err;
+    }
+};
+
+export const createCarListing = async (data) => {
+    if (IS_MOCK) { await delay(1000); return { id: Date.now(), ...data }; }
+    try {
+        const decamelizedData = decamelize(data);
+        const { data: inserted, error } = await supabase
+            .from('cars')
+            .insert([decamelizedData])
+            .select()
+            .single();
+
+        if (error) throw error;
+        return camelize(inserted);
+    } catch (err) {
+        console.error("Supabase createCarListing error:", err);
         throw err;
     }
 };
