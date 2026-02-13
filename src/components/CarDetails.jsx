@@ -218,7 +218,10 @@ const CarDetails = () => {
 
                         <ResalePredictor currentPrice={car.priceINR} />
 
-                        <ScheduleTestDrive carTitle={`${car.year} ${car.make} ${car.model}`} />
+                        <ScheduleTestDrive
+                            carId={car.id}
+                            carTitle={`${car.year} ${car.make} ${car.model}`}
+                        />
                     </div>
 
                     {/* Desktop Sidebar / Sticky Panel */}

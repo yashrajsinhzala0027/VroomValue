@@ -10,7 +10,7 @@ BEGIN
     END IF;
 END $$;
 
--- 2. Fix test_drives table (Adding missing columns)
+-- 2. Fix test_drives table (Adding all necessary columns)
 DO $$ 
 BEGIN 
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='test_drives' AND column_name='carid') THEN
@@ -24,6 +24,21 @@ BEGIN
     END IF;
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='test_drives' AND column_name='customerphone') THEN
         ALTER TABLE test_drives ADD COLUMN customerphone TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='test_drives' AND column_name='cartitle') THEN
+        ALTER TABLE test_drives ADD COLUMN cartitle TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='test_drives' AND column_name='date') THEN
+        ALTER TABLE test_drives ADD COLUMN date TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='test_drives' AND column_name='time') THEN
+        ALTER TABLE test_drives ADD COLUMN time TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='test_drives' AND column_name='name') THEN
+        ALTER TABLE test_drives ADD COLUMN name TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='test_drives' AND column_name='phone') THEN
+        ALTER TABLE test_drives ADD COLUMN phone TEXT;
     END IF;
 END $$;
 

@@ -21,9 +21,17 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
+app.get('/health', (req, res) => {
+    res.json({ status: 'up', timestamp: new Date().toISOString() });
+});
+
 app.use((req, res, next) => {
     const log = `${new Date().toISOString()} - ${req.method} ${req.url}\n`;
-    fs.appendFileSync(path.join(__dirname, 'server_log.txt'), log);
+    try {
+        fs.appendFileSync(path.join(__dirname, 'server_log.txt'), log);
+    } catch (e) {
+        // Silent fail for file logging in read-only environments
+    }
     console.log(log.trim());
     next();
 });
@@ -269,6 +277,7 @@ const decamelize = (obj) => {
         'requestedAt': 'requestedat',
         'carId': 'carid',
         'userId': 'userid',
+        'carTitle': 'cartitle',
         'buyerDetails': 'buyer_details',
         'reserveDetails': 'reserve_details'
     };
@@ -758,9 +767,10 @@ app.get('/api/test-drives', async (req, res) => {
 
 app.post('/api/test-drives', async (req, res) => {
     try {
+        const decamelizedBody = decamelize(req.body);
         const newDrive = {
             id: Date.now(),
-            ...req.body,
+            ...decamelizedBody,
             status: 'pending',
             requestedat: new Date().toISOString()
         };

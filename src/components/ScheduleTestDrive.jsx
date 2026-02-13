@@ -4,7 +4,7 @@ import { useToast } from './Toasts';
 import { bookTestDrive } from '../api/mockApi';
 import CustomSelect from './CustomSelect';
 
-const ScheduleTestDrive = ({ carTitle }) => {
+const ScheduleTestDrive = ({ carId, carTitle }) => {
     const { addToast } = useToast();
     const { user } = useAuth();
 
@@ -39,6 +39,8 @@ const ScheduleTestDrive = ({ carTitle }) => {
 
         try {
             await bookTestDrive({
+                carId,
+                userId: user?.id,
                 carTitle,
                 name,
                 date,
