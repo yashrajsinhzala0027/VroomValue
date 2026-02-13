@@ -472,17 +472,15 @@ export const registerUser = async (userData) => {
     const { data, error } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
+        options: {
+            data: {
+                name: userData.name,
+                phone: userData.phone,
+                dob: userData.dob
+            }
+        }
     });
     if (error) throw error;
-
-    const decamelizedUser = decamelize(userData);
-    delete decamelizedUser.password;
-
-    await supabase.from('users').insert([{
-        ...decamelizedUser,
-        id: data.user.id,
-        role: 'user'
-    }]);
 
     return { success: true };
 };
