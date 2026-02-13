@@ -456,19 +456,29 @@ export const endAuction = async (carId) => {
 
 // Auth
 export const loginUser = async ({ email, password }) => {
+    console.log("Attempting login for:", email);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
 
-    const { data: profile } = await supabase
+    if (error) {
+        console.error("Supabase Login Error:", error.message, error.status);
+        throw error;
+    }
+
+    const { data: profile, error: profileError } = await supabase
         .from('users')
         .select('*')
         .eq('email', email)
         .single();
 
-    return { ...camelize(profile), token: data.session.access_token };
+    if (profileError) {
+        console.warn("User profile not found in 'users' table despite successful auth. Error:", profileError);
+    }
+
+    return { ...camelize(profile || {}), token: data.session.access_token };
 };
 
 export const registerUser = async (userData) => {
+    console.log("Attempting signup for:", userData.email);
     const { data, error } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
@@ -480,8 +490,13 @@ export const registerUser = async (userData) => {
             }
         }
     });
-    if (error) throw error;
 
+    if (error) {
+        console.error("Supabase Signup Error:", error.message, error.status);
+        throw error;
+    }
+
+    console.log("Signup success! User ID:", data.user?.id);
     return { success: true };
 };
 
