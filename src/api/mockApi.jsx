@@ -1,7 +1,8 @@
 
 import { INITIAL_CARS, MODEL_PROFILES } from '../utils/constants';
 import { supabase } from './supabaseClient';
-export { calculateRealMarketPrice } from '../utils/valuation';
+import { calculateRealMarketPrice } from '../utils/valuation';
+export { calculateRealMarketPrice };
 
 // Helper to map lowercase DB keys to camelCase for frontend
 const camelize = (data) => {
