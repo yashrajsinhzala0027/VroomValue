@@ -568,7 +568,7 @@ const AdminDashboard = () => {
                                         )}
                                         {transactionCars.map(car => {
                                             // Determine customer details: either from direct purchase/reserve or highest bidder for sold auction cars
-                                            let details = car.status === 'sold' ? car.buyerDetails : car.reserveDetails;
+                                            let details = car.status === 'sold' ? car.buyerDetails : car.auction;
 
                                             if (!details && car.status === 'sold' && car.auction?.highestBidder) {
                                                 details = {

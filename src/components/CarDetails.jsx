@@ -71,7 +71,7 @@ const CarDetails = () => {
             setLoading(true);
             await updateCarListing(car.id, {
                 status: 'reserved',
-                reserveDetails: {
+                auction: {
                     name: currentUser.name || currentUser.displayName || 'Customer',
                     email: currentUser.email,
                     date: new Date().toISOString()
