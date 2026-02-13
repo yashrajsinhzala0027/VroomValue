@@ -1,3 +1,4 @@
+// Forced deployment trigger for Supabase Migration
 import { INITIAL_CARS, MODEL_PROFILES } from '../utils/constants';
 import { supabase } from './supabaseClient';
 import { calculateRealMarketPrice } from '../utils/valuation';

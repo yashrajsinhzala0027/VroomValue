@@ -1,3 +1,4 @@
+// Forced deployment trigger for Supabase Migration
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MAKES, MODEL_PROFILES, FUEL_TYPES, TRANSMISSIONS, CITIES, BODY_TYPES, COLORS, FEATURES, SEATS, OWNERS, RTO_REGIONS, INSURANCE_TYPES } from '../utils/constants';
