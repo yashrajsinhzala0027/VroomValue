@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchProfile = async (uid, token, email = null) => {
         try {
+            console.log("Fetching profile for UID:", uid);
             const { data: profile, error } = await supabase
                 .from('users')
                 .select('*')
@@ -50,9 +51,8 @@ export const AuthProvider = ({ children }) => {
                 .single();
 
             if (error) {
-                console.warn("Profile not found in users table, possibly a new signup or trigger failure.");
-                // Set a temporary user object so the app doesn't crash
-                // Prefer passed email > previously set email
+                console.error("Supabase Profile Query Error:", error.message, error.code);
+                // If it's a 406 or profile not found, don't crash, use defaults
                 const tempUser = {
                     id: uid,
                     email: email || 'user@example.com',
@@ -64,18 +64,23 @@ export const AuthProvider = ({ children }) => {
                 return;
             }
 
+            if (!profile) {
+                throw new Error("Profile query returned null data");
+            }
+
             const mappedUser = {
                 id: profile.id,
-                email: profile.email,
-                name: profile.name,
-                role: profile.role,
-                phone: profile.phone,
+                email: profile.email || email,
+                name: profile.name || 'User',
+                role: profile.role || 'user',
+                phone: profile.phone || '',
                 token
             };
             setCurrentUser(mappedUser);
         } catch (err) {
-            console.error("AuthContext Profile Fetch Error:", err);
-            setCurrentUser(null);
+            console.error("AuthContext Critical Error:", err);
+            // Even on total failure, set a minimal user to prevent white screen if they have a session
+            setCurrentUser({ id: uid, email: email || 'user@example.com', role: 'user', token });
         }
     };
 
