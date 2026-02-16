@@ -66,9 +66,9 @@ export const AuthProvider = ({ children }) => {
                 .eq('id', uid)
                 .maybeSingle();
 
-            if (error || !profile) {
+            if (error || !profile || typeof profile !== 'object') {
                 if (error) console.error("Supabase Profile Query Error:", error.message, error.code);
-                else console.warn("No profile found for UID:", uid);
+                else console.warn("Profile data is missing or invalid for UID:", uid);
 
                 // Fallback to basic session data
                 const tempUser = {
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
             }
 
             const mappedUser = {
-                id: profile.id,
+                id: profile.id || uid,
                 email: profile.email || email,
                 name: profile.name || 'User',
                 role: profile.role || 'user',

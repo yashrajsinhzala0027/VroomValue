@@ -471,14 +471,15 @@ export const loginUser = async ({ email, password }) => {
         .single();
 
     if (profileError) {
-        console.warn("User profile not found in 'users' table despite successful auth. Error:", profileError);
+        console.warn("User profile not found in 'users' table. Error:", profileError.message);
     }
 
+    const safeProfile = profile || {};
     return {
-        ...(camelize(profile || {})),
-        id: profile?.id || data.user?.id,
-        email: profile?.email || email,
-        role: profile?.role || 'user',
+        ...(camelize(safeProfile)),
+        id: safeProfile.id || data.user?.id,
+        email: safeProfile.email || email,
+        role: safeProfile.role || 'user',
         token: data.session.access_token
     };
 };
