@@ -120,24 +120,35 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 5. RLS Policies (Security Hardening)
+-- 5. RLS Policies & Permissions (Security Hardening)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cars ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sell_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE test_drives ENABLE ROW LEVEL SECURITY;
 
--- users: Users can read their own profile, anyone authenticated can read basic info if needed, 
--- but for simplicity/privacy: User can only read/update their own.
+-- users: Users can read their own profile
 DROP POLICY IF EXISTS "Users can read own profile" ON users;
 CREATE POLICY "Users can read own profile" ON users FOR SELECT USING (auth.uid()::text = id);
 DROP POLICY IF EXISTS "Users can update own profile" ON users;
 CREATE POLICY "Users can update own profile" ON users FOR UPDATE USING (auth.uid()::text = id);
+
+-- Permissions (Fixes 406 Not Acceptable Errors)
+GRANT ALL ON public.users TO postgres, anon, authenticated, service_role;
+GRANT ALL ON public.cars TO postgres, anon, authenticated, service_role;
+GRANT ALL ON public.sell_requests TO postgres, anon, authenticated, service_role;
+GRANT ALL ON public.test_drives TO postgres, anon, authenticated, service_role;
 
 -- Cars: Anyone can read, only authenticated can manage
 DROP POLICY IF EXISTS "Public Read Access" ON cars;
 CREATE POLICY "Public Read Access" ON cars FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Authenticated Manage Access" ON cars;
 CREATE POLICY "Authenticated Manage Access" ON cars FOR ALL USING (auth.role() = 'authenticated');
+
+-- 6. MANUAL ADMIN INITIALIZATION (Run this specifically for the owner)
+-- Uncomment the lines below and run once to make 'jay' an Admin
+-- INSERT INTO public.users (id, email, name, role)
+-- VALUES ('4892070d-f688-4cae-91c4-0cbe7f7f4e09', 'jay@gmail.com', 'jay', 'admin')
+-- ON CONFLICT (email) DO UPDATE SET id = EXCLUDED.id, role = 'admin';
 
 -- Sell Requests: Public can insert (with validation), only authenticated can read/manage
 DROP POLICY IF EXISTS "Allow all read" ON sell_requests;
