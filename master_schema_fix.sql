@@ -68,11 +68,10 @@ BEGIN
     END IF;
 END $$;
 -- 4. Fix users table and add Auth Sync Trigger
--- Ensure users table uses UUID to match auth.users (Standard Supabase Pattern)
+-- Ensure users table uses TEXT for ID to match Supabase UUIDs
 DO $$ 
 BEGIN 
-    -- If id is BIGINT (legacy), we might need to change it to UUID if using Supabase Auth
-    -- However, for the smoothest migration, we'll try to keep it as TEXT/UUID
+    -- Change ID type to TEXT if it's currently BIGINT
     IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='id' AND data_type='bigint') THEN
         ALTER TABLE users ALTER COLUMN id TYPE TEXT USING id::text;
     END IF;
@@ -81,6 +80,14 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_key') THEN
         ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);
     END IF;
+
+    -- Ensure other necessary columns exist
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone') THEN
+        ALTER TABLE users ADD COLUMN phone TEXT;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='dob') THEN
+        ALTER TABLE users ADD COLUMN dob TEXT;
+    END IF;
 END $$;
 
 -- Enable the trigger to sync Supabase Auth users with public.users
@@ -88,18 +95,20 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
   -- Use ON CONFLICT to handle cases where the email might already exist from legacy data
-  INSERT INTO public.users (id, email, name, role, phone)
+  INSERT INTO public.users (id, email, name, role, phone, dob)
   VALUES (
     new.id::text, 
     new.email, 
     COALESCE(new.raw_user_meta_data->>'name', ''), 
     'user', 
-    new.raw_user_meta_data->>'phone'
+    new.raw_user_meta_data->>'phone',
+    new.raw_user_meta_data->>'dob'
   )
   ON CONFLICT (email) DO UPDATE SET
     id = EXCLUDED.id,
     name = CASE WHEN EXCLUDED.name <> '' THEN EXCLUDED.name ELSE public.users.name END,
-    phone = CASE WHEN EXCLUDED.phone IS NOT NULL THEN EXCLUDED.phone ELSE public.users.phone END;
+    phone = CASE WHEN EXCLUDED.phone IS NOT NULL THEN EXCLUDED.phone ELSE public.users.phone END,
+    dob = CASE WHEN EXCLUDED.dob IS NOT NULL THEN EXCLUDED.dob ELSE public.users.dob END;
     
   RETURN new;
 END;
