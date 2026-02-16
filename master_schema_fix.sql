@@ -131,6 +131,8 @@ DROP POLICY IF EXISTS "Users can read own profile" ON users;
 CREATE POLICY "Users can read own profile" ON users FOR SELECT USING (auth.uid()::text = id);
 DROP POLICY IF EXISTS "Users can update own profile" ON users;
 CREATE POLICY "Users can update own profile" ON users FOR UPDATE USING (auth.uid()::text = id);
+DROP POLICY IF EXISTS "Users can insert own profile" ON users;
+CREATE POLICY "Users can insert own profile" ON users FOR INSERT WITH CHECK (auth.uid()::text = id);
 
 -- Permissions (Fixes 406 Not Acceptable Errors)
 GRANT ALL ON public.users TO postgres, anon, authenticated, service_role;
