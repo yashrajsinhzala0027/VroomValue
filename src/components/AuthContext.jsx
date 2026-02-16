@@ -68,17 +68,35 @@ export const AuthProvider = ({ children }) => {
 
             if (error || !profile || typeof profile !== 'object') {
                 if (error) console.error("Supabase Profile Query Error:", error.message, error.code);
-                else console.warn("Profile data is missing or invalid for UID:", uid);
 
-                // Fallback to basic session data
-                const tempUser = {
-                    id: uid,
-                    email: email || 'user@example.com',
-                    name: 'New User',
-                    role: 'user',
-                    token
-                };
-                setCurrentUser(tempUser);
+                // FALLBACK: If profile is missing, try to create it from the frontend
+                console.warn("Profile missing. Attempting frontend sync for UID:", uid);
+                const { data: newProfile, error: insertError } = await supabase
+                    .from('users')
+                    .insert([{
+                        id: uid,
+                        email: email,
+                        name: (await supabase.auth.getUser()).data.user?.user_metadata?.name || 'New User',
+                        role: 'user'
+                    }])
+                    .select()
+                    .maybeSingle();
+
+                if (insertError) {
+                    console.error("Frontend Auto-Sync Failed:", insertError.message);
+                    // Use memory fallback
+                    setCurrentUser({ id: uid, email, name: 'User', role: 'user', token });
+                } else {
+                    console.log("Frontend Auto-Sync Success!");
+                    const p = newProfile || {};
+                    setCurrentUser({
+                        id: p.id || uid,
+                        email: p.email || email,
+                        name: p.name || 'User',
+                        role: p.role || 'user',
+                        token
+                    });
+                }
                 return;
             }
 
