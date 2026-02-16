@@ -72,10 +72,10 @@ const Header = () => {
                                         fontWeight: 800, fontSize: '0.85rem',
                                         boxShadow: 'var(--shadow-sm)'
                                     }}>
-                                        {currentUser.name.charAt(0)}
+                                        {(currentUser.name || 'U').charAt(0)}
                                     </div>
                                     <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.9rem' }}>
-                                        {currentUser.name.split(' ')[0]}
+                                        {(currentUser.name || 'User').split(' ')[0]}
                                     </span>
                                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', transition: 'transform 0.3s', transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)' }}>▼</span>
                                 </button>

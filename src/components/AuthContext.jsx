@@ -11,15 +11,25 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // 1. Initial Session Check
         const checkSession = async () => {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session) {
-                    await fetchProfile(session.user.id, session.access_token, session.user.email);
+                    // 1. Set user IMMEDIATELY from session data (No waiting for database)
+                    const baseUser = {
+                        id: session.user.id,
+                        email: session.user.email,
+                        name: session.user.user_metadata?.first_name || session.user.user_metadata?.name || 'User',
+                        role: 'user', // Default
+                        token: session.access_token
+                    };
+                    setCurrentUser(baseUser);
+
+                    // 2. Fetch extended profile in background
+                    fetchProfile(session.user.id, session.access_token, session.user.email);
                 }
             } catch (err) {
-                console.error("Initial session check failed:", err);
+                console.error("Auth initialization failed:", err);
             } finally {
                 setLoading(false);
             }
@@ -27,10 +37,16 @@ export const AuthProvider = ({ children }) => {
 
         checkSession();
 
-        // 2. Listen for Auth Changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (session) {
-                // Don't await fetchProfile here to block the loading state
+                const baseUser = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    name: session.user.user_metadata?.first_name || session.user.user_metadata?.name || 'User',
+                    role: 'user',
+                    token: session.access_token
+                };
+                setCurrentUser(baseUser);
                 fetchProfile(session.user.id, session.access_token, session.user.email);
             } else {
                 setCurrentUser(null);
