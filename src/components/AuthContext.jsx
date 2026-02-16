@@ -64,10 +64,6 @@ export const AuthProvider = ({ children }) => {
                 return;
             }
 
-            if (!profile) {
-                throw new Error("Profile query returned null data");
-            }
-
             const mappedUser = {
                 id: profile.id,
                 email: profile.email || email,
