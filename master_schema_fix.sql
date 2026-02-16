@@ -71,30 +71,30 @@ END $$;
 -- Ensure users table uses TEXT for ID to match Supabase UUIDs
 DO $$ 
 BEGIN 
-    -- Change ID type to TEXT if it's currently BIGINT
+    -- 1. Correct Column Types & Existence
     IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='id' AND data_type='bigint') THEN
         ALTER TABLE users ALTER COLUMN id TYPE TEXT USING id::text;
     END IF;
 
-    -- Ensure email is unique for the trigger to work correctly
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_key') THEN
-        ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);
-    END IF;
-
-    -- Ensure other necessary columns exist
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone') THEN
         ALTER TABLE users ADD COLUMN phone TEXT;
     END IF;
+    
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='dob') THEN
         ALTER TABLE users ADD COLUMN dob TEXT;
     END IF;
+
+    -- 2. Ensure Email Uniqueness (Critical for UPSERT)
+    -- We drop any old constraint name first to be sure
+    ALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key;
+    ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);
+
 END $$;
 
--- Enable the trigger to sync Supabase Auth users with public.users
+-- 3. The "Bulletproof" Sync Function
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS trigger AS $$
 BEGIN
-  -- Use ON CONFLICT to handle cases where the email might already exist from legacy data
   INSERT INTO public.users (id, email, name, role, phone, dob)
   VALUES (
     new.id::text, 
@@ -105,7 +105,7 @@ BEGIN
     new.raw_user_meta_data->>'dob'
   )
   ON CONFLICT (email) DO UPDATE SET
-    id = EXCLUDED.id,
+    id = EXCLUDED.id, -- Update ID to match Auth UUID if it was different
     name = CASE WHEN EXCLUDED.name <> '' THEN EXCLUDED.name ELSE public.users.name END,
     phone = CASE WHEN EXCLUDED.phone IS NOT NULL THEN EXCLUDED.phone ELSE public.users.phone END,
     dob = CASE WHEN EXCLUDED.dob IS NOT NULL THEN EXCLUDED.dob ELSE public.users.dob END;
@@ -114,24 +114,29 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
--- Drop trigger if exists and recreate
+-- 4. Re-apply Trigger
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- 5. RLS Policies (Security Hardening)
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cars ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sell_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE test_drives ENABLE ROW LEVEL SECURITY;
 
--- Refined Policies to satisfy security warnings
+-- users: Users can read their own profile, anyone authenticated can read basic info if needed, 
+-- but for simplicity/privacy: User can only read/update their own.
+DROP POLICY IF EXISTS "Users can read own profile" ON users;
+CREATE POLICY "Users can read own profile" ON users FOR SELECT USING (auth.uid()::text = id);
+DROP POLICY IF EXISTS "Users can update own profile" ON users;
+CREATE POLICY "Users can update own profile" ON users FOR UPDATE USING (auth.uid()::text = id);
+
 -- Cars: Anyone can read, only authenticated can manage
-DROP POLICY IF EXISTS "Allow all read" ON cars;
-DROP POLICY IF EXISTS "Allow all write" ON cars;
 DROP POLICY IF EXISTS "Public Read Access" ON cars;
-DROP POLICY IF EXISTS "Authenticated Manage Access" ON cars;
 CREATE POLICY "Public Read Access" ON cars FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Authenticated Manage Access" ON cars;
 CREATE POLICY "Authenticated Manage Access" ON cars FOR ALL USING (auth.role() = 'authenticated');
 
 -- Sell Requests: Public can insert (with validation), only authenticated can read/manage
