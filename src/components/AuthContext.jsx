@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
                 .from('users')
                 .select('*')
                 .eq('id', uid)
-                .single();
+                .maybeSingle();
 
             if (error) {
                 console.error("Supabase Profile Query Error:", error.message, error.code);
