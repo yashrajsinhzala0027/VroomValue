@@ -13,11 +13,16 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         // 1. Initial Session Check
         const checkSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                await fetchProfile(session.user.id, session.access_token);
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    await fetchProfile(session.user.id, session.access_token, session.user.email);
+                }
+            } catch (err) {
+                console.error("Initial session check failed:", err);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
 
         checkSession();
@@ -25,7 +30,8 @@ export const AuthProvider = ({ children }) => {
         // 2. Listen for Auth Changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (session) {
-                await fetchProfile(session.user.id, session.access_token);
+                // Don't await fetchProfile here to block the loading state
+                fetchProfile(session.user.id, session.access_token, session.user.email);
             } else {
                 setCurrentUser(null);
             }
@@ -46,9 +52,10 @@ export const AuthProvider = ({ children }) => {
             if (error) {
                 console.warn("Profile not found in users table, possibly a new signup or trigger failure.");
                 // Set a temporary user object so the app doesn't crash
+                // Prefer passed email > previously set email
                 const tempUser = {
                     id: uid,
-                    email: email || (await supabase.auth.getUser()).data.user?.email,
+                    email: email || 'user@example.com',
                     name: 'New User',
                     role: 'user',
                     token
