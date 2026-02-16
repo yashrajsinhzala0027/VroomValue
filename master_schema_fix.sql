@@ -76,14 +76,31 @@ BEGIN
     IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='id' AND data_type='bigint') THEN
         ALTER TABLE users ALTER COLUMN id TYPE TEXT USING id::text;
     END IF;
+
+    -- Ensure email is unique for the trigger to work correctly
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_key') THEN
+        ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);
+    END IF;
 END $$;
 
 -- Enable the trigger to sync Supabase Auth users with public.users
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS trigger AS $$
 BEGIN
+  -- Use ON CONFLICT to handle cases where the email might already exist from legacy data
   INSERT INTO public.users (id, email, name, role, phone)
-  VALUES (new.id::text, new.email, new.raw_user_meta_data->>'name', 'user', new.raw_user_meta_data->>'phone');
+  VALUES (
+    new.id::text, 
+    new.email, 
+    COALESCE(new.raw_user_meta_data->>'name', ''), 
+    'user', 
+    new.raw_user_meta_data->>'phone'
+  )
+  ON CONFLICT (email) DO UPDATE SET
+    id = EXCLUDED.id,
+    name = CASE WHEN EXCLUDED.name <> '' THEN EXCLUDED.name ELSE public.users.name END,
+    phone = CASE WHEN EXCLUDED.phone IS NOT NULL THEN EXCLUDED.phone ELSE public.users.phone END;
+    
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
