@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         return () => subscription.unsubscribe();
     }, []);
 
-    const fetchProfile = async (uid, token) => {
+    const fetchProfile = async (uid, token, email = null) => {
         try {
             const { data: profile, error } = await supabase
                 .from('users')
@@ -44,7 +44,16 @@ export const AuthProvider = ({ children }) => {
                 .single();
 
             if (error) {
-                console.warn("Profile not found in users table, possibly a new signup.");
+                console.warn("Profile not found in users table, possibly a new signup or trigger failure.");
+                // Set a temporary user object so the app doesn't crash
+                const tempUser = {
+                    id: uid,
+                    email: email || (await supabase.auth.getUser()).data.user?.email,
+                    name: 'New User',
+                    role: 'user',
+                    token
+                };
+                setCurrentUser(tempUser);
                 return;
             }
 

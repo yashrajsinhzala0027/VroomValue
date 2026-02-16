@@ -474,7 +474,13 @@ export const loginUser = async ({ email, password }) => {
         console.warn("User profile not found in 'users' table despite successful auth. Error:", profileError);
     }
 
-    return { ...camelize(profile || {}), token: data.session.access_token };
+    return {
+        ...(camelize(profile || {})),
+        id: profile?.id || data.user?.id,
+        email: profile?.email || email,
+        role: profile?.role || 'user',
+        token: data.session.access_token
+    };
 };
 
 export const registerUser = async (userData) => {
