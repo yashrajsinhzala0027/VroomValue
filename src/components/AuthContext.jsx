@@ -66,9 +66,11 @@ export const AuthProvider = ({ children }) => {
                 .eq('id', uid)
                 .maybeSingle();
 
-            if (error) {
-                console.error("Supabase Profile Query Error:", error.message, error.code);
-                // If it's a 406 or profile not found, don't crash, use defaults
+            if (error || !profile) {
+                if (error) console.error("Supabase Profile Query Error:", error.message, error.code);
+                else console.warn("No profile found for UID:", uid);
+
+                // Fallback to basic session data
                 const tempUser = {
                     id: uid,
                     email: email || 'user@example.com',
