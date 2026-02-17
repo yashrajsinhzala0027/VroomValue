@@ -59,7 +59,8 @@ export const AuthProvider = ({ children }) => {
 
     const fetchProfile = async (uid, token, email = null) => {
         try {
-            // 1. Fetch profile by ID
+            // 1. Fetch profile by ID ONLY
+            // We NEVER query by email to avoid 406/409 errors and security issues
             let { data: profile, error } = await supabase
                 .from('users')
                 .select('*')
@@ -69,6 +70,7 @@ export const AuthProvider = ({ children }) => {
             if (error) console.error("Profile Fetch Error:", error.message);
 
             // 2. If doesn't exist, UPSERT via ID
+            // Safe upsert that handles race conditions via ON CONFLICT DO NOTHING/UPDATE
             if (!profile) {
                 console.log("Profile missing. Upserting for UID:", uid);
 
@@ -85,12 +87,15 @@ export const AuthProvider = ({ children }) => {
 
                 if (upsertError) {
                     console.error("Profile Sync Error:", upsertError.message);
+                    // If upsert fails, we DO NOT retry. The database is the source of truth.
                 } else {
                     profile = newProfile;
                 }
             }
 
-            // 3. Set User State (No retries)
+            // 3. Set User State
+            // Even if profile fetch/create failed, we set a basic user object from session
+            // to prevent the "White Page" crash.
             const mappedUser = {
                 id: uid,
                 email: email || profile?.email,
