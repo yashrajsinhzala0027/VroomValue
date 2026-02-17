@@ -149,11 +149,28 @@ CREATE POLICY "Public Read Access" ON cars FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Authenticated Manage Access" ON cars;
 CREATE POLICY "Authenticated Manage Access" ON cars FOR ALL USING (auth.role() = 'authenticated');
 
--- 6. MANUAL ADMIN INITIALIZATION (Run this specifically for the owner)
--- Uncomment the lines below and run once to make 'jay' an Admin
--- INSERT INTO public.users (id, email, name, role)
--- VALUES ('4892070d-f688-4cae-91c4-0cbe7f7f4e09', 'jay@gmail.com', 'jay', 'admin')
--- ON CONFLICT (email) DO UPDATE SET id = EXCLUDED.id, role = 'admin';
+-- 6. ADMIN SECURITY: Lock admin role to admin@vroomvalue.in ONLY
+-- This prevents anyone else from becoming admin
+
+CREATE OR REPLACE FUNCTION check_admin_email()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.role = 'admin' AND NEW.email != 'admin@vroomvalue.in' THEN
+    RAISE EXCEPTION 'Admin role can only be assigned to admin@vroomvalue.in';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS enforce_admin_email ON public.users;
+CREATE TRIGGER enforce_admin_email
+  BEFORE INSERT OR UPDATE ON public.users
+  FOR EACH ROW
+  EXECUTE FUNCTION check_admin_email();
+
+-- Set admin@vroomvalue.in as the ONLY admin
+UPDATE public.users SET role = 'admin' WHERE email = 'admin@vroomvalue.in';
+UPDATE public.users SET role = 'user' WHERE email != 'admin@vroomvalue.in' AND role = 'admin';
 
 -- Sell Requests: Public can insert (with validation), only authenticated can read/manage
 DROP POLICY IF EXISTS "Allow all read" ON sell_requests;
