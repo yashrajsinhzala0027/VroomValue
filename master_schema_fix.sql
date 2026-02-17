@@ -95,22 +95,25 @@ END $$;
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS trigger AS $$
 BEGIN
+  -- Try to insert the user profile
   INSERT INTO public.users (id, email, name, role, phone, dob)
   VALUES (
     new.id::text, 
     new.email, 
-    COALESCE(new.raw_user_meta_data->>'name', ''), 
+    COALESCE(new.raw_user_meta_data->>'name', 'User'), 
     'user', 
-    new.raw_user_meta_data->>'phone',
-    new.raw_user_meta_data->>'dob'
+    COALESCE(new.raw_user_meta_data->>'phone', ''),
+    COALESCE(new.raw_user_meta_data->>'dob', NULL)
   )
-  ON CONFLICT (email) DO UPDATE SET
-    id = EXCLUDED.id, -- Update ID to match Auth UUID if it was different
-    name = CASE WHEN EXCLUDED.name <> '' THEN EXCLUDED.name ELSE public.users.name END,
-    phone = CASE WHEN EXCLUDED.phone IS NOT NULL THEN EXCLUDED.phone ELSE public.users.phone END,
-    dob = CASE WHEN EXCLUDED.dob IS NOT NULL THEN EXCLUDED.dob ELSE public.users.dob END;
-    
+  ON CONFLICT (id) DO NOTHING;
+  
   RETURN new;
+EXCEPTION
+  WHEN OTHERS THEN
+    -- If anything fails, don't block the signup
+    -- The frontend "Self-Healing" code will create the profile on first login
+    RAISE WARNING 'Failed to create user profile for %: %', new.email, SQLERRM;
+    RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
