@@ -47,18 +47,7 @@ const AdminDashboard = () => {
         return () => clearInterval(interval);
     }, []);
 
-    const handleUnreserve = async (carId) => {
-        if (!window.confirm('Are you sure you want to unreserve this car? It will go back on sale.')) return;
-
-        try {
-            await unreserveCar(carId);
-            addToast('Car unreserved successfully', 'success');
-            refreshData();
-        } catch (error) {
-            console.error('Error unreserving car:', error);
-            addToast('Failed to unreserve car', 'error');
-        }
-    };
+    // handleUnreserve moved below triggerConfirm to access modal logic
 
     const [editingCar, setEditingCar] = useState(null);
     const [editPriceValue, setEditPriceValue] = useState('');
@@ -84,6 +73,25 @@ const AdminDashboard = () => {
             onConfirm: () => {
                 config.onConfirm();
                 setModal(prev => ({ ...prev, isOpen: false }));
+            }
+        });
+    };
+
+    const handleUnreserve = async (carId) => {
+        triggerConfirm({
+            title: "Unreserve Car?",
+            message: "Are you sure you want to unreserve this car? It will go back on sale immediately.",
+            confirmText: "Unreserve",
+            type: "danger",
+            onConfirm: async () => {
+                try {
+                    await unreserveCar(carId);
+                    addToast('Car unreserved successfully', 'success');
+                    refreshData();
+                } catch (error) {
+                    console.error('Error unreserving car:', error);
+                    addToast('Failed to unreserve car', 'error');
+                }
             }
         });
     };
