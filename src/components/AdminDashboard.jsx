@@ -51,7 +51,7 @@ const AdminDashboard = () => {
 
     const [editingCar, setEditingCar] = useState(null);
     const [editPriceValue, setEditPriceValue] = useState('');
-    const [deletingCarId, setDeletingCarId] = useState(null);
+    // const [deletingCarId, setDeletingCarId] = useState(null); // Removed in favor of triggerConfirm
 
     // Custom Modal State
     const [modal, setModal] = useState({
@@ -97,16 +97,17 @@ const AdminDashboard = () => {
     };
 
     const handleDelete = (id) => {
-        setDeletingCarId(id);
-    };
-
-    const confirmDelete = async () => {
-        if (deletingCarId) {
-            await deleteCarListing(deletingCarId);
-            refreshData();
-            addToast("Listing deleted", "success");
-            setDeletingCarId(null);
-        }
+        triggerConfirm({
+            title: "Confirm Deletion",
+            message: "Are you sure you want to permanently remove this listing? This action cannot be undone.",
+            confirmText: "Yes, Delete",
+            type: "danger",
+            onConfirm: async () => {
+                await deleteCarListing(id);
+                refreshData();
+                addToast("Listing deleted", "success");
+            }
+        });
     };
 
     const handleEditPrice = (car) => {
@@ -748,23 +749,7 @@ const AdminDashboard = () => {
                 </div>
             )}
 
-            {/* DELETE CONFIRMATION MODAL */}
-            {deletingCarId && (
-                <div className={`modal-overlay ${deletingCarId ? 'active' : ''}`}>
-                    <div className="modal-content small">
-                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>⚠️</div>
-                        <h3 style={{ marginTop: 0 }}>Confirm Deletion</h3>
-                        <p style={{ color: '#64748b', marginBottom: '24px' }}>
-                            Are you sure you want to verify remove this listing? This action cannot be undone.
-                        </p>
-
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={() => setDeletingCarId(null)} className="action-btn" style={{ flex: 1, background: '#f1f5f9', color: '#64748b' }}>Cancel</button>
-                            <button onClick={confirmDelete} className="action-btn btn-delete" style={{ flex: 1 }}>Yes, Delete</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* DELETE CONFIRMATION MODAL - REMOVED (Replaced by generic ConfirmModal) */}
 
             {/* START AUCTION MODAL */}
             {initiatingAuctionCar && (
