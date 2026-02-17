@@ -2,6 +2,12 @@
 -- MASTER SCHEMA FIX FOR VROOMVALUE
 -- Run this in your Supabase SQL Editor
 
+-- 0. FIX PERMISSIONS FIRST (Prevents 406 errors)
+GRANT ALL ON public.users TO postgres, anon, authenticated, service_role;
+GRANT ALL ON public.cars TO postgres, anon, authenticated, service_role;
+GRANT ALL ON public.sell_requests TO postgres, anon, authenticated, service_role;
+GRANT ALL ON public.test_drives TO postgres, anon, authenticated, service_role;
+
 -- 1. Ensure sell_requests table is complete
 DO $$ 
 BEGIN 
@@ -183,10 +189,31 @@ DROP POLICY IF EXISTS "Authenticated View Access" ON sell_requests;
 CREATE POLICY "Public Submit Access" ON sell_requests FOR INSERT WITH CHECK (email IS NOT NULL);
 CREATE POLICY "Authenticated View Access" ON sell_requests FOR SELECT USING (auth.role() = 'authenticated');
 
--- Test Drives: Public can insert (with validation), only authenticated can read/manage
 DROP POLICY IF EXISTS "Allow all read" ON test_drives;
 DROP POLICY IF EXISTS "Allow all write" ON test_drives;
 DROP POLICY IF EXISTS "Public Request Access" ON test_drives;
 DROP POLICY IF EXISTS "Authenticated View Access" ON test_drives;
 CREATE POLICY "Public Request Access" ON test_drives FOR INSERT WITH CHECK (customerphone IS NOT NULL);
 CREATE POLICY "Authenticated View Access" ON test_drives FOR SELECT USING (auth.role() = 'authenticated');
+
+-- 7. FINAL STEP: Create/Update Admin Profile
+-- This ensures admin@vroomvalue.in has admin access
+DO $$
+DECLARE
+    admin_exists BOOLEAN;
+BEGIN
+    SELECT EXISTS(SELECT 1 FROM public.users WHERE email = 'admin@vroomvalue.in') INTO admin_exists;
+    
+    IF admin_exists THEN
+        UPDATE public.users 
+        SET role = 'admin', name = 'Admin'
+        WHERE email = 'admin@vroomvalue.in';
+        RAISE NOTICE 'Admin role updated successfully';
+    ELSE
+        INSERT INTO public.users (id, email, name, role)
+        SELECT id::text, email, 'Admin', 'admin'
+        FROM auth.users 
+        WHERE email = 'admin@vroomvalue.in';
+        RAISE NOTICE 'Admin profile created successfully';
+    END IF;
+END $$;
