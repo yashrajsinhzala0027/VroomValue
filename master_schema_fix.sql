@@ -82,6 +82,11 @@ BEGIN
         ALTER TABLE users ALTER COLUMN id TYPE TEXT USING id::text;
     END IF;
 
+    -- Ensure ID is PRIMARY KEY (Critical for UPSERT)
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints WHERE table_name = 'users' AND constraint_type = 'PRIMARY KEY') THEN
+        ALTER TABLE users ADD PRIMARY KEY (id);
+    END IF;
+
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone') THEN
         ALTER TABLE users ADD COLUMN phone TEXT;
     END IF;
