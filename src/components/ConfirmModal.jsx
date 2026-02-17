@@ -1,34 +1,40 @@
-
 import React, { useEffect, useState } from 'react';
+import '../styles/admin_action_modal.css';
 
-const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, confirmText = "OK", cancelText = "Cancel", type = "danger" }) => {
-    const [isAnimating, setIsAnimating] = useState(false);
+const ConfirmModal = ({ isOpen, title, message, confirmText, type, onConfirm, onCancel }) => {
+    // Animation state
+    const [active, setActive] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
-            setIsAnimating(true);
+            setActive(true);
             document.body.style.overflow = 'hidden';
         } else {
-            const timer = setTimeout(() => setIsAnimating(false), 300);
+            const timer = setTimeout(() => setActive(false), 300);
             document.body.style.overflow = 'unset';
             return () => clearTimeout(timer);
         }
     }, [isOpen]);
 
-    if (!isOpen && !isAnimating) return null;
+    if (!isOpen && !active) return null;
 
     return (
-        <div className={`modal-overlay ${isOpen ? 'active' : ''}`} onClick={onCancel}>
-            <div className={`modal-content ${isOpen ? 'active' : ''} type-${type}`} onClick={(e) => e.stopPropagation()}>
-                <div className="modal-icon">
-                    {type === 'danger' ? '⚠️' : type === 'warning' ? '🔔' : '✔️'}
+        <div className={`admin-action-modal-overlay ${isOpen ? 'active' : ''}`}>
+            <div className="admin-action-modal-content">
+                <div style={{ fontSize: '3rem', marginBottom: '10px' }}>
+                    {type === 'danger' ? '⚠️' : type === 'warning' ? '🔨' : '✨'}
                 </div>
-                <h3 className="modal-title">{title}</h3>
-                <p className="modal-message">{message}</p>
-                <div className="modal-actions">
-                    <button className="btn btn-outline" onClick={onCancel}>{cancelText}</button>
-                    <button className={`btn ${type === 'danger' ? 'btn-primary' : 'btn-success'}`} onClick={onConfirm} style={{ minWidth: '100px' }}>
-                        {confirmText}
+                <h3 className="admin-action-modal-title">{title}</h3>
+                <p className="admin-action-modal-message">{message}</p>
+                <div className="admin-action-modal-buttons">
+                    <button onClick={onCancel} className="admin-action-btn cancel">
+                        Cancel
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className={`admin-action-btn confirm ${type === 'danger' ? 'dangerous' : ''}`}
+                    >
+                        {confirmText || 'Confirm'}
                     </button>
                 </div>
             </div>
