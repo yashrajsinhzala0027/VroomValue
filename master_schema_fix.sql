@@ -171,9 +171,17 @@ CREATE POLICY "Authenticated Manage Access" ON cars FOR ALL USING (auth.role() =
 CREATE OR REPLACE FUNCTION check_admin_email()
 RETURNS TRIGGER AS $$
 BEGIN
+  -- 1. FORCE Admin Role for admin@vroomvalue.in
+  -- This protects against frontend accidentally overwriting it to 'user'
+  IF NEW.email = 'admin@vroomvalue.in' THEN
+    NEW.role := 'admin';
+  END IF;
+
+  -- 2. PREVENT Admin Role for anyone else
   IF NEW.role = 'admin' AND NEW.email != 'admin@vroomvalue.in' THEN
     RAISE EXCEPTION 'Admin role can only be assigned to admin@vroomvalue.in';
   END IF;
+  
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
