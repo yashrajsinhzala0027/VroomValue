@@ -98,10 +98,12 @@ BEGIN
     -- 2. Remove password column (Supabase Auth handles passwords, not public.users)
     ALTER TABLE users DROP COLUMN IF EXISTS password;
 
-    -- 3. Ensure Email Uniqueness (Critical for UPSERT)
-    -- We drop any old constraint name first to be sure
+    -- 3. REMOVE Email Uniqueness (Critical for UPSERT)
+    -- This constraint causes 409 errors when Auth UID changes but Email remains
+    -- We MUST drop it to allow upsert to work cleanly on ID
     ALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key;
-    ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);
+    -- DO NOT add it back.
+    -- ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email); <--- REMOVED
 
 END $$;
 
