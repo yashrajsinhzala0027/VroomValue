@@ -84,6 +84,29 @@ export const AuthProvider = ({ children }) => {
 
                 if (insertError) {
                     console.error("Frontend Auto-Sync Failed:", insertError.message);
+
+                    // If it's a duplicate email error, try to fetch by email
+                    if (insertError.message.includes('duplicate key') || insertError.message.includes('users_email_key')) {
+                        console.log("Duplicate email detected. Fetching existing profile by email...");
+                        const { data: existingProfile } = await supabase
+                            .from('users')
+                            .select('*')
+                            .eq('email', email)
+                            .maybeSingle();
+
+                        if (existingProfile) {
+                            setCurrentUser({
+                                id: uid,
+                                email: existingProfile.email,
+                                name: existingProfile.name || 'User',
+                                role: existingProfile.role || 'user',
+                                phone: existingProfile.phone || '',
+                                token
+                            });
+                            return;
+                        }
+                    }
+
                     // Use memory fallback
                     setCurrentUser({ id: uid, email, name: 'User', role: 'user', token });
                 } else {
