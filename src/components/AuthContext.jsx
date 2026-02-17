@@ -10,6 +10,8 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const processedUIDs = React.useRef(new Set());
+
     useEffect(() => {
         const checkSession = async () => {
             try {
@@ -25,8 +27,11 @@ export const AuthProvider = ({ children }) => {
                     };
                     setCurrentUser(baseUser);
 
-                    // 2. Fetch extended profile in background
-                    fetchProfile(session.user.id, session.access_token, session.user.email);
+                    // 2. Fetch extended profile in background (IF NOT ALREADY FETCHED)
+                    if (!processedUIDs.current.has(session.user.id)) {
+                        processedUIDs.current.add(session.user.id);
+                        fetchProfile(session.user.id, session.access_token, session.user.email);
+                    }
                 }
             } catch (err) {
                 console.error("Auth initialization failed:", err);
@@ -47,9 +52,15 @@ export const AuthProvider = ({ children }) => {
                     token: session.access_token
                 };
                 setCurrentUser(baseUser);
-                fetchProfile(session.user.id, session.access_token, session.user.email);
+
+                // Deduplicate sync calls
+                if (!processedUIDs.current.has(session.user.id)) {
+                    processedUIDs.current.add(session.user.id);
+                    fetchProfile(session.user.id, session.access_token, session.user.email);
+                }
             } else {
                 setCurrentUser(null);
+                processedUIDs.current.clear(); // Clear cache on logout
             }
             setLoading(false);
         });
