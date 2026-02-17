@@ -84,7 +84,10 @@ BEGIN
         ALTER TABLE users ADD COLUMN dob TEXT;
     END IF;
 
-    -- 2. Ensure Email Uniqueness (Critical for UPSERT)
+    -- 2. Remove password column (Supabase Auth handles passwords, not public.users)
+    ALTER TABLE users DROP COLUMN IF EXISTS password;
+
+    -- 3. Ensure Email Uniqueness (Critical for UPSERT)
     -- We drop any old constraint name first to be sure
     ALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key;
     ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);
