@@ -18,7 +18,7 @@ BEGIN
   
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Step 2: Apply the constraint as a trigger
 DROP TRIGGER IF EXISTS enforce_admin_email ON public.users;

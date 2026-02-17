@@ -160,7 +160,7 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 DROP TRIGGER IF EXISTS enforce_admin_email ON public.users;
 CREATE TRIGGER enforce_admin_email
