@@ -59,82 +59,53 @@ export const AuthProvider = ({ children }) => {
 
     const fetchProfile = async (uid, token, email = null) => {
         try {
-            console.log("Fetching profile for UID:", uid);
-            const { data: profile, error } = await supabase
+            // 1. Fetch profile by ID
+            let { data: profile, error } = await supabase
                 .from('users')
                 .select('*')
                 .eq('id', uid)
                 .maybeSingle();
 
-            if (error || !profile || typeof profile !== 'object') {
-                if (error) console.error("Supabase Profile Query Error:", error.message, error.code);
+            if (error) console.error("Profile Fetch Error:", error.message);
 
-                // FALLBACK: If profile is missing, try to create it from the frontend
-                console.warn("Profile missing. Attempting frontend sync for UID:", uid);
-                const { data: newProfile, error: insertError } = await supabase
+            // 2. If doesn't exist, UPSERT via ID
+            if (!profile) {
+                console.log("Profile missing. Upserting for UID:", uid);
+
+                const { data: newProfile, error: upsertError } = await supabase
                     .from('users')
-                    .insert([{
+                    .upsert({
                         id: uid,
                         email: email,
-                        name: (await supabase.auth.getUser()).data.user?.user_metadata?.name || 'New User',
+                        name: (await supabase.auth.getUser()).data.user?.user_metadata?.name || 'User',
                         role: 'user'
-                    }])
+                    }, { onConflict: 'id' })
                     .select()
                     .maybeSingle();
 
-                if (insertError) {
-                    console.error("Frontend Auto-Sync Failed:", insertError.message);
-
-                    // If it's a duplicate email error, try to fetch by email
-                    if (insertError.message.includes('duplicate key') || insertError.message.includes('users_email_key')) {
-                        console.log("Duplicate email detected. Fetching existing profile by email...");
-                        const { data: existingProfile } = await supabase
-                            .from('users')
-                            .select('*')
-                            .eq('email', email)
-                            .maybeSingle();
-
-                        if (existingProfile) {
-                            setCurrentUser({
-                                id: uid,
-                                email: existingProfile.email,
-                                name: existingProfile.name || 'User',
-                                role: existingProfile.role || 'user',
-                                phone: existingProfile.phone || '',
-                                token
-                            });
-                            return;
-                        }
-                    }
-
-                    // Use memory fallback
-                    setCurrentUser({ id: uid, email, name: 'User', role: 'user', token });
+                if (upsertError) {
+                    console.error("Profile Sync Error:", upsertError.message);
                 } else {
-                    console.log("Frontend Auto-Sync Success!");
-                    const p = newProfile || {};
-                    setCurrentUser({
-                        id: p.id || uid,
-                        email: p.email || email,
-                        name: p.name || 'User',
-                        role: p.role || 'user',
-                        token
-                    });
+                    profile = newProfile;
                 }
-                return;
             }
 
+            // 3. Set User State (No retries)
             const mappedUser = {
-                id: profile.id || uid,
-                email: profile.email || email,
-                name: profile.name || 'User',
-                role: profile.role || 'user',
-                phone: profile.phone || '',
+                id: uid,
+                email: email || profile?.email,
+                name: profile?.name || 'User',
+                role: profile?.role || 'user',
+                phone: profile?.phone || '',
                 token
             };
+
+            console.log("User Profile Loaded:", mappedUser.role);
             setCurrentUser(mappedUser);
+
         } catch (err) {
             console.error("AuthContext Critical Error:", err);
-            // Even on total failure, set a minimal user to prevent white screen if they have a session
+            // Minimal fallback to prevent crash
             setCurrentUser({ id: uid, email: email || 'user@example.com', role: 'user', token });
         }
     };
