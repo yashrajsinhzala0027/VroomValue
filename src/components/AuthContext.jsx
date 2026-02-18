@@ -65,7 +65,15 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         });
 
-        return () => subscription.unsubscribe();
+        // Failsafe: Force loading to false after 2 seconds to prevent white screen
+        const timer = setTimeout(() => {
+            if (loading) setLoading(false);
+        }, 2000);
+
+        return () => {
+            subscription.unsubscribe();
+            clearTimeout(timer);
+        };
     }, []);
 
     const fetchProfile = async (uid, token, email = null) => {
