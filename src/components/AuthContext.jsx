@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
                     // 2. Fetch extended profile in background (IF NOT ALREADY FETCHED)
                     if (!processedUIDs.current.has(session.user.id)) {
                         processedUIDs.current.add(session.user.id);
-                        fetchProfile(session.user.id, session.access_token, session.user.email);
+                        await fetchProfile(session.user.id, session.access_token, session.user.email);
                     }
                 }
             } catch (err) {
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
                 // Deduplicate sync calls
                 if (!processedUIDs.current.has(session.user.id)) {
                     processedUIDs.current.add(session.user.id);
-                    fetchProfile(session.user.id, session.access_token, session.user.email);
+                    await fetchProfile(session.user.id, session.access_token, session.user.email);
                 }
             } else {
                 setCurrentUser(null);
@@ -122,7 +122,13 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
             console.error("AuthContext Critical Error:", err);
             // Minimal fallback to prevent crash
-            setCurrentUser({ id: uid, email: email || 'user@example.com', role: 'user', token });
+            // Minimal fallback to prevent crash
+            setCurrentUser(prevResult => ({
+                id: uid,
+                email: email || 'user@example.com',
+                role: prevResult?.role || 'user',
+                token
+            }));
         }
     };
 
