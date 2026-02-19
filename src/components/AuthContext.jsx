@@ -81,15 +81,20 @@ export const AuthProvider = ({ children }) => {
             role: existingRole,
             token: session.access_token
         };
-        setCurrentUser(baseUser);
-        setLoading(false); // RELEASE MAIN LOCK IMMEDIATELY
-
-        // 3. Fetch verified role in background
-        if (!processedUIDs.current.has(session.user.id)) {
-            processedUIDs.current.add(session.user.id);
+        // 3. Prepare for background verification
+        const needsVerification = !processedUIDs.current.has(session.user.id);
+        if (needsVerification) {
             setIsVerifying(true);
-            await fetchProfile(session.user.id, session.access_token, session.user.email, abortControllerRef.current.signal);
-            setIsVerifying(false);
+            processedUIDs.current.add(session.user.id);
+        }
+
+        setCurrentUser(baseUser);
+        setLoading(false); // RELEASE MAIN LOCK
+
+        // 4. Actually fetch verified role in background
+        if (needsVerification) {
+            fetchProfile(session.user.id, session.access_token, session.user.email, abortControllerRef.current.signal)
+                .finally(() => setIsVerifying(false));
         }
     };
 
