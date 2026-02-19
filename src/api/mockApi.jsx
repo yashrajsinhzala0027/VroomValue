@@ -64,9 +64,9 @@ const IS_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 // Helper to simulate delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const getCars = async (filters = {}) => {
+export const getCars = async (filters = {}, columns = '*') => {
     if (IS_MOCK) {
-        await delay(800);
+        await delay(300); // Reduced delay
         let filtered = [...INITIAL_CARS];
 
         if (filters.make && filters.make.length > 0) {
@@ -102,7 +102,7 @@ export const getCars = async (filters = {}) => {
     }
 
     try {
-        let query = supabase.from('cars').select('*');
+        let query = supabase.from('cars').select(columns);
 
         // Apply filters only if they exist
         if (filters.city) query = query.eq('city', filters.city);
@@ -257,9 +257,9 @@ export const bookTestDrive = async (data) => {
 };
 
 export const getTestDrives = async () => {
-    if (IS_MOCK) { await delay(500); return []; }
+    if (IS_MOCK) { await delay(300); return []; }
     try {
-        const { data, error } = await supabase.from('test_drives').select('*');
+        const { data, error } = await supabase.from('test_drives').select('id, date, name, phone, cartitle, time');
         if (error) throw error;
         return camelize(data);
     } catch (err) {
@@ -289,9 +289,9 @@ export const submitSellRequest = async (data) => {
 };
 
 export const getSellRequests = async () => {
-    if (IS_MOCK) { await delay(800); return []; }
+    if (IS_MOCK) { await delay(400); return []; }
     try {
-        const { data, error } = await supabase.from('sell_requests').select('*');
+        const { data, error } = await supabase.from('sell_requests').select('id, requestdate, make, model, city, kms, priceinr, images, status');
         if (error) throw error;
         return camelize(data);
     } catch (err) {

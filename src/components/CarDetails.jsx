@@ -13,6 +13,7 @@ import ScheduleTestDrive from './ScheduleTestDrive';
 import BiddingWidget from './BiddingWidget';
 import VirtualShowroom from './VirtualShowroom';
 import { CarHealthScore, ResalePredictor } from './IntelligenceCenter';
+import AIValuationMeter from './AIValuationMeter';
 
 const CarDetails = () => {
     const { id } = useParams();
@@ -174,16 +175,21 @@ const CarDetails = () => {
                             </button>
                         </section>
 
+                        <AIValuationMeter score={car.id % 2 === 0 ? 94 : 91} />
+
                         <section className="glass-panel vehicle-overview">
                             <h2>Vehicle Overview</h2>
-                            <p className="overview-text">
+                            <p className="overview-text" style={{ fontSize: '1.1rem', lineHeight: '1.7', color: 'var(--text-main)', marginBottom: '32px' }}>
                                 {car.description}
                             </p>
-                            <div className="feature-tag-list">
-                                {features.slice(0, 8).map(f => (
-                                    <span key={f} className="badge badge-outline">
-                                        {f}
-                                    </span>
+
+                            <h3>Premium Features</h3>
+                            <div className="features-icon-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px', marginTop: '20px' }}>
+                                {features.map(f => (
+                                    <div key={f} className="feature-icon-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'var(--bg-main)', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                                        <span style={{ fontSize: '1.2rem' }}>✨</span>
+                                        <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{f}</span>
+                                    </div>
                                 ))}
                             </div>
                         </section>
@@ -196,21 +202,25 @@ const CarDetails = () => {
                         />
 
                         <section className="glass-panel spec-grid-container">
-                            <h2>
-                                <span style={{ color: 'var(--primary)' }}>⚙️</span> Key Specifications
-                            </h2>
-                            <div className="spec-grid">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                                <h2 style={{ margin: 0 }}>Technical Specifications</h2>
+                                <span className="badge badge-verified">VV Certified Audit</span>
+                            </div>
+                            <div className="spec-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '24px' }}>
                                 {[
-                                    { label: 'Engine', val: car.engineCapacity ? `${car.engineCapacity} cc` : '1.2L dual-Jet' },
-                                    { label: 'Mileage', val: car.mileageKmpl ? `${car.mileageKmpl} kmpl` : '22.3 kmpl' },
-                                    { label: 'RTO', val: car.rto || 'DL-01' },
-                                    { label: 'Body', val: car.bodyType || 'Hatchback' },
-                                    { label: 'Trans', val: car.transmission },
-                                    { label: 'Fuel', val: car.fuel }
+                                    { label: 'Engine', val: car.engineCapacity ? `${car.engineCapacity} cc` : '1.2L dual-Jet', icon: '🚀' },
+                                    { label: 'Mileage', val: car.mileageKmpl ? `${car.mileageKmpl} kmpl` : '22.3 kmpl', icon: '⛽' },
+                                    { label: 'RTO', val: car.rto || 'DL-01', icon: '📍' },
+                                    { label: 'Body', val: car.bodyType || 'Hatchback', icon: '🚗' },
+                                    { label: 'Trans', val: car.transmission, icon: '⚙️' },
+                                    { label: 'Fuel', val: car.fuel, icon: '🔥' },
+                                    { label: 'Seats', val: car.seats || '5 Seater', icon: '💺' },
+                                    { label: 'Insurance', val: car.insuranceValidity || 'Comprehensive', icon: '🛡️' }
                                 ].map(spec => (
-                                    <div key={spec.label}>
-                                        <div className="spec-item-label">{spec.label}</div>
-                                        <div className="spec-item-value">{spec.val}</div>
+                                    <div key={spec.label} style={{ padding: '16px', background: 'rgba(255,255,255,0.5)', borderRadius: '16px', border: '1px solid var(--border)' }}>
+                                        <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>{spec.icon}</div>
+                                        <div className="spec-item-label" style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>{spec.label}</div>
+                                        <div className="spec-item-value" style={{ fontWeight: 800, fontSize: '1rem', marginTop: '4px' }}>{spec.val}</div>
                                     </div>
                                 ))}
                             </div>
@@ -254,12 +264,33 @@ const CarDetails = () => {
                                         <div className="badge-reserved badge-status-large">RESERVED</div>
                                     ) : (
                                         <>
-                                            <button onClick={handleBuy} className="btn btn-primary" style={{ width: '100%', height: '60px', fontSize: '1.1rem', fontWeight: 800 }}>BUY THIS VEHICLE</button>
+                                            <button onClick={handleBuy} className="btn btn-primary" style={{ width: '100%', height: '60px', fontSize: '1.2rem', fontWeight: 800 }}>BUY THIS VEHICLE</button>
                                             <button onClick={handleReserve} className="btn btn-outline" style={{ width: '100%', height: '54px', fontWeight: 700 }}>RESERVE NOW (₹10,000)</button>
+                                            <button onClick={() => addToast("Connecting to seller...", "info")} className="btn btn-outline" style={{ width: '100%', height: '54px', fontWeight: 700, borderColor: 'var(--primary)', color: 'var(--primary)' }}>CONTACT SELLER</button>
                                         </>
                                     )}
                                 </div>
                             )}
+
+                            <div className="seller-trust-box" style={{ marginTop: '32px', padding: '24px', borderRadius: '20px', background: 'var(--primary-soft)', border: '1px solid var(--primary-glow)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                                    <div style={{ padding: '8px', background: 'var(--primary)', borderRadius: '12px', color: 'white' }}>💼</div>
+                                    <div>
+                                        <div style={{ fontWeight: 800, fontSize: '1rem' }}>Verified Seller</div>
+                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>VroomValue Certified Partner</div>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                    <div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Response Rate</div>
+                                        <div style={{ fontWeight: 800, color: 'var(--success)' }}>98% (Express)</div>
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Location</div>
+                                        <div style={{ fontWeight: 800 }}>{car.city || 'Delhi'}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

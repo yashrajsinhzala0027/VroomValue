@@ -9,6 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isVerifying, setIsVerifying] = useState(false); // New: Track background profile fetch
 
     const abortControllerRef = React.useRef(null);
     const processedUIDs = React.useRef(new Set());
@@ -39,7 +40,8 @@ export const AuthProvider = ({ children }) => {
 
             if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'USER_UPDATED') {
                 if (session) {
-                    await handleLogin(session);
+                    // DO NOT AWAIT handleLogin - allow app to mount immediately
+                    handleLogin(session);
                 } else {
                     handleLogoutCleanup();
                 }
@@ -68,8 +70,6 @@ export const AuthProvider = ({ children }) => {
         abortControllerRef.current = new AbortController();
 
         // 2. Set basic state immediately from session
-        // CRITICAL: Preserve existing role if we are just refreshing the same user
-        // This prevents the "Access Denied" flicker when switching tabs
         const existingRole = (currentUser && currentUser.id === session.user.id) ? currentUser.role : 'user';
 
         const baseUser = {
@@ -80,11 +80,14 @@ export const AuthProvider = ({ children }) => {
             token: session.access_token
         };
         setCurrentUser(baseUser);
+        setLoading(false); // RELEASE MAIN LOCK IMMEDIATELY
 
-        // 3. Fetch verified role (centralized deduplication)
+        // 3. Fetch verified role in background
         if (!processedUIDs.current.has(session.user.id)) {
             processedUIDs.current.add(session.user.id);
+            setIsVerifying(true);
             await fetchProfile(session.user.id, session.access_token, session.user.email, abortControllerRef.current.signal);
+            setIsVerifying(false);
         }
     };
 
@@ -203,8 +206,9 @@ export const AuthProvider = ({ children }) => {
         login,
         signup,
         logout,
-        loading
-    }), [currentUser, login, signup, logout, loading]);
+        loading,
+        isVerifying // Expose this 
+    }), [currentUser, login, signup, logout, loading, isVerifying]);
 
     return (
         <AuthContext.Provider value={value}>

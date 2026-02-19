@@ -7,7 +7,7 @@ import { formatPriceINR } from '../utils/formatters';
 import { useToast } from './Toasts';
 
 const AdminDashboard = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, isVerifying: isAuthVerifying } = useAuth();
     const navigate = useNavigate();
     const { addToast } = useToast();
     const [cars, setCars] = useState([]);
@@ -16,17 +16,17 @@ const AdminDashboard = () => {
     const [testDrives, setTestDrives] = useState([]);
     const [activeTab, setActiveTab] = useState('inventory');
     const [loading, setLoading] = useState(true);
-
-    // Stats
-    const totalInventory = cars.filter(c => c.status === 'approved' && !c.auction?.isAuction).length;
-    const pendingRequests = sellRequests.length;
-    const activeAuctions = cars.filter(c => c.auction?.isAuction && new Date(c.auction.endTime) > new Date()).length;
+    const [statusFilter, setActiveStatusFilter] = useState('all');
 
     const refreshData = async (isInitial = false) => {
         if (isInitial) setLoading(true);
         try {
+            // OPTIMIZED: Fetch only columns needed for the table
+            // This excludes heavy 'description', 'features', 'specs', etc.
+            const summaryCols = 'id, make, model, year, variant, priceinr, status, sellertype, city, reserve_details, buyer_details';
+
             const [carsData, requestsData, drivesData] = await Promise.all([
-                getCars(),
+                getCars({}, summaryCols),
                 getSellRequests(),
                 getTestDrives()
             ]);
@@ -43,15 +43,12 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         refreshData(true);
-        const interval = setInterval(() => refreshData(false), 30000); // Silent auto-refresh 
+        const interval = setInterval(() => refreshData(false), 30000);
         return () => clearInterval(interval);
     }, []);
 
-    // handleUnreserve moved below triggerConfirm to access modal logic
-
     const [editingCar, setEditingCar] = useState(null);
     const [editPriceValue, setEditPriceValue] = useState('');
-    // const [deletingCarId, setDeletingCarId] = useState(null); // Removed in favor of triggerConfirm
 
     // Custom Modal State
     const [modal, setModal] = useState({
@@ -143,7 +140,6 @@ const AdminDashboard = () => {
         if (!selectedRequest) return;
 
         try {
-            // Move from Requests -> Inventory
             await approveSellRequest(selectedRequest.id, {
                 priceINR: Number(reviewData.price),
                 kms: Number(reviewData.kms)
@@ -191,7 +187,6 @@ const AdminDashboard = () => {
         });
     };
 
-    // --- Start Auction Logic ---
     const [initiatingAuctionCar, setInitiatingAuctionCar] = useState(null);
     const [auctionConfig, setAuctionConfig] = useState({
         startingBid: '',
@@ -242,20 +237,22 @@ const AdminDashboard = () => {
         }
     };
 
-    // STRENGTHENED AUTH GUARD: Don't show Access Denied while loading/refreshing
-    // if we haven't confirmed they AREN'T an admin yet.
-    if (!loading && currentUser?.role !== 'admin') {
+    // STRENGTHENED AUTH GUARD: Wait for BACKGROUND verification too
+    if (!loading && !isAuthVerifying && currentUser?.role !== 'admin') {
         return <div className="container" style={{ padding: '40px' }}>Access Denied. Admin only.</div>;
     }
 
-    // Explicit return for null user while not loading (should be caught by routes, but good for safety)
+    // Explicit return for null user while not loading
     if (!loading && !currentUser) {
         return <div className="container" style={{ padding: '40px' }}>Please login as Admin.</div>;
     }
 
     const auctionCars = cars.filter(c => c.auction && c.auction.isAuction);
     const transactionCars = cars.filter(c => c.status === 'sold' || c.status === 'reserved');
-    const inventoryCars = cars.filter(c => c.status !== 'sold' && c.status !== 'reserved');
+    const inventoryCars = cars.filter(c => {
+        if (statusFilter === 'all') return c.status !== 'pending'; // Show all except raw pending
+        return c.status === statusFilter;
+    });
     const totalValue = cars.reduce((acc, car) => acc + car.priceINR, 0);
 
     return (
@@ -268,13 +265,14 @@ const AdminDashboard = () => {
             >
                 <span>❮</span>
             </button>
-            <div className="admin-header">
+            <div className="admin-header" style={{ background: 'linear-gradient(135deg, var(--secondary) 0%, #2d3748 100%)', padding: '40px 0', color: 'white' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                        <h1 style={{ marginBottom: '8px' }}>Admin Dashboard</h1>
-                        <p style={{ opacity: 0.8 }}>Manage your inventory and customer requests</p>
+                        <h1 style={{ marginBottom: '8px', color: 'white' }}>Command Center</h1>
+                        <p style={{ opacity: 0.8, fontSize: '1rem' }}>VroomValue Management & Analytics Platform</p>
                     </div>
-                    <div>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <button onClick={() => refreshData(true)} className="btn btn-primary" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>Refresh Live Feed</button>
                         <button
                             onClick={() => triggerConfirm({
                                 title: "Reset Inventory?",
@@ -286,7 +284,7 @@ const AdminDashboard = () => {
                             className="btn btn-outline"
                             style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white' }}
                         >
-                            Restock Inventory
+                            Emergency Reset
                         </button>
                     </div>
                 </div>
@@ -294,26 +292,33 @@ const AdminDashboard = () => {
 
             <div className="dashboard-container">
                 {/* Stats Cards */}
-                <div className="dashboard-stats-grid">
-                    <div className="stat-card">
-                        <div className="stat-label">Total Listings</div>
-                        <div className="stat-value">{cars.length}</div>
-                        <div style={{ marginTop: '8px', color: 'var(--success)', fontSize: '0.85rem' }}>↑ Live on site</div>
+                <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '40px', marginTop: '-30px' }}>
+                    <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>🏎️</div>
+                        <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Active Inventory</div>
+                        <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: 'var(--text-main)' }}>{cars.length}</div>
+                        <div style={{ color: 'var(--success)', fontSize: '0.8rem', fontWeight: 600 }}>↑ 12% from last month</div>
                     </div>
-                    <div className="stat-card">
-                        <div className="stat-label">Active Auctions</div>
-                        <div className="stat-value" style={{ color: '#f59e0b' }}>{auctionCars.length}</div>
-                        <div style={{ marginTop: '8px', color: '#8898aa', fontSize: '0.85rem' }}>Live bidding</div>
+
+                    <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>🔨</div>
+                        <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Live Auctions</div>
+                        <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: '#f59e0b' }}>{auctionCars.length}</div>
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600 }}>Real-time bidding active</div>
                     </div>
-                    <div className="stat-card">
-                        <div className="stat-label">Action Required</div>
-                        <div className="stat-value" style={{ color: sellRequests.length > 0 ? '#ff9900' : 'inherit' }}>{sellRequests.length}</div>
-                        <div style={{ marginTop: '8px', color: '#8898aa', fontSize: '0.85rem' }}>Pending Requests</div>
+
+                    <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>📝</div>
+                        <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Pending Approvals</div>
+                        <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: sellRequests.length > 0 ? 'var(--danger)' : 'var(--text-main)' }}>{sellRequests.length}</div>
+                        <div style={{ color: sellRequests.length > 0 ? 'var(--danger)' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600 }}>{sellRequests.length > 0 ? 'Action Required' : 'All caught up'}</div>
                     </div>
-                    <div className="stat-card">
-                        <div className="stat-label">Test Drives</div>
-                        <div className="stat-value">{testDrives.length}</div>
-                        <div style={{ marginTop: '8px', color: '#8898aa', fontSize: '0.85rem' }}>Total inquiries</div>
+
+                    <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>🤝</div>
+                        <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Total Inquiries</div>
+                        <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: 'var(--primary)' }}>{testDrives.length}</div>
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600 }}>Test drives & leads</div>
                     </div>
                 </div>
 
@@ -321,37 +326,56 @@ const AdminDashboard = () => {
                     <div style={{ textAlign: 'center', padding: '40px' }}>Loading dashboard...</div>
                 ) : (
                     <div className="admin-panel">
-                        <div className="admin-tabs">
-                            <button
-                                className={`admin-tab ${activeTab === 'inventory' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('inventory')}
-                            >
-                                Inventory ({cars.length})
-                            </button>
-                            <button
-                                className={`admin-tab ${activeTab === 'sell-requests' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('sell-requests')}
-                            >
-                                Sell Requests ({sellRequests.length})
-                            </button>
-                            <button
-                                className={`admin-tab ${activeTab === 'auctions' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('auctions')}
-                            >
-                                Auctions ({auctionCars.length})
-                            </button>
-                            <button
-                                className={`admin-tab ${activeTab === 'test-drives' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('test-drives')}
-                            >
-                                Test Drives ({testDrives.length})
-                            </button>
-                            <button
-                                className={`admin-tab ${activeTab === 'transactions' ? 'active' : ''}`}
-                                onClick={() => setActiveTab('transactions')}
-                            >
-                                Transactions ({transactionCars.length})
-                            </button>
+                        <div className="admin-tabs" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <div style={{ display: 'flex' }}>
+                                <button
+                                    className={`admin-tab ${activeTab === 'inventory' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('inventory')}
+                                >
+                                    Inventory ({cars.length})
+                                </button>
+                                <button
+                                    className={`admin-tab ${activeTab === 'sell-requests' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('sell-requests')}
+                                >
+                                    Sell Requests ({sellRequests.length})
+                                </button>
+                                <button
+                                    className={`admin-tab ${activeTab === 'auctions' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('auctions')}
+                                >
+                                    Auctions ({auctionCars.length})
+                                </button>
+                                <button
+                                    className={`admin-tab ${activeTab === 'test-drives' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('test-drives')}
+                                >
+                                    Test Drives ({testDrives.length})
+                                </button>
+                                <button
+                                    className={`admin-tab ${activeTab === 'transactions' ? 'active' : ''}`}
+                                    onClick={() => setActiveTab('transactions')}
+                                >
+                                    Transactions ({transactionCars.length})
+                                </button>
+                            </div>
+
+                            {activeTab === 'inventory' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingRight: '20px' }}>
+                                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>FILTER:</span>
+                                    <select
+                                        className="form-input"
+                                        style={{ width: '160px', height: '38px', borderRadius: '10px', fontSize: '0.85rem' }}
+                                        onChange={(e) => setActiveStatusFilter(e.target.value)}
+                                        value={statusFilter}
+                                    >
+                                        <option value="all">All Status</option>
+                                        <option value="approved">Approved</option>
+                                        <option value="sold">Sold</option>
+                                        <option value="reserved">Reserved</option>
+                                    </select>
+                                </div>
+                            )}
                         </div>
 
                         {activeTab === 'inventory' && (

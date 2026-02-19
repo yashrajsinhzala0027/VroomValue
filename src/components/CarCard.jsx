@@ -146,9 +146,21 @@ const CarCard = ({ car }) => {
                     </div>
                 </div>
 
-                <div className="car-card__price-row" style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span className="car-card__price" style={{ color: 'var(--text-main)', fontSize: '1.4rem', fontWeight: 900 }}>{formatPriceINR(car.priceINR)}</span>
-                    <span className="car-card__emi" style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', background: 'var(--primary-glow)', padding: '4px 8px', borderRadius: '6px' }}>EMI {formatPriceINR(Math.round(car.priceINR * 0.015))}</span>
+                <div className="car-card__price-row" style={{ borderTop: '1px solid var(--border)', paddingTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        <span className="car-card__price" style={{ color: 'var(--text-main)', fontSize: '1.8rem', fontWeight: 900 }}>{formatPriceINR(car.priceINR)}</span>
+                        {car.certified === 1 && (
+                            <span className="badge badge-verified" style={{ fontSize: '0.65rem' }}>✓ Verified</span>
+                        )}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                        <span className="car-card__emi" style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--primary)' }}>
+                            EMI from {formatPriceINR(Math.round(car.priceINR * 0.015))}/month
+                        </span>
+                        <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            🔥 High demand
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

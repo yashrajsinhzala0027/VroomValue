@@ -10,21 +10,30 @@ const Hero = () => {
             <div className="container hero-container">
                 <div className="hero-content">
                     <h1>
-                        DRIVE THE <br />
-                        <span className="hero-highlight">FUTURE</span> TODAY.
+                        India’s Smart AI Car <br />
+                        <span className="hero-highlight">Valuation & Marketplace</span>
                     </h1>
                     <p className="hero-subtitle">
-                        India's elite destination for certified pre-owned vehicles. Engineered with high-intelligence trust reports and market-accurate valuation.
+                        Get accurate car price insights instantly using real market data. The most trusted platform for buying and selling certified pre-owned vehicles.
                     </p>
 
-                    <div className="hero-trust-badges desktop-only">
+                    <div className="hero-actions" style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
+                        <button onClick={() => navigate('/sell')} className="btn btn-primary btn-lg">Sell My Car</button>
+                        <button onClick={() => navigate('/listings')} className="btn btn-outline btn-lg">Browse Cars</button>
+                    </div>
+
+                    <div className="hero-trust-badges">
                         <div className="trust-badge-item">
-                            <div className="trust-badge-icon">✓</div>
-                            <span className="trust-badge-text">140+ Point Audit</span>
+                            <div className="trust-badge-icon">🤖</div>
+                            <span className="trust-badge-text">Instant AI Valuation</span>
                         </div>
                         <div className="trust-badge-item">
-                            <div className="trust-badge-icon">✓</div>
-                            <span className="trust-badge-text">Real-time Valuation</span>
+                            <div className="trust-badge-icon">📋</div>
+                            <span className="trust-badge-text">Secure & Verified Listings</span>
+                        </div>
+                        <div className="trust-badge-item">
+                            <div className="trust-badge-icon">📈</div>
+                            <span className="trust-badge-text">Real Market Data Analysis</span>
                         </div>
                     </div>
                 </div>
