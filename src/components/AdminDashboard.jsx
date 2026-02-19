@@ -296,8 +296,23 @@ const AdminDashboard = () => {
                         <h1 style={{ marginBottom: '8px', color: 'white' }}>Command Center</h1>
                         <p style={{ opacity: 0.8, fontSize: '1rem' }}>VroomValue Management & Analytics Platform</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '12px' }}>
-                        <button onClick={() => refreshData(true)} className="btn btn-primary" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>Refresh Live Feed</button>
+                    <div style={{ display: 'flex', gap: '16px' }}>
+                        <button
+                            onClick={() => refreshData(true)}
+                            className="btn"
+                            style={{
+                                background: 'rgba(255,255,255,0.1)',
+                                backdropFilter: 'blur(8px)',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                color: 'white',
+                                borderRadius: '12px',
+                                padding: '10px 20px',
+                                fontWeight: '600',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            Refresh Live Feed
+                        </button>
                         <button
                             onClick={() => triggerConfirm({
                                 title: "Reset Inventory?",
@@ -306,8 +321,17 @@ const AdminDashboard = () => {
                                 type: "danger",
                                 onConfirm: resetApp
                             })}
-                            className="btn btn-outline"
-                            style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white' }}
+                            className="btn"
+                            style={{
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                backdropFilter: 'blur(8px)',
+                                border: '1px solid rgba(239, 68, 68, 0.4)',
+                                color: '#fecaca',
+                                borderRadius: '12px',
+                                padding: '10px 20px',
+                                fontWeight: '600',
+                                transition: 'all 0.2s ease'
+                            }}
                         >
                             Emergency Reset
                         </button>
