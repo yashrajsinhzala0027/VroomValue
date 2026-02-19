@@ -410,19 +410,21 @@ const AdminDashboard = () => {
                             </div>
 
                             {activeTab === 'inventory' && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingRight: '20px' }}>
-                                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)' }}>FILTER:</span>
-                                    <select
-                                        className="form-input"
-                                        style={{ width: '160px', height: '38px', borderRadius: '10px', fontSize: '0.85rem' }}
-                                        onChange={(e) => setActiveStatusFilter(e.target.value)}
-                                        value={statusFilter}
-                                    >
-                                        <option value="all">All Status</option>
-                                        <option value="approved">Approved</option>
-                                        <option value="sold">Sold</option>
-                                        <option value="reserved">Reserved</option>
-                                    </select>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingRight: '20px' }}>
+                                    <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.5px' }}>FILTER:</span>
+                                    <div className="admin-filter-select-wrapper">
+                                        <select
+                                            className="admin-filter-select"
+                                            onChange={(e) => setActiveStatusFilter(e.target.value)}
+                                            value={statusFilter}
+                                        >
+                                            <option value="all">All Status</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="sold">Sold</option>
+                                            <option value="reserved">Reserved</option>
+                                        </select>
+                                        <span className="admin-filter-chevron">▼</span>
+                                    </div>
                                 </div>
                             )}
                         </div>

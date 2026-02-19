@@ -3490,3 +3490,52 @@ input[type="checkbox"]:checked::after {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
 }
+
+/* Premium Admin Select */
+.admin-filter-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.admin-filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 40px 10px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 180px;
+    outline: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.admin-filter-select:hover {
+    border-color: var(--primary);
+    background: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.admin-filter-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.admin-filter-chevron {
+    position: absolute;
+    right: 16px;
+    pointer-events: none;
+    color: #64748b;
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+}
+
+.admin-filter-select-wrapper:hover .admin-filter-chevron {
+    color: var(--primary);
+    transform: translateY(2px);
+}
