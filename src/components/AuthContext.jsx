@@ -24,12 +24,14 @@ export const AuthProvider = ({ children }) => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log("Auth Lifecycle Event:", event);
 
-            // CRITICAL: Block any session if the lock is on
+            // CRITICAL: Block any session IF the lock is on AND we have a session
             if (localStorage.getItem('VV_AUTH_LOCK') === 'true') {
-                console.log("🔒 Blocking session due to Auth Lock.");
-                handleLogoutCleanup();
                 if (session) {
+                    console.log("🔒 Blocking session due to Auth Lock.");
+                    handleLogoutCleanup();
                     supabase.auth.signOut({ scope: 'global' }).catch(() => { });
+                } else if (currentUser) {
+                    handleLogoutCleanup();
                 }
                 setLoading(false);
                 return;
@@ -164,26 +166,28 @@ export const AuthProvider = ({ children }) => {
     const logout = React.useCallback(async () => {
         try {
             console.log("Triggering global sign out...");
-            // ACTIVATE PERSISTENT LOCK
+            // 1. Set Lock FIRST to prevent auto-restore during the process
             localStorage.setItem('VV_AUTH_LOCK', 'true');
 
-            // Force global session termination
-            await supabase.auth.signOut({ scope: 'global' });
+            // 2. Clear local state synchronously
+            handleLogoutCleanup();
 
-            // Wipe localStorage auth markers
+            // 3. Force server-side cleanup (don't let it block indefinitely)
+            await Promise.race([
+                supabase.auth.signOut({ scope: 'global' }),
+                new Promise(resolve => setTimeout(resolve, 3000))
+            ]).catch(err => console.error("SignOut low-level error:", err));
+
+            // 4. Final wipe
             Object.keys(localStorage).forEach(key => {
                 if (key.includes('sb-') || key.includes('supabase.auth') || key.includes('supabase-')) {
                     localStorage.removeItem(key);
                 }
             });
-            // Re-ensure lock is set after potential wipe loop
-            localStorage.setItem('VV_AUTH_LOCK', 'true');
+            localStorage.setItem('VV_AUTH_LOCK', 'true'); // Restore lock
 
-            // Wipe Cookies manually for good measure
             document.cookie.split(";").forEach((c) => {
-                document.cookie = c
-                    .replace(/^ +/, "")
-                    .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
             });
 
         } catch (err) {
