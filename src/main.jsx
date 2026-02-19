@@ -18,6 +18,14 @@ import ValuationWizard from './components/ValuationWizard';
 import { ListingSkeleton } from './components/SkeletonLoader';
 import LoadingScreen from './components/LoadingScreen';
 
+// VERCEL/VITE DEPLOYMENT FIX:
+// If a new build is deployed, old hashes in the user's browser will fail to load (MIME type error).
+// This listener catches the failure and forces a full reload to get the latest site assets.
+window.addEventListener('vite:preloadError', (event) => {
+    console.log('Preload error detected, forcing reload...', event);
+    window.location.reload(true);
+});
+
 // Styles loaded
 
 // Lazy Load Pages

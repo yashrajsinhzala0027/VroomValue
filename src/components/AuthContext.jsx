@@ -22,8 +22,6 @@ export const AuthProvider = ({ children }) => {
 
         // 2. SINGLE SOURCE OF TRUTH: handles initial session AND updates
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log("Auth Lifecycle Event:", event);
-
             // CRITICAL: Block any session IF the lock is on AND we have a session
             if (localStorage.getItem('VV_AUTH_LOCK') === 'true') {
                 if (session) {
@@ -36,6 +34,8 @@ export const AuthProvider = ({ children }) => {
                 setLoading(false);
                 return;
             }
+
+            console.log("Auth Lifecycle Event:", event);
 
             if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'USER_UPDATED') {
                 if (session) {
@@ -89,11 +89,12 @@ export const AuthProvider = ({ children }) => {
     };
 
     const handleLogoutCleanup = React.useCallback(() => {
+        if (!currentUser && processedUIDs.current.size === 0) return; // Already clean
         console.log("Nuclear State Cleanup Triggered");
         if (abortControllerRef.current) abortControllerRef.current.abort();
         setCurrentUser(null);
         processedUIDs.current.clear();
-    }, []);
+    }, [currentUser]);
 
     const fetchProfile = async (uid, token, email = null, signal) => {
         try {
