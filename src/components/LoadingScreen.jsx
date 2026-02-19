@@ -7,7 +7,7 @@ const LoadingScreen = ({ onComplete }) => {
         const timer = setTimeout(() => {
             setVisible(false);
             if (onComplete) onComplete();
-        }, 2000); // 2 seconds introduction
+        }, 800); // Snappier 0.8s introduction
         return () => clearTimeout(timer);
     }, [onComplete]);
 

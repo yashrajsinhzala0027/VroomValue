@@ -22,8 +22,8 @@ const AdminDashboard = () => {
     const pendingRequests = sellRequests.length;
     const activeAuctions = cars.filter(c => c.auction?.isAuction && new Date(c.auction.endTime) > new Date()).length;
 
-    const refreshData = async () => {
-        setLoading(true);
+    const refreshData = async (isInitial = false) => {
+        if (isInitial) setLoading(true);
         try {
             const [carsData, requestsData, drivesData] = await Promise.all([
                 getCars(),
@@ -37,13 +37,13 @@ const AdminDashboard = () => {
             console.error("Error loading admin data:", error);
             addToast("Failed to load dashboard data.", "error");
         } finally {
-            setLoading(false);
+            if (isInitial) setLoading(false);
         }
     };
 
     useEffect(() => {
-        refreshData();
-        const interval = setInterval(refreshData, 30000); // Auto-refresh every 30s
+        refreshData(true);
+        const interval = setInterval(() => refreshData(false), 30000); // Silent auto-refresh 
         return () => clearInterval(interval);
     }, []);
 

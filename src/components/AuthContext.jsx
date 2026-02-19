@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
         // Failsafe: force loading to false
         const timer = setTimeout(() => {
             setLoading(false);
-        }, 2000);
+        }, 1000);
 
         return () => {
             subscription.unsubscribe();
