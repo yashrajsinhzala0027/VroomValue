@@ -239,12 +239,37 @@ const AdminDashboard = () => {
 
     // STRENGTHENED AUTH GUARD: Wait for BACKGROUND verification too
     if (!loading && !isAuthVerifying && currentUser?.role !== 'admin') {
-        return <div className="container" style={{ padding: '40px' }}>Access Denied. Admin only.</div>;
+        return (
+            <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>
+                <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '40px' }}>
+                    <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🔒</div>
+                    <h2 style={{ marginBottom: '16px' }}>Access Restricted</h2>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
+                        This area is reserved for VroomValue administrators. Please log in with an authorized account to continue.
+                    </p>
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                        <button onClick={() => navigate('/')} className="btn btn-outline">Go Home</button>
+                        <button onClick={() => navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)} className="btn btn-primary">Login as Admin</button>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     // Explicit return for null user while not loading
     if (!loading && !currentUser) {
-        return <div className="container" style={{ padding: '40px' }}>Please login as Admin.</div>;
+        return (
+            <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>
+                <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '40px' }}>
+                    <div style={{ fontSize: '4rem', marginBottom: '20px' }}>👤</div>
+                    <h2 style={{ marginBottom: '16px' }}>Session Expired</h2>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
+                        Your session has timed out. Please log in again to access the Command Center.
+                    </p>
+                    <button onClick={() => navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)} className="btn btn-primary">Log In Now</button>
+                </div>
+            </div>
+        );
     }
 
     const auctionCars = cars.filter(c => c.auction && c.auction.isAuction);

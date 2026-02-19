@@ -70,7 +70,9 @@ export const AuthProvider = ({ children }) => {
         abortControllerRef.current = new AbortController();
 
         // 2. Set basic state immediately from session
-        const existingRole = (currentUser && currentUser.id === session.user.id) ? currentUser.role : 'user';
+        // USE SESSION STORAGE HINT: Prevent 'user' role flicker on reload
+        const cachedRole = sessionStorage.getItem('VV_ROLE_HINT') || 'user';
+        const existingRole = (currentUser && currentUser.id === session.user.id) ? currentUser.role : cachedRole;
 
         const baseUser = {
             id: session.user.id,
@@ -97,6 +99,7 @@ export const AuthProvider = ({ children }) => {
         if (abortControllerRef.current) abortControllerRef.current.abort();
         setCurrentUser(null);
         processedUIDs.current.clear();
+        sessionStorage.removeItem('VV_ROLE_HINT'); // Clean cache on logout
     }, [currentUser]);
 
     const fetchProfile = async (uid, token, email = null, signal) => {
@@ -140,14 +143,17 @@ export const AuthProvider = ({ children }) => {
             if (signal?.aborted) return;
 
             if (profile) {
-                setCurrentUser({
+                const updatedUser = {
                     id: uid,
                     email: email || profile.email,
                     name: profile.name || 'User',
                     role: profile.role || 'user',
                     phone: profile.phone || '',
                     token
-                });
+                };
+                setCurrentUser(updatedUser);
+                // PERSIST ROLE: Sync with session storage hint
+                sessionStorage.setItem('VV_ROLE_HINT', updatedUser.role);
             }
         } catch (err) {
             if (err.name === 'AbortError') return;
