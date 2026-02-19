@@ -66,11 +66,15 @@ export const AuthProvider = ({ children }) => {
         abortControllerRef.current = new AbortController();
 
         // 2. Set basic state immediately from session
+        // CRITICAL: Preserve existing role if we are just refreshing the same user
+        // This prevents the "Access Denied" flicker when switching tabs
+        const existingRole = (currentUser && currentUser.id === session.user.id) ? currentUser.role : 'user';
+
         const baseUser = {
             id: session.user.id,
             email: session.user.email,
             name: session.user.user_metadata?.first_name || session.user.user_metadata?.name || 'User',
-            role: 'user', // Temporary role until profile loaded
+            role: existingRole,
             token: session.access_token
         };
         setCurrentUser(baseUser);

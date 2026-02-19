@@ -242,8 +242,15 @@ const AdminDashboard = () => {
         }
     };
 
-    if (currentUser?.role !== 'admin') {
+    // STRENGTHENED AUTH GUARD: Don't show Access Denied while loading/refreshing
+    // if we haven't confirmed they AREN'T an admin yet.
+    if (!loading && currentUser?.role !== 'admin') {
         return <div className="container" style={{ padding: '40px' }}>Access Denied. Admin only.</div>;
+    }
+
+    // Explicit return for null user while not loading (should be caught by routes, but good for safety)
+    if (!loading && !currentUser) {
+        return <div className="container" style={{ padding: '40px' }}>Please login as Admin.</div>;
     }
 
     const auctionCars = cars.filter(c => c.auction && c.auction.isAuction);
