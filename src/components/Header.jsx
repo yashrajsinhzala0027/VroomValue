@@ -98,6 +98,7 @@ const Header = () => {
                                             <button
                                                 onClick={async () => {
                                                     try {
+                                                        sessionStorage.setItem('VV_LOGGING_OUT', 'true');
                                                         await logout();
                                                     } catch (err) {
                                                         console.error("Header logout trigger error:", err);

@@ -14,9 +14,25 @@ export const AuthProvider = ({ children }) => {
     const processedUIDs = React.useRef(new Set());
 
     useEffect(() => {
-        // SINGLE SOURCE OF TRUTH: handles initial session AND updates
+        // 1. Check for "Nuclear Cleanup" flag from previous reload
+        if (sessionStorage.getItem('VV_LOGGING_OUT') === 'true') {
+            console.log("Cleanup flag detected, forcing signed out state");
+            sessionStorage.removeItem('VV_LOGGING_OUT');
+            handleLogoutCleanup();
+            setLoading(false);
+            return;
+        }
+
+        // 2. SINGLE SOURCE OF TRUTH: handles initial session AND updates
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log("Auth Lifecycle Event:", event);
+
+            // Prevent auto-restore if we just tried to logout
+            if (sessionStorage.getItem('VV_LOGGING_OUT') === 'true') {
+                handleLogoutCleanup();
+                setLoading(false);
+                return;
+            }
 
             if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'USER_UPDATED') {
                 if (session) {
@@ -137,6 +153,9 @@ export const AuthProvider = ({ children }) => {
     const logout = React.useCallback(async () => {
         try {
             console.log("Triggering global sign out...");
+            // Mark session for atomic destruction on reload
+            sessionStorage.setItem('VV_LOGGING_OUT', 'true');
+
             // Force global session termination
             await supabase.auth.signOut({ scope: 'global' });
 
@@ -146,6 +165,14 @@ export const AuthProvider = ({ children }) => {
                     localStorage.removeItem(key);
                 }
             });
+
+            // Wipe Cookies manually for good measure
+            document.cookie.split(";").forEach((c) => {
+                document.cookie = c
+                    .replace(/^ +/, "")
+                    .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+
         } catch (err) {
             console.error("Logout process error:", err);
         } finally {
