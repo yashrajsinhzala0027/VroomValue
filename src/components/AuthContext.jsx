@@ -10,89 +10,85 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const abortControllerRef = React.useRef(null);
     const processedUIDs = React.useRef(new Set());
 
     useEffect(() => {
-        const checkSession = async () => {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    // 1. Set user IMMEDIATELY from session data (No waiting for database)
-                    const baseUser = {
-                        id: session.user.id,
-                        email: session.user.email,
-                        name: session.user.user_metadata?.first_name || session.user.user_metadata?.name || 'User',
-                        role: 'user', // Default
-                        token: session.access_token
-                    };
-                    setCurrentUser(baseUser);
-
-                    // 2. Fetch extended profile in background (IF NOT ALREADY FETCHED)
-                    if (!processedUIDs.current.has(session.user.id)) {
-                        processedUIDs.current.add(session.user.id);
-                        await fetchProfile(session.user.id, session.access_token, session.user.email);
-                    }
-                }
-            } catch (err) {
-                console.error("Auth initialization failed:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        checkSession();
-
+        // SINGLE SOURCE OF TRUTH: handles initial session AND updates
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (session) {
-                const baseUser = {
-                    id: session.user.id,
-                    email: session.user.email,
-                    name: session.user.user_metadata?.first_name || session.user.user_metadata?.name || 'User',
-                    role: 'user',
-                    token: session.access_token
-                };
-                setCurrentUser(baseUser);
+            console.log("Auth Lifecycle Event:", event);
 
-                // Deduplicate sync calls
-                if (!processedUIDs.current.has(session.user.id)) {
-                    processedUIDs.current.add(session.user.id);
-                    await fetchProfile(session.user.id, session.access_token, session.user.email);
+            if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'USER_UPDATED') {
+                if (session) {
+                    await handleLogin(session);
+                } else {
+                    handleLogoutCleanup();
                 }
-            } else {
-                setCurrentUser(null);
-                processedUIDs.current.clear(); // Clear cache on logout
+            } else if (event === 'SIGNED_OUT') {
+                handleLogoutCleanup();
             }
+
             setLoading(false);
         });
 
-        // Failsafe: Force loading to false after 2 seconds to prevent white screen
+        // Failsafe: Force loading to false after 2 seconds
         const timer = setTimeout(() => {
-            if (loading) setLoading(false);
+            setLoading(false);
         }, 2000);
 
         return () => {
             subscription.unsubscribe();
             clearTimeout(timer);
+            if (abortControllerRef.current) abortControllerRef.current.abort();
         };
     }, []);
 
-    const fetchProfile = async (uid, token, email = null) => {
+    const handleLogin = async (session) => {
+        // 1. Clear any pending profile fetches
+        if (abortControllerRef.current) abortControllerRef.current.abort();
+        abortControllerRef.current = new AbortController();
+
+        // 2. Set basic state immediately from session
+        const baseUser = {
+            id: session.user.id,
+            email: session.user.email,
+            name: session.user.user_metadata?.first_name || session.user.user_metadata?.name || 'User',
+            role: 'user', // Temporary role until profile loaded
+            token: session.access_token
+        };
+        setCurrentUser(baseUser);
+
+        // 3. Fetch verified role (centralized deduplication)
+        if (!processedUIDs.current.has(session.user.id)) {
+            processedUIDs.current.add(session.user.id);
+            await fetchProfile(session.user.id, session.access_token, session.user.email, abortControllerRef.current.signal);
+        }
+    };
+
+    const handleLogoutCleanup = React.useCallback(() => {
+        console.log("Nuclear State Cleanup Triggered");
+        if (abortControllerRef.current) abortControllerRef.current.abort();
+        setCurrentUser(null);
+        processedUIDs.current.clear();
+    }, []);
+
+    const fetchProfile = async (uid, token, email = null, signal) => {
         try {
-            // 1. Fetch profile by ID ONLY
-            // We NEVER query by email to avoid 406/409 errors and security issues
+            // STRICT: check if account is still relevant before requesting
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session || session.user.id !== uid) return;
+
             let { data: profile, error } = await supabase
                 .from('users')
                 .select('*')
                 .eq('id', uid)
                 .maybeSingle();
 
+            if (signal?.aborted) return;
             if (error) console.error("Profile Fetch Error:", error.message);
 
-            // 2. If doesn't exist, UPSERT via ID
-            // Safe upsert that handles race conditions via ON CONFLICT DO NOTHING/UPDATE
             if (!profile) {
-                console.log("Profile missing. Upserting for UID:", uid);
-
+                // UPSERT ONLY: No retry loops or recursion
                 const { data: newProfile, error: upsertError } = await supabase
                     .from('users')
                     .upsert({
@@ -104,46 +100,34 @@ export const AuthProvider = ({ children }) => {
                     .select()
                     .maybeSingle();
 
+                if (signal?.aborted) return;
                 if (upsertError) {
                     console.error("Profile Sync Error:", upsertError.message);
-                    // If upsert fails, we DO NOT retry. The database is the source of truth.
                 } else {
                     profile = newProfile;
                 }
             }
 
-            // 3. Set User State
-            // Even if profile fetch/create failed, we set a basic user object from session
-            // to prevent the "White Page" crash.
-            const mappedUser = {
-                id: uid,
-                email: email || profile?.email,
-                name: profile?.name || 'User',
-                role: profile?.role || 'user',
-                phone: profile?.phone || '',
-                token
-            };
+            if (signal?.aborted) return;
 
-            console.log("User Profile Loaded:", mappedUser.role);
-            setCurrentUser(mappedUser);
-
+            if (profile) {
+                setCurrentUser({
+                    id: uid,
+                    email: email || profile.email,
+                    name: profile.name || 'User',
+                    role: profile.role || 'user',
+                    phone: profile.phone || '',
+                    token
+                });
+            }
         } catch (err) {
-            console.error("AuthContext Critical Error:", err);
-            // Minimal fallback to prevent crash
-            // Minimal fallback to prevent crash
-            setCurrentUser(prevResult => ({
-                id: uid,
-                email: email || 'user@example.com',
-                role: prevResult?.role || 'user',
-                token
-            }));
+            if (err.name === 'AbortError') return;
+            console.error("AuthContext fetchProfile Critical:", err);
         }
     };
 
     const login = React.useCallback(async (email, password) => {
-        const user = await loginUser({ email, password });
-        // Profile is handled by onAuthStateChange
-        return user;
+        return await loginUser({ email, password });
     }, []);
 
     const signup = React.useCallback(async (userData) => {
@@ -151,9 +135,23 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const logout = React.useCallback(async () => {
-        await supabase.auth.signOut();
-        setCurrentUser(null);
-    }, []);
+        try {
+            console.log("Triggering global sign out...");
+            // Force global session termination
+            await supabase.auth.signOut({ scope: 'global' });
+
+            // Wipe localStorage auth markers
+            Object.keys(localStorage).forEach(key => {
+                if (key.includes('sb-') || key.includes('supabase.auth')) {
+                    localStorage.removeItem(key);
+                }
+            });
+        } catch (err) {
+            console.error("Logout process error:", err);
+        } finally {
+            handleLogoutCleanup();
+        }
+    }, [handleLogoutCleanup]);
 
     const value = React.useMemo(() => ({
         currentUser,

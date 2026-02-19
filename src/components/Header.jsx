@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useWishlist } from './WishlistContext';
 import BrandLogo from './BrandLogo';
@@ -10,6 +10,7 @@ const Header = () => {
     const { currentUser, logout } = useAuth();
     const { wishlist } = useWishlist();
     const location = useLocation();
+    const navigate = useNavigate();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -94,7 +95,19 @@ const Header = () => {
                                             )}
                                         </div>
                                         <div className="dropdown-footer">
-                                            <button onClick={() => { logout(); setIsDropdownOpen(false); }} className="dropdown-logout-btn">
+                                            <button
+                                                onClick={async () => {
+                                                    try {
+                                                        await logout();
+                                                    } catch (err) {
+                                                        console.error("Header logout trigger error:", err);
+                                                    } finally {
+                                                        setIsDropdownOpen(false);
+                                                        window.location.href = '/';
+                                                    }
+                                                }}
+                                                className="dropdown-logout-btn"
+                                            >
                                                 Sign Out
                                             </button>
                                         </div>
