@@ -307,7 +307,10 @@ export const approveSellRequest = async (id, data) => {
         await supabase.from('sell_requests').update({ status: 'approved' }).eq('id', id);
 
         // Step 2: Create new car listing
-        const decamelizedCar = decamelize(data);
+        // IMPORTANT: Remove the ID from the sell_request to allow 'cars' table to generate its own ID
+        const { id: _, requestDate: __, status: ___, ...carDetails } = data;
+
+        const decamelizedCar = decamelize(carDetails);
         const { error } = await supabase.from('cars').insert([{
             ...decamelizedCar,
             status: 'approved',

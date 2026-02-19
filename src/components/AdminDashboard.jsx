@@ -140,10 +140,14 @@ const AdminDashboard = () => {
         if (!selectedRequest) return;
 
         try {
-            await approveSellRequest(selectedRequest.id, {
+            // PASS FULL DATA: Include all car details from the request
+            const approvalData = {
+                ...selectedRequest,
                 priceINR: Number(reviewData.price),
                 kms: Number(reviewData.kms)
-            });
+            };
+
+            await approveSellRequest(selectedRequest.id, approvalData);
 
             refreshData();
             closeReviewModal();
