@@ -98,13 +98,16 @@ const Header = () => {
                                             <button
                                                 onClick={async () => {
                                                     try {
-                                                        sessionStorage.setItem('VV_LOGGING_OUT', 'true');
+                                                        // Persistent lock for cross-refresh guest mode
+                                                        localStorage.setItem('VV_AUTH_LOCK', 'true');
                                                         await logout();
                                                     } catch (err) {
                                                         console.error("Header logout trigger error:", err);
                                                     } finally {
                                                         setIsDropdownOpen(false);
                                                         window.location.href = '/';
+                                                        // Fallback hard refresh
+                                                        setTimeout(() => window.location.reload(), 100);
                                                     }
                                                 }}
                                                 className="dropdown-logout-btn"

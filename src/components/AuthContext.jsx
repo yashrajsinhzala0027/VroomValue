@@ -14,22 +14,23 @@ export const AuthProvider = ({ children }) => {
     const processedUIDs = React.useRef(new Set());
 
     useEffect(() => {
-        // 1. Check for "Nuclear Cleanup" flag from previous reload
-        if (sessionStorage.getItem('VV_LOGGING_OUT') === 'true') {
-            console.log("Cleanup flag detected, forcing signed out state");
-            sessionStorage.removeItem('VV_LOGGING_OUT');
+        // 1. Initial State Check
+        if (localStorage.getItem('VV_AUTH_LOCK') === 'true') {
+            console.log("🔒 Persistent Auth Lock detected.");
             handleLogoutCleanup();
-            setLoading(false);
-            return;
         }
 
         // 2. SINGLE SOURCE OF TRUTH: handles initial session AND updates
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log("Auth Lifecycle Event:", event);
 
-            // Prevent auto-restore if we just tried to logout
-            if (sessionStorage.getItem('VV_LOGGING_OUT') === 'true') {
+            // CRITICAL: Block any session if the lock is on
+            if (localStorage.getItem('VV_AUTH_LOCK') === 'true') {
+                console.log("🔒 Blocking session due to Auth Lock.");
                 handleLogoutCleanup();
+                if (session) {
+                    supabase.auth.signOut({ scope: 'global' }).catch(() => { });
+                }
                 setLoading(false);
                 return;
             }
@@ -40,14 +41,14 @@ export const AuthProvider = ({ children }) => {
                 } else {
                     handleLogoutCleanup();
                 }
-            } else if (event === 'SIGNED_OUT') {
+            } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
                 handleLogoutCleanup();
             }
 
             setLoading(false);
         });
 
-        // Failsafe: Force loading to false after 2 seconds
+        // Failsafe: force loading to false
         const timer = setTimeout(() => {
             setLoading(false);
         }, 2000);
@@ -92,7 +93,9 @@ export const AuthProvider = ({ children }) => {
         try {
             // STRICT: check if account is still relevant before requesting
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session || session.user.id !== uid) return;
+
+            // Check for lock here too
+            if (!session || session.user.id !== uid || localStorage.getItem('VV_AUTH_LOCK') === 'true') return;
 
             let { data: profile, error } = await supabase
                 .from('users')
@@ -143,28 +146,34 @@ export const AuthProvider = ({ children }) => {
     };
 
     const login = React.useCallback(async (email, password) => {
+        // UNLOCK auth on manual login attempt
+        localStorage.removeItem('VV_AUTH_LOCK');
         return await loginUser({ email, password });
     }, []);
 
     const signup = React.useCallback(async (userData) => {
+        // UNLOCK auth on manual signup attempt
+        localStorage.removeItem('VV_AUTH_LOCK');
         return await registerUser(userData);
     }, []);
 
     const logout = React.useCallback(async () => {
         try {
             console.log("Triggering global sign out...");
-            // Mark session for atomic destruction on reload
-            sessionStorage.setItem('VV_LOGGING_OUT', 'true');
+            // ACTIVATE PERSISTENT LOCK
+            localStorage.setItem('VV_AUTH_LOCK', 'true');
 
             // Force global session termination
             await supabase.auth.signOut({ scope: 'global' });
 
             // Wipe localStorage auth markers
             Object.keys(localStorage).forEach(key => {
-                if (key.includes('sb-') || key.includes('supabase.auth')) {
+                if (key.includes('sb-') || key.includes('supabase.auth') || key.includes('supabase-')) {
                     localStorage.removeItem(key);
                 }
             });
+            // Re-ensure lock is set after potential wipe loop
+            localStorage.setItem('VV_AUTH_LOCK', 'true');
 
             // Wipe Cookies manually for good measure
             document.cookie.split(";").forEach((c) => {
