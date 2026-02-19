@@ -175,10 +175,20 @@ export const getCarById = async (id) => {
 export const createCarListing = async (data) => {
     if (IS_MOCK) { await delay(1000); return { id: Date.now(), ...data }; }
     try {
+        // Safe ID generation (Auto-increment fallback)
+        const { data: lastCar } = await supabase
+            .from('cars')
+            .select('id')
+            .order('id', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        const nextId = (lastCar?.id || 0) + 1;
+
         const decamelizedData = decamelize(data);
         const { data: inserted, error } = await supabase
             .from('cars')
-            .insert([decamelizedData])
+            .insert([{ ...decamelizedData, id: nextId }])
             .select()
             .single();
 
@@ -306,13 +316,23 @@ export const approveSellRequest = async (id, data) => {
         // Step 1: Update request status
         await supabase.from('sell_requests').update({ status: 'approved' }).eq('id', id);
 
-        // Step 2: Create new car listing
-        // IMPORTANT: Remove the ID from the sell_request to allow 'cars' table to generate its own ID
+        // Step 2: Get next ID for cars (Manual generation since auto-increment is missing)
+        const { data: lastCar } = await supabase
+            .from('cars')
+            .select('id')
+            .order('id', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        const nextId = (lastCar?.id || 0) + 1;
+
+        // Step 3: Create new car listing
         const { id: _, requestDate: __, status: ___, ...carDetails } = data;
 
         const decamelizedCar = decamelize(carDetails);
         const { error } = await supabase.from('cars').insert([{
             ...decamelizedCar,
+            id: nextId,
             status: 'approved',
             sellertype: 'VroomValue Certified'
         }]);
