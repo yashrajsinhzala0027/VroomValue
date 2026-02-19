@@ -67,9 +67,14 @@ const AdminDashboard = () => {
             message: config.message || 'This action cannot be undone.',
             confirmText: config.confirmText || 'Confirm',
             type: config.type || 'danger',
-            onConfirm: () => {
-                config.onConfirm();
-                setModal(prev => ({ ...prev, isOpen: false }));
+            onConfirm: async () => {
+                try {
+                    await config.onConfirm();
+                    setModal(prev => ({ ...prev, isOpen: false }));
+                } catch (error) {
+                    console.error("Confirmation action failed:", error);
+                    // Modal stays open to let user know or try again 
+                }
             }
         });
     };
@@ -165,10 +170,16 @@ const AdminDashboard = () => {
             confirmText: "Reject",
             type: "danger",
             onConfirm: async () => {
-                if (selectedRequest?.id === id) closeReviewModal();
-                await rejectSellRequest(id);
-                refreshData();
-                addToast("Request rejected and removed", "info");
+                try {
+                    if (selectedRequest?.id === id) closeReviewModal();
+                    await rejectSellRequest(id);
+                    refreshData();
+                    addToast("Request rejected and removed", "success");
+                } catch (err) {
+                    console.error("Rejection error:", err);
+                    addToast("Failed to reject request", "error");
+                    throw err; // Re-throw for triggerConfirm handling
+                }
             }
         });
     };

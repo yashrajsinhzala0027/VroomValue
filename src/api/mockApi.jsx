@@ -349,7 +349,7 @@ export const rejectSellRequest = async (id) => {
     try {
         const { error } = await supabase
             .from('sell_requests')
-            .update({ status: 'rejected' })
+            .delete()
             .eq('id', id);
         if (error) throw error;
         return { success: true };
