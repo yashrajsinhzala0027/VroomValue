@@ -40,7 +40,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
         try {
             await bookTestDrive({
                 carId,
-                userId: user?.id,
+                userId: user?.id || null,
                 carTitle,
                 name,
                 date,

@@ -97,6 +97,9 @@ export const getCars = async (filters = {}, columns = '*') => {
             const minYear = Math.min(...filters.year.map(Number));
             filtered = filtered.filter(c => c.year >= minYear);
         }
+        if (filters.isAuction) {
+            filtered = filtered.filter(c => c.auction && c.auction.isAuction === true);
+        }
 
         return filtered;
     }
@@ -140,6 +143,9 @@ export const getCars = async (filters = {}, columns = '*') => {
             const [min, max] = filters.year;
             if (min) query = query.gte('year', min);
             if (max) query = query.lte('year', max);
+        }
+        if (filters.isAuction === 'true' || filters.isAuction === true) {
+            query = query.eq('reserve_details->isAuction', true);
         }
 
         const { data, error } = await query;
@@ -251,14 +257,19 @@ export const unreserveCar = async (id) => {
 
 export const bookTestDrive = async (data) => {
     if (IS_MOCK) { await delay(1000); return { success: true }; }
+    console.log("Supabase bookTestDrive payload:", data);
     try {
         const decamelizedData = decamelize(data);
+        console.log("Supabase bookTestDrive decamelized:", decamelizedData);
         const { error } = await supabase.from('test_drives').insert([{
             ...decamelizedData,
             status: 'pending',
             requestedat: new Date().toISOString()
         }]);
-        if (error) throw error;
+        if (error) {
+            console.error("Supabase bookTestDrive INSERT error details:", error);
+            throw error;
+        }
         return { success: true };
     } catch (err) {
         console.error("Supabase bookTestDrive error:", err);
@@ -301,12 +312,29 @@ export const submitSellRequest = async (data) => {
 export const getSellRequests = async () => {
     if (IS_MOCK) { await delay(400); return []; }
     try {
-        const { data, error } = await supabase.from('sell_requests').select('*');
+        const { data, error } = await supabase
+            .from('sell_requests')
+            .select('*')
+            .eq('status', 'pending');
         if (error) throw error;
         return camelize(data);
     } catch (err) {
         console.error("Supabase getSellRequests error:", err);
         throw err;
+    }
+};
+
+export const getUserCount = async () => {
+    if (IS_MOCK) { await delay(300); return 542; }
+    try {
+        const { count, error } = await supabase
+            .from('users')
+            .select('*', { count: 'exact', head: true });
+        if (error) throw error;
+        return count || 0;
+    } catch (err) {
+        console.error("Supabase getUserCount error:", err);
+        return 0; // Fallback to 0 if count fails
     }
 };
 
@@ -321,10 +349,7 @@ const VALID_CAR_COLUMNS = [
 export const approveSellRequest = async (id, data) => {
     if (IS_MOCK) { await delay(1200); return { success: true }; }
     try {
-        // Step 1: Update request status
-        await supabase.from('sell_requests').update({ status: 'approved' }).eq('id', id);
-
-        // Step 2: Get next ID (Manual generation needed as per previous NULL constraint fix)
+        // Step 1: Get next ID (Manual generation needed as per previous NULL constraint fix)
         const { data: lastCar } = await supabase
             .from('cars')
             .select('id')
@@ -334,14 +359,14 @@ export const approveSellRequest = async (id, data) => {
 
         const nextId = (lastCar?.id || 0) + 1;
 
-        // Step 3: Prepare valid car payload
+        // Step 2: Prepare valid car payload
         const decamelizedData = decamelize(data);
         const finalCarPayload = {};
 
-        // Filter: Only allow columns that exist in cars table
-        Object.keys(decamelizedData).forEach(key => {
-            if (VALID_CAR_COLUMNS.includes(key)) {
-                finalCarPayload[key] = decamelizedData[key];
+        // STRICT: Iterate over allowable columns instead of input keys
+        VALID_CAR_COLUMNS.forEach(col => {
+            if (decamelizedData.hasOwnProperty(col)) {
+                finalCarPayload[col] = decamelizedData[col];
             }
         });
 
@@ -350,32 +375,65 @@ export const approveSellRequest = async (id, data) => {
         finalCarPayload.status = 'approved';
         finalCarPayload.sellertype = 'VroomValue Certified';
 
-        // Step 4: Insert valid record
-        const { error } = await supabase.from('cars').insert([finalCarPayload]);
+        // Log final payload for debugging
+        console.log("Supabase Insert Payload:", finalCarPayload);
 
-        if (error) {
+        // Step 3: Insert valid record
+        const { error: insertError } = await supabase.from('cars').insert([finalCarPayload]);
+
+        if (insertError) {
             console.error("Insert failed with payload:", finalCarPayload);
-            throw error;
+            throw insertError;
         }
 
+        // Step 4: Update request status (Only if insert succeeds)
+        const { error: updateError, count } = await supabase
+            .from('sell_requests')
+            .update({ status: 'approved' })
+            .eq('id', id)
+            .select('*', { count: 'exact', head: true });
+
+        if (updateError) {
+            console.error("Status update failed for request ID:", id, updateError);
+            throw updateError;
+        }
+
+        if (count === 0) {
+            console.error(`Status update affected 0 rows for request ${id}. Check RLS policies.`);
+            throw new Error("No changes were saved. You may not have permission to update this request.");
+        }
+
+        console.log(`Approval Success: Car inserted and request ${id} updated. Rows affected: ${count}`);
         return { success: true };
     } catch (err) {
-        console.error("Supabase approveSellRequest error:", err);
+        console.error("CRITICAL: Supabase approveSellRequest error:", err);
         throw err;
     }
 };
 
 export const rejectSellRequest = async (id) => {
     if (IS_MOCK) { await delay(500); return { success: true }; }
+    console.log(`Attempting to reject/delete request ID: ${id}`);
     try {
-        const { error } = await supabase
+        const { error, count } = await supabase
             .from('sell_requests')
-            .delete()
+            .delete({ count: 'exact' })
             .eq('id', id);
-        if (error) throw error;
+
+        if (error) {
+            console.error(`Deletion failed for request ID: ${id}`, error);
+            throw error;
+        }
+
+        if (count === 0) {
+            console.error(`Deletion affected 0 rows for request ${id}. Check RLS policies.`);
+            throw new Error("No changes were saved. You may not have permission to delete this request.");
+        }
+
+        console.log(`Rejection Success: Deleted ${count} rows for request ID: ${id}`);
         return { success: true };
     } catch (err) {
-        console.error("Supabase rejectSellRequest error:", err);
+        console.error("CRITICAL: Supabase rejectSellRequest error:", err);
         throw err;
     }
 };
@@ -390,15 +448,30 @@ export const getValuation = async (details) => {
 export const placeBid = async (carId, userId, bidAmount) => {
     if (IS_MOCK) { await delay(500); return { success: true }; }
     try {
+        // 1. Fetch current auction state to prevent racing
         const { data: car, error: fetchError } = await supabase
             .from('cars')
-            .select('reserve_details')
+            .select('*')
             .eq('id', carId)
             .single();
 
         if (fetchError) throw fetchError;
+        if (!car) throw new Error("Car not found");
+        if (car.status === 'sold') throw new Error("This vehicle has already been sold.");
 
-        const reserve_details = car.reserve_details || { bids: [] };
+        const reserve_details = car.reserve_details || {};
+        const currentHigh = reserve_details.currentBid || reserve_details.startingBid || 0;
+
+        // 2. Validate Bid Amount
+        if (bidAmount <= currentHigh) {
+            throw new Error(`Your bid must be higher than the current bid of ${formatPriceINR(currentHigh)}`);
+        }
+
+        // 3. Check if auction is still active
+        if (reserve_details.endTime && new Date(reserve_details.endTime) < new Date()) {
+            throw new Error("This auction has already ended.");
+        }
+
         const newBid = {
             id: Date.now(),
             userId,
@@ -415,6 +488,7 @@ export const placeBid = async (carId, userId, bidAmount) => {
                     ...reserve_details,
                     currentBid: bidAmount,
                     highestBidder: userId,
+                    bidCount: (reserve_details.bidCount || 0) + 1,
                     bids: updatedBids
                 }
             })

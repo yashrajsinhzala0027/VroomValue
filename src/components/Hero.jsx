@@ -17,23 +17,38 @@ const Hero = () => {
                         Get accurate car price insights instantly using real market data. The most trusted platform for buying and selling certified pre-owned vehicles.
                     </p>
 
-                    <div className="hero-actions" style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
-                        <button onClick={() => navigate('/sell')} className="btn btn-primary btn-lg">Sell My Car</button>
-                        <button onClick={() => navigate('/listings')} className="btn btn-outline btn-lg">Browse Cars</button>
+                    <div className="hero-actions" style={{ display: 'flex', gap: '16px', marginBottom: '40px' }}>
+                        <button onClick={() => navigate('/sell')} className="btn btn-primary">Sell My Car</button>
+                        <button onClick={() => navigate('/listings')} className="btn btn-outline">Browse Cars</button>
+                    </div>
+
+                    <div className="hero-stats" style={{ display: 'flex', gap: '40px', marginBottom: '40px', padding: '24px 0', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+                        <div className="stat-item">
+                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--primary)' }}>1000+</div>
+                            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Cars Listed</div>
+                        </div>
+                        <div className="stat-item">
+                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--primary)' }}>500+</div>
+                            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Happy Users</div>
+                        </div>
+                        <div className="stat-item">
+                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--primary)' }}>50+</div>
+                            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Cities Covered</div>
+                        </div>
                     </div>
 
                     <div className="hero-trust-badges">
                         <div className="trust-badge-item">
-                            <div className="trust-badge-icon">🤖</div>
-                            <span className="trust-badge-text">Instant AI Valuation</span>
+                            <div className="trust-badge-icon">🛡️</div>
+                            <span className="trust-badge-text">AI Powered Valuation</span>
                         </div>
                         <div className="trust-badge-item">
-                            <div className="trust-badge-icon">📋</div>
-                            <span className="trust-badge-text">Secure & Verified Listings</span>
+                            <div className="trust-badge-icon">✓</div>
+                            <span className="trust-badge-text">Verified Listings</span>
                         </div>
                         <div className="trust-badge-item">
-                            <div className="trust-badge-icon">📈</div>
-                            <span className="trust-badge-text">Real Market Data Analysis</span>
+                            <div className="trust-badge-icon">📊</div>
+                            <span className="trust-badge-text">Real Market Insights</span>
                         </div>
                     </div>
                 </div>
@@ -43,11 +58,11 @@ const Hero = () => {
                     <SearchBar vertical={true} />
                     <div className="quick-filters">
                         <span className="quick-filter-label">Quick Filter:</span>
-                        {['SUV', 'Luxury', 'Hatchback', 'Electric'].map(tag => (
+                        {['SUV', 'Luxury', 'Sedan', 'Electric'].map(tag => (
                             <button
                                 key={tag}
                                 className="badge"
-                                style={{ background: 'var(--bg-main)', cursor: 'pointer', border: '1px solid var(--border)' }}
+                                style={{ background: 'transparent', cursor: 'pointer', border: '1px solid var(--border)', transition: 'all 0.2s' }}
                                 onClick={() => navigate(`/listings?bodyType=${tag}`)}
                             >{tag}</button>
                         ))}

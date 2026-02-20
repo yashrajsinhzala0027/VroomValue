@@ -11,9 +11,9 @@
 }
 
 .car-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary-glow);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary);
 }
 
 .car-card__image-container {
@@ -50,17 +50,17 @@
 }
 
 .car-card__badge {
-    background: var(--bg-glass);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(8px);
     color: var(--text-main);
-    padding: 6px 12px;
-    border-radius: var(--radius-sm);
-    font-size: 0.75rem;
-    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--border);
+    letter-spacing: 0.8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .car-card__badge.valuation.great {
@@ -76,15 +76,15 @@
 }
 
 .car-card__badge.certified {
-    background: #ecfdf5;
-    color: #059669;
-    border: 1px solid #10b981;
+    background: #10b981;
+    color: white;
+    border: none;
 }
 
 .car-card__badge.auction {
-    background: #fffbeb;
-    color: #d97706;
-    border: 1px solid #f59e0b;
+    background: #ef4444;
+    color: white;
+    border: none;
 }
 
 .car-card__wishlist {

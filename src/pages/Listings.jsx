@@ -210,8 +210,14 @@ const Listings = () => {
 
                         <div className="listings-header">
                             <div>
-                                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 900, color: 'var(--secondary)', marginBottom: '8px', lineHeight: 1 }}>Premium Inventory</h1>
-                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Showing {cars.length} elite certified vehicles</p>
+                                <h1 style={{ fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 900, color: 'var(--secondary)', marginBottom: '8px', lineHeight: 1 }}>
+                                    {filters.isAuction === 'true' ? 'Live Auctions' : 'Premium Inventory'}
+                                </h1>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                                    {filters.isAuction === 'true'
+                                        ? `Showing ${cars.length} vehicles with active bidding`
+                                        : `Showing ${cars.length} elite certified vehicles`}
+                                </p>
                             </div>
                             <div className="desktop-only" style={{ width: '280px' }}>
                                 <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '20px', letterSpacing: '1px' }}>Sort Logistics</div>

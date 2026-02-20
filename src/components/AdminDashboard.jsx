@@ -14,9 +14,12 @@ const AdminDashboard = () => {
     const [sellRequests, setSellRequests] = useState([]);
 
     const [testDrives, setTestDrives] = useState([]);
+    const [userCount, setUserCount] = useState(0);
     const [activeTab, setActiveTab] = useState('inventory');
     const [loading, setLoading] = useState(true);
     const [statusFilter, setActiveStatusFilter] = useState('all');
+    const [processingIds, setProcessingIds] = useState(new Set());
+    const [isRejectionProcessing, setIsRejectionProcessing] = useState(false);
 
     const refreshData = async (isInitial = false) => {
         if (isInitial) setLoading(true);
@@ -25,14 +28,16 @@ const AdminDashboard = () => {
             // This excludes heavy 'description', 'features', 'specs', etc.
             const summaryCols = 'id, make, model, year, variant, priceinr, status, sellertype, city, reserve_details, buyer_details';
 
-            const [carsData, requestsData, drivesData] = await Promise.all([
+            const [carsData, requestsData, drivesData, count] = await Promise.all([
                 getCars({}, summaryCols),
                 getSellRequests(),
-                getTestDrives()
+                getTestDrives(),
+                getUserCount()
             ]);
             setCars(carsData);
             setSellRequests(requestsData);
             setTestDrives(drivesData);
+            setUserCount(count);
         } catch (error) {
             console.error("Error loading admin data:", error);
             addToast("Failed to load dashboard data.", "error");
@@ -106,8 +111,10 @@ const AdminDashboard = () => {
             type: "danger",
             onConfirm: async () => {
                 await deleteCarListing(id);
-                refreshData();
-                addToast("Listing deleted", "success");
+                // Optimistically update local inventory
+                setCars(prev => prev.filter(car => car.id !== id));
+                await refreshData();
+                addToast("Vehicle removed from inventory", "info");
             }
         });
     };
@@ -142,9 +149,11 @@ const AdminDashboard = () => {
     };
 
     const handleApprove = async () => {
-        if (!selectedRequest) return;
+        if (!selectedRequest || processingIds.has(selectedRequest.id)) return;
 
         try {
+            setProcessingIds(prev => new Set(prev).add(selectedRequest.id));
+
             // PASS FULL DATA: Include all car details from the request
             const approvalData = {
                 ...selectedRequest,
@@ -154,12 +163,23 @@ const AdminDashboard = () => {
 
             await approveSellRequest(selectedRequest.id, approvalData);
 
-            refreshData();
+            // Update local state ONLY on success confirmed by backend
+            setSellRequests(prev => prev.filter(req => req.id !== selectedRequest.id));
+
             closeReviewModal();
             addToast("Listing Approved & Published!", "success");
+
+            // Allow DB longer to settle (1.5s)
+            setTimeout(() => refreshData(), 1500);
         } catch (err) {
-            console.error(err);
-            addToast("Failed to approve request", "error");
+            console.error("Approve Error:", err);
+            addToast(err.message || "Failed to approve request", "error");
+        } finally {
+            setProcessingIds(prev => {
+                const next = new Set(prev);
+                next.delete(selectedRequest?.id);
+                return next;
+            });
         }
     };
 
@@ -170,15 +190,30 @@ const AdminDashboard = () => {
             confirmText: "Reject",
             type: "danger",
             onConfirm: async () => {
+                setIsRejectionProcessing(true);
                 try {
+                    setProcessingIds(prev => new Set(prev).add(id));
                     if (selectedRequest?.id === id) closeReviewModal();
+
                     await rejectSellRequest(id);
-                    refreshData();
+
+                    // Update locally confirmed
+                    setSellRequests(prev => prev.filter(req => req.id !== id));
+
                     addToast("Request rejected and removed", "success");
+
+                    // Delay refresh to allow DB to settle
+                    setTimeout(() => refreshData(), 1500);
                 } catch (err) {
                     console.error("Rejection error:", err);
-                    addToast("Failed to reject request", "error");
+                    addToast(err.message || "Failed to reject request", "error");
                     throw err; // Re-throw for triggerConfirm handling
+                } finally {
+                    setProcessingIds(prev => {
+                        const next = new Set(prev);
+                        next.delete(id);
+                        return next;
+                    });
                 }
             }
         });
@@ -384,6 +419,13 @@ const AdminDashboard = () => {
                         <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: 'var(--primary)' }}>{testDrives.length}</div>
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600 }}>Test drives & leads</div>
                     </div>
+
+                    <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>👥</div>
+                        <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Total Users</div>
+                        <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: 'var(--text-main)' }}>{userCount}</div>
+                        <div style={{ color: 'var(--success)', fontSize: '0.8rem', fontWeight: 600 }}>Registered customers</div>
+                    </div>
                 </div>
 
                 {loading ? (
@@ -511,8 +553,8 @@ const AdminDashboard = () => {
                                                 </td>
                                             </tr>
                                         )}
-                                        {sellRequests.map(req => (
-                                            <tr key={req.id}>
+                                        {sellRequests.filter(r => !processingIds.has(r.id)).map(req => (
+                                            <tr key={req.id} style={{ opacity: processingIds.has(req.id) ? 0.5 : 1 }}>
                                                 <td>#{String(req.id).padStart(4, '0')}</td>
                                                 <td>{new Date(req.requestDate).toLocaleDateString()}</td>
                                                 <td>
@@ -525,9 +567,10 @@ const AdminDashboard = () => {
                                                     <button
                                                         onClick={() => openReviewModal(req)}
                                                         className="btn btn-primary"
+                                                        disabled={processingIds.has(req.id)}
                                                         style={{ padding: '6px 12px', fontSize: '0.8rem' }}
                                                     >
-                                                        Review & Approve
+                                                        {processingIds.has(req.id) ? 'Processing...' : 'Review & Approve'}
                                                     </button>
                                                 </td>
                                             </tr>
@@ -806,11 +849,21 @@ const AdminDashboard = () => {
                                     </div>
 
                                     <div style={{ display: 'flex', gap: '12px' }}>
-                                        <button onClick={handleApprove} className="btn btn-primary" style={{ flex: 1 }}>
-                                            Approve & Publish
+                                        <button
+                                            onClick={handleApprove}
+                                            className="btn btn-primary"
+                                            style={{ flex: 1 }}
+                                            disabled={processingIds.has(selectedRequest.id) || isRejectionProcessing}
+                                        >
+                                            {processingIds.has(selectedRequest.id) ? 'Publishing...' : 'Approve & Publish'}
                                         </button>
-                                        <button onClick={() => handleReject(selectedRequest.id)} className="action-btn btn-delete" style={{ padding: '0 16px' }}>
-                                            Reject
+                                        <button
+                                            onClick={() => handleReject(selectedRequest.id)}
+                                            className="action-btn btn-delete"
+                                            style={{ padding: '0 16px' }}
+                                            disabled={processingIds.has(selectedRequest.id) || isRejectionProcessing}
+                                        >
+                                            {isRejectionProcessing ? 'Rejecting...' : 'Reject'}
                                         </button>
                                     </div>
                                 </div>

@@ -236,58 +236,60 @@ const CarDetails = () => {
 
                     {/* Desktop Sidebar / Sticky Panel */}
                     <div className="sticky-panel desktop-only">
-                        <div className="glass-panel sidebar-panel">
-                            <div style={{ marginBottom: '8px', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-muted)' }}>{car.year} • {car.kms} kms • {car.owner === 1 ? '1st' : '2nd'} Owner</div>
-                            <h1 className="sidebar-car-title">{car.make} {car.model}</h1>
+                        <div className="glass-panel sidebar-panel" style={{ padding: '32px', borderRadius: '32px', border: '1px solid var(--border)', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
+                            <div style={{ marginBottom: '12px', fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                                {car.year} • {formatKm(car.kms)} • {car.owner === 1 ? '1st' : `${car.owner}nd`} Owner
+                            </div>
+                            <h1 className="sidebar-car-title" style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: '1.1', marginBottom: '24px' }}>{car.make} {car.model}</h1>
 
-                            <div className="price-display-wrapper">
+                            <div className="price-display-wrapper" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px', background: 'var(--bg-main)', padding: '24px', borderRadius: '20px', border: '1px solid var(--border)' }}>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span className="price-main">{formatPriceINR(car.priceINR)}</span>
-                                    <span className="price-sub">Certified Market Price</span>
+                                    <span className="price-main" style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--primary)', lineHeight: 1 }}>{formatPriceINR(car.priceINR)}</span>
+                                    <span className="price-sub" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '8px', fontWeight: 600 }}>Fixed Market Price (Inc. GST)</span>
                                 </div>
                                 <button
                                     onClick={handleSave}
                                     className={`btn ${isInWishlist(car.id) ? 'btn-primary' : 'btn-outline'}`}
-                                    style={{ borderRadius: '12px', padding: '12px', minHeight: '50px', minWidth: '50px' }}
+                                    style={{ borderRadius: '16px', padding: '12px', minHeight: '56px', minWidth: '56px' }}
                                 >
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill={isInWishlist(car.id) ? 'white' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill={isInWishlist(car.id) ? 'white' : 'none'} stroke="currentColor" strokeWidth="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                                 </button>
                             </div>
 
                             {auction && auction.isAuction ? (
                                 <BiddingWidget car={{ ...car, auction }} onBidPlaced={() => getCarById(id).then(setCar)} />
                             ) : (
-                                <div className="flex-stack">
+                                <div className="flex-stack" style={{ gap: '16px' }}>
                                     {car.status === 'sold' ? (
-                                        <div className="badge-sold badge-status-large">SOLD OUT</div>
+                                        <div className="badge-sold badge-status-large" style={{ background: '#fee2e2', color: '#ef4444', padding: '24px', borderRadius: '20px', fontWeight: 900, fontSize: '1.2rem' }}>VEHICLE SOLD OUT</div>
                                     ) : car.status === 'reserved' ? (
-                                        <div className="badge-reserved badge-status-large">RESERVED</div>
+                                        <div className="badge-reserved badge-status-large" style={{ background: '#fef3c7', color: '#d97706', padding: '24px', borderRadius: '20px', fontWeight: 900, fontSize: '1.2rem' }}>CURRENTLY RESERVED</div>
                                     ) : (
                                         <>
-                                            <button onClick={handleBuy} className="btn btn-primary" style={{ width: '100%', height: '60px', fontSize: '1.2rem', fontWeight: 800 }}>BUY THIS VEHICLE</button>
-                                            <button onClick={handleReserve} className="btn btn-outline" style={{ width: '100%', height: '54px', fontWeight: 700 }}>RESERVE NOW (₹10,000)</button>
-                                            <button onClick={() => addToast("Connecting to seller...", "info")} className="btn btn-outline" style={{ width: '100%', height: '54px', fontWeight: 700, borderColor: 'var(--primary)', color: 'var(--primary)' }}>CONTACT SELLER</button>
+                                            <button onClick={handleBuy} className="btn btn-primary" style={{ width: '100%', height: '64px', fontSize: '1.25rem', fontWeight: 900, borderRadius: '20px' }}>BUY THIS VEHICLE</button>
+                                            <button onClick={handleReserve} className="btn btn-outline" style={{ width: '100%', height: '56px', fontWeight: 800, borderRadius: '20px' }}>RESERVE FOR ₹10,000</button>
+                                            <button onClick={() => addToast("Connecting to seller...", "info")} className="btn btn-outline" style={{ width: '100%', height: '56px', fontWeight: 800, borderRadius: '20px', borderColor: 'var(--primary)', color: 'var(--primary)', background: 'var(--primary-soft)' }}>WHATSAPP SELLER</button>
                                         </>
                                     )}
                                 </div>
                             )}
 
-                            <div className="seller-trust-box" style={{ marginTop: '32px', padding: '24px', borderRadius: '20px', background: 'var(--primary-soft)', border: '1px solid var(--primary-glow)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                                    <div style={{ padding: '8px', background: 'var(--primary)', borderRadius: '12px', color: 'white' }}>💼</div>
+                            <div className="seller-trust-box" style={{ marginTop: '40px', padding: '28px', borderRadius: '28px', background: 'var(--bg-main)', border: '1px solid var(--border)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+                                    <div style={{ width: '56px', height: '56px', background: 'var(--primary)', borderRadius: '16px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🛡️</div>
                                     <div>
-                                        <div style={{ fontWeight: 800, fontSize: '1rem' }}>Verified Seller</div>
-                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>VroomValue Certified Partner</div>
+                                        <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--text-main)' }}>VroomValue Certified</div>
+                                        <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>140+ Point Digital Audit Passed</div>
                                     </div>
                                 </div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', padding: '20px', background: 'var(--bg-surface)', borderRadius: '20px', border: '1px solid var(--border)' }}>
                                     <div>
-                                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Response Rate</div>
-                                        <div style={{ fontWeight: 800, color: 'var(--success)' }}>98% (Express)</div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Response Rate</div>
+                                        <div style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1.1rem' }}>98.4%</div>
                                     </div>
                                     <div>
-                                        <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Location</div>
-                                        <div style={{ fontWeight: 800 }}>{car.city || 'Delhi'}</div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>Location</div>
+                                        <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--text-main)' }}>{car.city || 'Gurgaon'}</div>
                                     </div>
                                 </div>
                             </div>

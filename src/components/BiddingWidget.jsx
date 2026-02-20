@@ -20,10 +20,25 @@ const BiddingWidget = ({ car, onBidPlaced }) => {
     const isHighestBidder = currentUser && auction.highestBidder === currentUser.email;
 
     useEffect(() => {
-        if (auction?.bids) {
-            setBidHistory(auction.bids.sort((a, b) => b.amount - a.amount));
-        }
-    }, [auction]);
+        const fetchLatestBids = async () => {
+            if (isEnded) return;
+            try {
+                const refreshedCar = await getCarById(car.id);
+                if (refreshedCar && refreshedCar.auction) {
+                    setBidHistory(refreshedCar.auction.bids.sort((a, b) => b.amount - a.amount));
+                    if (onBidPlaced && refreshedCar.auction.currentBid > currentBid) {
+                        // Silent update of parent if someone else bid
+                        onBidPlaced();
+                    }
+                }
+            } catch (err) {
+                console.warn("Poll error:", err);
+            }
+        };
+
+        const pollInterval = setInterval(fetchLatestBids, 10000); // 10s poll
+        return () => clearInterval(pollInterval);
+    }, [car.id, isEnded, currentBid, onBidPlaced]);
 
     useEffect(() => {
         const updateTimer = () => {
@@ -105,24 +120,51 @@ const BiddingWidget = ({ car, onBidPlaced }) => {
                             Reserve Not Met
                         </span>
                     )}
+                    {isReserveMet && (
+                        <span className="badge" style={{ background: '#ecfdf5', color: '#10b981', border: '1px solid #d1fae5' }}>
+                            Reserve Met
+                        </span>
+                    )}
                 </div>
             </div>
 
             {!isEnded ? (
                 <div className="timer-grid">
-                    {['d', 'h', 'm', 's'].map((unit, i) => (
-                        <div key={unit} className="timer-box">
-                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--secondary)', lineHeight: 1 }}>
-                                {timeRemaining[unit].toString().padStart(2, '0')}
+                    {['d', 'h', 'm', 's'].map((unit, i) => {
+                        const isUrgent = !timeRemaining.d && !timeRemaining.h && timeRemaining.m < 5;
+                        return (
+                            <div key={unit} className="timer-box" style={{ borderColor: isUrgent ? '#ef4444' : 'var(--border)' }}>
+                                <div style={{
+                                    fontSize: '1.75rem',
+                                    fontWeight: 900,
+                                    color: isUrgent ? '#ef4444' : 'var(--secondary)',
+                                    lineHeight: 1,
+                                    textShadow: isUrgent ? '0 0 10px rgba(239, 68, 68, 0.2)' : 'none'
+                                }}>
+                                    {timeRemaining[unit].toString().padStart(2, '0')}
+                                </div>
+                                <div style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '6px', letterSpacing: '1px' }}>
+                                    {['Days', 'Hours', 'Mins', 'Secs'][i]}
+                                </div>
                             </div>
-                            <div style={{ fontSize: '0.6rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '6px', letterSpacing: '1px' }}>
-                                {['Days', 'Hours', 'Mins', 'Secs'][i]}
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             ) : (
-                <div className="badge-sold badge-status-large" style={{ marginBottom: '32px' }}>AUCTION CLOSED</div>
+                <div style={{ background: 'var(--bg-surface)', padding: '32px', borderRadius: '24px', textAlign: 'center', border: '2px solid var(--border)', marginBottom: '32px' }}>
+                    <div className="badge-sold badge-status-large" style={{ display: 'inline-block', marginBottom: '16px' }}>AUCTION CLOSED</div>
+                    {auction.highestBidder ? (
+                        <div>
+                            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '8px' }}>Winning Bid</div>
+                            <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--primary)' }}>{formatPriceINR(currentBid)}</div>
+                            <div style={{ marginTop: '16px', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                                Sold to <span style={{ color: 'var(--primary)' }}>{auction.highestBidder.split('@')[0]}***</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <div style={{ color: 'var(--text-muted)', fontWeight: 600 }}>No bids were placed.</div>
+                    )}
+                </div>
             )}
 
             {isHighestBidder && (

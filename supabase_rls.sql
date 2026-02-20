@@ -43,12 +43,57 @@ TO public
 USING (false) 
 WITH CHECK (false);
 
+-- ADMIN POLICIES: Required for Approval/Rejection workflow
+DROP POLICY IF EXISTS "Allow admins to delete sell_requests" ON "public"."sell_requests";
+CREATE POLICY "Allow admins to delete sell_requests" ON "public"."sell_requests"
+FOR DELETE USING (
+  EXISTS (
+    SELECT 1 FROM users
+    WHERE users.id::text = auth.uid()::text AND users.role = 'admin'
+  )
+);
+
+DROP POLICY IF EXISTS "Allow admins to update sell_requests" ON "public"."sell_requests";
+CREATE POLICY "Allow admins to update sell_requests" ON "public"."sell_requests"
+FOR UPDATE USING (
+  EXISTS (
+    SELECT 1 FROM users
+    WHERE users.id::text = auth.uid()::text AND users.role = 'admin'
+  )
+) WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM users
+    WHERE users.id::text = auth.uid()::text AND users.role = 'admin'
+  )
+);
+
 -- test_drives table
-DROP POLICY IF EXISTS "Allow public select on test_drives" ON test_drives;
+-- 1. Permit anyone to book a test drive (Guests and Users)
+-- Refined to satisfy security linter while allowing guest access
 DROP POLICY IF EXISTS "Allow public insert on test_drives" ON test_drives;
-DROP POLICY IF EXISTS "Deny public access on test_drives" ON test_drives;
-CREATE POLICY "Deny public access on test_drives" 
-ON test_drives FOR ALL 
+CREATE POLICY "Allow public insert on test_drives" 
+ON test_drives FOR INSERT 
 TO public 
-USING (false) 
-WITH CHECK (false);
+WITH CHECK (
+  status = 'pending' AND 
+  (userid IS NULL OR userid::text = auth.uid()::text)
+);
+
+-- 2. Permit admins to manage all test drives
+DROP POLICY IF EXISTS "Allow admins full access on test_drives" ON test_drives;
+CREATE POLICY "Allow admins full access on test_drives" 
+ON test_drives FOR ALL 
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM users
+    WHERE users.id::text = auth.uid()::text AND users.role = 'admin'
+  )
+);
+
+-- 3. Permit users to see their own requests
+DROP POLICY IF EXISTS "Allow users to view own test_drives" ON test_drives;
+CREATE POLICY "Allow users to view own test_drives" 
+ON test_drives FOR SELECT 
+TO authenticated
+USING (userid::text = auth.uid()::text);

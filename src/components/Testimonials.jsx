@@ -24,32 +24,40 @@ const testimonials = [
 
 const Testimonials = () => {
     return (
-        <section className="section" style={{ background: 'linear-gradient(180deg, #f8fafc 0%, white 100%)' }}>
+        <section className="section" style={{ background: 'var(--bg-main)', borderTop: '1px solid var(--border)' }}>
             <div className="container">
-                <div className="features-header">
-                    <h2>What India Says</h2>
-                    <p>Join 15,000+ happy families moving with VroomValue</p>
+                <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+                    <h2 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '16px' }}>What India Says</h2>
+                    <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>Join 15,000+ happy families moving with VroomValue</p>
                 </div>
 
-                <div className="testimonials-grid">
+                <div className="pro-grid">
                     {testimonials.map((t, i) => (
-                        <div key={i} className="glass-panel testimonial-card">
-                            <div className="rating-stars">
+                        <div key={i} className="glass-panel" style={{ padding: '32px', borderRadius: '24px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                            <div className="rating-stars" style={{ color: '#f59e0b', fontSize: '1.25rem' }}>
                                 {"★".repeat(t.rating)}
                             </div>
-                            <p className="testimonial-text">
+                            <p className="testimonial-text" style={{ fontSize: '1.1rem', lineHeight: '1.7', fontStyle: 'italic', color: 'var(--text-main)' }}>
                                 "{t.text}"
                             </p>
-                            <div className="testimonial-user">
+                            <div className="testimonial-user" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
                                 <div className="user-avatar" style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '12px',
                                     background: `hsl(${210 + (i * 30)}, 70%, 90%)`,
-                                    color: `hsl(${210 + (i * 30)}, 70%, 40%)`
+                                    color: `hsl(${210 + (i * 30)}, 70%, 40%)`,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontWeight: 800,
+                                    fontSize: '1.2rem'
                                 }}>
                                     {t.name.charAt(0)}
                                 </div>
                                 <div className="user-info">
-                                    <h4>{t.name}</h4>
-                                    <span>{t.location}</span>
+                                    <h4 style={{ fontSize: '1rem', fontWeight: 800, margin: 0 }}>{t.name}</h4>
+                                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>{t.location}</span>
                                 </div>
                             </div>
                         </div>
