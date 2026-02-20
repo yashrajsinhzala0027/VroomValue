@@ -301,7 +301,7 @@ export const submitSellRequest = async (data) => {
 export const getSellRequests = async () => {
     if (IS_MOCK) { await delay(400); return []; }
     try {
-        const { data, error } = await supabase.from('sell_requests').select('id, requestdate, make, model, city, kms, priceinr, images, status');
+        const { data, error } = await supabase.from('sell_requests').select('*');
         if (error) throw error;
         return camelize(data);
     } catch (err) {
