@@ -310,13 +310,21 @@ export const getSellRequests = async () => {
     }
 };
 
+// Whitelist of valid columns in 'cars' table 
+const VALID_CAR_COLUMNS = [
+    'make', 'model', 'variant', 'year', 'priceinr', 'kms', 'fuel',
+    'transmission', 'owners', 'color', 'insurance', 'regstate',
+    'rtonumber', 'location', 'description', 'images', 'features',
+    'safetyfeatures', 'status', 'sellertype'
+];
+
 export const approveSellRequest = async (id, data) => {
     if (IS_MOCK) { await delay(1200); return { success: true }; }
     try {
         // Step 1: Update request status
         await supabase.from('sell_requests').update({ status: 'approved' }).eq('id', id);
 
-        // Step 2: Get next ID for cars (Manual generation since auto-increment is missing)
+        // Step 2: Get next ID (Manual generation needed as per previous NULL constraint fix)
         const { data: lastCar } = await supabase
             .from('cars')
             .select('id')
@@ -326,17 +334,30 @@ export const approveSellRequest = async (id, data) => {
 
         const nextId = (lastCar?.id || 0) + 1;
 
-        // Step 3: Create new car listing
-        const { id: _, requestDate: __, status: ___, ...carDetails } = data;
+        // Step 3: Prepare valid car payload
+        const decamelizedData = decamelize(data);
+        const finalCarPayload = {};
 
-        const decamelizedCar = decamelize(carDetails);
-        const { error } = await supabase.from('cars').insert([{
-            ...decamelizedCar,
-            id: nextId,
-            status: 'approved',
-            sellertype: 'VroomValue Certified'
-        }]);
-        if (error) throw error;
+        // Filter: Only allow columns that exist in cars table
+        Object.keys(decamelizedData).forEach(key => {
+            if (VALID_CAR_COLUMNS.includes(key)) {
+                finalCarPayload[key] = decamelizedData[key];
+            }
+        });
+
+        // Add mandatory system fields
+        finalCarPayload.id = nextId;
+        finalCarPayload.status = 'approved';
+        finalCarPayload.sellertype = 'VroomValue Certified';
+
+        // Step 4: Insert valid record
+        const { error } = await supabase.from('cars').insert([finalCarPayload]);
+
+        if (error) {
+            console.error("Insert failed with payload:", finalCarPayload);
+            throw error;
+        }
+
         return { success: true };
     } catch (err) {
         console.error("Supabase approveSellRequest error:", err);
