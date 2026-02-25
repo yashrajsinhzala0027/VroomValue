@@ -24,7 +24,7 @@ const FilterAccordion = memo(({ title, children, isOpen, onToggle }) => {
                 onClick={onToggle}
                 style={{ background: 'transparent', transition: 'all 0.2s', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', border: 'none', cursor: 'pointer' }}
             >
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)' }}>{title}</h4>
+                <h4 className="filter-accordion-title">{title}</h4>
                 <span className="filter-accordion-icon" style={{
                     transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                     transition: 'transform 0.3s ease',
@@ -103,36 +103,48 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
 
     return (
         <aside className="filters-panel" style={{ borderRight: '1px solid var(--border)' }}>
-            <div className="filters-panel-inner" style={{ padding: 'clamp(20px, 4vw, 32px)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', paddingBottom: '16px', borderBottom: '1px solid var(--border)' }} className="desktop-only">
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--secondary)', letterSpacing: '1px' }}>SYSTEM FILTERS</h3>
+            <div className="filters-panel-inner" style={{ padding: 'clamp(12px, 2vw, 20px)' }}>
+                <div className="filter-sidebar-header desktop-only">
+                    <h3>System Filters</h3>
                     <button
                         onClick={() => onChange('reset', true)}
                         className="btn-text"
-                        style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 8px', borderRadius: '4px', background: 'var(--primary-glow)', border: 'none', cursor: 'pointer' }}
+                        style={{
+                            color: 'var(--primary)',
+                            fontWeight: 800,
+                            fontSize: '0.7rem',
+                            textTransform: 'uppercase',
+                            letterSpacing: '1px',
+                            padding: '6px 12px',
+                            borderRadius: '20px',
+                            background: 'var(--primary-glow)',
+                            border: '1px solid var(--primary-glow)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
                     >
                         Clear All
                     </button>
                 </div>
 
                 {/* Price Range */}
-                <div className="filter-group" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '24px' }}>
-                    <h4 style={{ marginBottom: '12px', fontSize: '0.95rem', fontWeight: 700 }}>Price Range</h4>
+                <div className="filter-group" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '32px' }}>
+                    <h4 style={{ marginBottom: '24px', fontSize: '1.1rem', fontWeight: 700, color: 'var(--secondary)' }}>Price Range</h4>
 
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '12px', fontWeight: 800, color: 'var(--secondary)', fontSize: '1.2rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', fontWeight: 700, color: 'var(--secondary)', fontSize: '1.25rem' }}>
                         <AnimatedPrice value={localMin} />
-                        <span style={{ color: 'var(--text-muted)', fontWeight: 400, fontSize: '0.85rem', opacity: 0.7 }}>to</span>
                         <AnimatedPrice value={localMax} />
                     </div>
 
-                    <div style={{ marginTop: '8px' }}>
+                    <div style={{ position: 'relative' }}>
                         <div className="dual-slider-container">
                             <div className="slider-track-active-area">
-                                <div className="slider-track-bg" style={{ background: 'var(--border)' }}></div>
+                                <div className="slider-track-bg" style={{ background: '#F1F5F9' }}></div>
                                 <div className="slider-track-fill" style={{
                                     background: 'var(--primary)',
                                     left: `${(localMin / 7000000) * 100}%`,
-                                    width: `${((localMax - localMin) / 7000000) * 100}%`
+                                    width: `${((localMax - localMin) / 7000000) * 100}%`,
+                                    height: '3px'
                                 }}></div>
                             </div>
 
@@ -151,20 +163,30 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                                 className={`dual-range-thumb ${localMin > 3500000 ? 'thumb-z-index-1' : 'thumb-z-index-2'}`}
                             />
                         </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px' }}>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontWeight: 500 }}>Minimum</span>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontWeight: 500 }}>Maximum</span>
+                        </div>
                     </div>
                 </div>
 
                 {/* Brands + Models */}
                 <FilterAccordion title="Brands + Models" isOpen={openSections.brands} onToggle={() => toggleSection('brands')}>
-                    <input
-                        type="text"
-                        placeholder="Search brand inventory..."
-                        value={brandSearch}
-                        onChange={(e) => setBrandSearch(e.target.value)}
-                        className="filter-search-input"
-                        style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '10px 16px', fontSize: '0.85rem', width: '100%', marginBottom: '16px' }}
-                    />
-                    <div className="checkbox-group" style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '8px' }}>
+                    <div className="reference-search-wrapper">
+                        <input
+                            type="text"
+                            placeholder="Search"
+                            value={brandSearch}
+                            onChange={(e) => setBrandSearch(e.target.value)}
+                            className="reference-search-input"
+                        />
+                        <span className="search-icon-right">🔍</span>
+                    </div>
+
+                    <span className="category-label">Top Brands</span>
+
+                    <div className="checkbox-group" style={{ maxHeight: '450px', overflowY: 'auto' }}>
                         {filteredMakes.map(make => {
                             const isBrandSelected = (filters.make || []).includes(make);
                             const brandModels = MAKE_TO_MODELS_MAP[make] || [];
@@ -172,59 +194,73 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                             const selectedModels = filters.model || [];
 
                             return (
-                                <div key={make} style={{ marginBottom: '16px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', flex: 1 }}>
+                                <div key={make}>
+                                    <div
+                                        className="brand-list-item"
+                                        onClick={() => handleCheckboxChange('make', make)}
+                                    >
+                                        <div className="brand-item-label">
                                             <input
                                                 type="checkbox"
                                                 name="make"
                                                 checked={isBrandSelected}
-                                                onChange={() => handleCheckboxChange('make', make)}
+                                                onChange={() => { }} // Handled by parent div
                                                 style={{ display: 'none' }}
                                             />
-                                            <span className="checkbox-premium"></span>
-                                            <BrandLogo make={make} size={24} />
-                                            <span style={{ fontWeight: isBrandSelected ? 800 : 500, fontSize: '0.9rem' }}>{make}</span>
-                                        </label>
+                                            <span className="minimal-checkbox"></span>
+                                            <span className="brand-item-name">{make}</span>
+                                        </div>
+
                                         {brandModels.length > 0 && (
-                                            <button
+                                            <span
+                                                className={`brand-chevron ${isExpanded ? 'expanded' : ''}`}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setExpandedBrands(prev => ({ ...prev, [make]: !prev[make] }));
                                                 }}
-                                                style={{
-                                                    background: 'none',
-                                                    border: 'none',
-                                                    color: 'var(--primary)',
-                                                    fontSize: '0.75rem',
-                                                    fontWeight: 700,
-                                                    cursor: 'pointer',
-                                                    padding: '4px 8px',
-                                                    borderRadius: '4px'
-                                                }}
                                             >
-                                                {isExpanded ? 'Hide Models' : `Show ${brandModels.length} Models`}
-                                            </button>
+                                                ▼
+                                            </span>
                                         )}
                                     </div>
 
-                                    {isExpanded && brandModels.length > 0 && (
-                                        <div style={{ paddingLeft: '36px', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                            {brandModels.map(model => (
-                                                <label key={model} className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-                                                    <input
-                                                        type="checkbox"
-                                                        name="model"
-                                                        checked={selectedModels.includes(model)}
-                                                        onChange={() => handleCheckboxChange('model', model)}
-                                                        style={{ display: 'none' }}
-                                                    />
-                                                    <span className="checkbox-premium" style={{ width: '16px', height: '16px' }}></span>
-                                                    <span style={{ fontSize: '0.8rem', fontWeight: selectedModels.includes(model) ? 700 : 400 }}>{model}</span>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    )}
+                                    <AnimatePresence>
+                                        {isExpanded && brandModels.length > 0 && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                                style={{ overflow: 'hidden', background: 'var(--bg-main)' }}
+                                            >
+                                                <div style={{ paddingLeft: '34px', paddingBottom: '12px', display: 'flex', flexDirection: 'column' }}>
+                                                    {brandModels.map(model => (
+                                                        <div
+                                                            key={model}
+                                                            className="brand-list-item"
+                                                            style={{ borderBottom: 'none', padding: '12px 0' }}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleCheckboxChange('model', model);
+                                                            }}
+                                                        >
+                                                            <div className="brand-item-label">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    name="model"
+                                                                    checked={selectedModels.includes(model)}
+                                                                    onChange={() => { }} // Handled by parent div
+                                                                    style={{ display: 'none' }}
+                                                                />
+                                                                <span className="minimal-checkbox" style={{ border: '1.5px solid var(--text-muted)', opacity: 0.6 }}></span>
+                                                                <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: selectedModels.includes(model) ? 700 : 400 }}>{model}</span>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             );
                         })}
@@ -235,15 +271,17 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Kms Driven" isOpen={openSections.kms} onToggle={() => toggleSection('kms')}>
                     <div className="checkbox-group">
                         {[10000, 30000, 50000, 75000, 100000, 125000, 150000].map(km => (
-                            <label key={km} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={km} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.maxKms || []).includes(km.toString())}
                                     onChange={() => handleCheckboxChange('maxKms', km.toString())}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {km.toLocaleString()} kms or less
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.maxKms || []).includes(km.toString()) ? 700 : 500 }}>
+                                    {km.toLocaleString()} kms or less
+                                </span>
                             </label>
                         ))}
                     </div>
@@ -253,15 +291,17 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Year" isOpen={openSections.year} onToggle={() => toggleSection('year')}>
                     <div className="checkbox-group">
                         {YEARS.map(year => (
-                            <label key={year} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={year} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.year || []).includes(year.toString())}
                                     onChange={() => handleCheckboxChange('year', year.toString())}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {year} & above
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.year || []).includes(year.toString()) ? 700 : 500 }}>
+                                    {year} & above
+                                </span>
                             </label>
                         ))}
                     </div>
@@ -271,15 +311,15 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Fuel Type" isOpen={openSections.fuel} onToggle={() => toggleSection('fuel')}>
                     <div className="checkbox-group">
                         {FUEL_TYPES.map(fuel => (
-                            <label key={fuel} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={fuel} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.fuel || []).includes(fuel)}
                                     onChange={() => handleCheckboxChange('fuel', fuel)}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {fuel}
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.fuel || []).includes(fuel) ? 700 : 500 }}>{fuel}</span>
                             </label>
                         ))}
                     </div>
@@ -289,15 +329,15 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Body Type" isOpen={openSections.body} onToggle={() => toggleSection('body')}>
                     <div className="checkbox-group">
                         {BODY_TYPES.map(type => (
-                            <label key={type} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={type} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.bodyType || []).includes(type)}
                                     onChange={() => handleCheckboxChange('bodyType', type)}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {type}
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.bodyType || []).includes(type) ? 700 : 500 }}>{type}</span>
                             </label>
                         ))}
                     </div>
@@ -307,15 +347,15 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Transmission" isOpen={openSections.transmission} onToggle={() => toggleSection('transmission')}>
                     <div className="checkbox-group">
                         {TRANSMISSIONS.map(trans => (
-                            <label key={trans} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={trans} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.transmission || []).includes(trans)}
                                     onChange={() => handleCheckboxChange('transmission', trans)}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {trans}
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.transmission || []).includes(trans) ? 700 : 500 }}>{trans}</span>
                             </label>
                         ))}
                     </div>
@@ -340,15 +380,15 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Features" isOpen={openSections.features} onToggle={() => toggleSection('features')}>
                     <div className="checkbox-group">
                         {FEATURES.map(f => (
-                            <label key={f} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={f} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.features || []).includes(f)}
                                     onChange={() => handleCheckboxChange('features', f)}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {f}
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.features || []).includes(f) ? 700 : 500 }}>{f}</span>
                             </label>
                         ))}
                     </div>
@@ -358,15 +398,15 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Seats" isOpen={openSections.seats} onToggle={() => toggleSection('seats')}>
                     <div className="checkbox-group">
                         {SEATS.map(s => (
-                            <label key={s} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={s} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.seats || []).includes(s)}
                                     onChange={() => handleCheckboxChange('seats', s)}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {s}
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.seats || []).includes(s) ? 700 : 500 }}>{s} Seats</span>
                             </label>
                         ))}
                     </div>
@@ -376,15 +416,15 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                 <FilterAccordion title="Owner" isOpen={openSections.owner} onToggle={() => toggleSection('owner')}>
                     <div className="checkbox-group">
                         {OWNERS.map(o => (
-                            <label key={o} className="checkbox-label" style={{ marginBottom: '10px' }}>
+                            <label key={o} className="checkbox-label" style={{ padding: '4px 0' }}>
                                 <input
                                     type="checkbox"
                                     checked={(filters.owner || []).includes(o)}
                                     onChange={() => handleCheckboxChange('owner', o)}
                                     style={{ display: 'none' }}
                                 />
-                                <span className="checkbox-premium"></span>
-                                {o}
+                                <span className="minimal-checkbox"></span>
+                                <span style={{ fontSize: '0.9rem', fontWeight: (filters.owner || []).includes(o) ? 700 : 500 }}>{o}</span>
                             </label>
                         ))}
                     </div>

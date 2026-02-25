@@ -744,9 +744,139 @@
     font-weight: 500;
 }
 
-.checkbox-label:hover {
+/* Minimalist Reference Styles with Brand Integration */
+.filter-accordion-title {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: var(--secondary) !important;
+    letter-spacing: -0.2px;
+}
+
+.reference-search-wrapper {
+    position: relative;
+    margin: 16px 0 20px;
+}
+
+.reference-search-input {
+    width: 100%;
+    padding: 12px 42px 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    background: white;
+    transition: all 0.2s;
+}
+
+.reference-search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.reference-search-input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.search-icon-right {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.category-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin: 8px 0 12px;
+    display: block;
+}
+
+.brand-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 12px;
+    margin: 0 -12px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.brand-list-item:hover {
+    background: transparent;
+}
+
+.brand-item-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.brand-item-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--secondary);
+    transition: color 0.2s ease;
+}
+
+.brand-list-item:hover .brand-item-name {
     color: var(--primary);
-    transform: translateX(4px);
+}
+
+.brand-chevron {
+    color: var(--secondary);
+    font-size: 0.85rem;
+    opacity: 0.8;
+    transition: transform 0.3s ease, color 0.2s ease;
+}
+
+.brand-list-item:hover .brand-chevron {
+    color: var(--primary);
+    opacity: 1;
+}
+
+.brand-chevron.expanded {
+    transform: rotate(180deg);
+}
+
+.minimal-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--secondary);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.checkbox-label input:checked+.minimal-checkbox,
+.brand-list-item input:checked+.minimal-checkbox {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.brand-list-item input:checked+.minimal-checkbox::after,
+.checkbox-label input:checked+.minimal-checkbox::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-bottom: 2px;
 }
 
 /* Custom Premium Selectors */
@@ -756,7 +886,7 @@ input[type="checkbox"] {
     -webkit-appearance: none;
     cursor: pointer;
     background: white;
-    border: 2px solid #cbd5e1;
+    border: 2px solid var(--border);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
     position: relative;
@@ -1415,11 +1545,11 @@ input[type="checkbox"]:checked::after {
     border-radius: 10px;
 }
 
-/* Dual Range Slider Premium */
+/* Dual Range Slider Refinement */
 .dual-slider-container {
     position: relative;
     width: 100%;
-    height: 48px;
+    height: 12px;
     display: flex;
     align-items: center;
 }
@@ -1432,9 +1562,9 @@ input[type="checkbox"]:checked::after {
 
 .slider-track-active-area {
     position: absolute;
-    left: 12px;
-    right: 12px;
-    height: 10px;
+    left: 0;
+    right: 0;
+    height: 3px;
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
@@ -1445,9 +1575,8 @@ input[type="checkbox"]:checked::after {
     position: absolute;
     inset: 0;
     height: 100%;
-    background: #f8fafc;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: #F1F5F9;
+    border-radius: 4px;
 }
 
 .slider-track-fill {
@@ -1456,7 +1585,7 @@ input[type="checkbox"]:checked::after {
     bottom: 0;
     height: 100%;
     background: var(--primary);
-    border-radius: 10px;
+    border-radius: 4px;
     z-index: 2;
 }
 
@@ -1464,7 +1593,7 @@ input[type="checkbox"]:checked::after {
     position: absolute;
     width: 100%;
     left: 0;
-    height: 100%;
+    height: 20px;
     pointer-events: none;
     -webkit-appearance: none;
     appearance: none;
@@ -1479,23 +1608,19 @@ input[type="checkbox"]:checked::after {
     pointer-events: auto;
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     background: var(--primary);
-    border: 3.5px solid white;
     border-radius: 50%;
     cursor: pointer;
-    box-shadow:
-        0 4px 10px rgba(79, 70, 229, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    box-shadow: 0 0 0 4px var(--primary-glow);
+    transition: all 0.2s;
 }
 
 .dual-range-thumb::-webkit-slider-thumb:hover {
-    transform: scale(1.18);
-    box-shadow:
-        0 6px 15px rgba(79, 70, 229, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px var(--primary-glow);
 }
 
 .dual-range-thumb::-moz-range-thumb {
@@ -1719,21 +1844,87 @@ input[type="checkbox"]:checked::after {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Checkbox Premium */
-.checkbox-premium {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #cbd5e1;
-    border-radius: 4px;
-    /* Square with slight radius */
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
+/* Minimalist Scrollbar */
+.checkbox-group::-webkit-scrollbar {
+    width: 4px;
 }
 
-.checkbox-label input:checked+.checkbox-premium {
+.checkbox-group::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Minimalist Scrollbar & Branding */
+.checkbox-group::-webkit-scrollbar {
+    width: 4px;
+}
+
+.checkbox-group::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.checkbox-group::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+.checkbox-group::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+    opacity: 0.5;
+}
+
+/* Color Swatch Branding */
+.color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    position: relative;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px var(--primary-glow);
+}
+
+.color-swatch.selected {
+    border-color: var(--primary);
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px var(--primary-glow);
+}
+
+.filter-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.filter-sidebar-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--secondary);
+    text-transform: none;
+    letter-spacing: -0.3px;
+}
+
+.filter-accordion-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--secondary) !important;
+    letter-spacing: -0.2px;
+}
+
+/* Removing hover color change as per user request */
+.filter-accordion-header:hover .filter-accordion-title {
+    color: var(--secondary) !important;
+}
+
+/* Global Minimal Checkbox Branding */
+.checkbox-label input:checked+.minimal-checkbox {
     background: var(--primary);
     border-color: var(--primary);
 }

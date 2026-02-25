@@ -101,6 +101,16 @@ export const getCars = async (filters = {}, columns = '*') => {
             filtered = filtered.filter(c => c.auction && c.auction.isAuction === true);
         }
 
+        // Price Range filtering
+        if (filters.minPrice !== undefined && filters.minPrice !== null && filters.minPrice !== '') {
+            const min = Number(filters.minPrice);
+            if (!isNaN(min)) filtered = filtered.filter(c => Number(c.priceINR) >= min);
+        }
+        if (filters.maxPrice !== undefined && filters.maxPrice !== null && filters.maxPrice !== '') {
+            const max = Number(filters.maxPrice);
+            if (!isNaN(max)) filtered = filtered.filter(c => Number(c.priceINR) <= max);
+        }
+
         return filtered;
     }
 
@@ -133,6 +143,13 @@ export const getCars = async (filters = {}, columns = '*') => {
             const [min, max] = filters.budget;
             if (min) query = query.gte('priceinr', min);
             if (max) query = query.lte('priceinr', max);
+        }
+        // minPrice / maxPrice from sidebar sliders
+        if (filters.minPrice !== undefined && filters.minPrice !== null && filters.minPrice !== '') {
+            query = query.gte('priceinr', Number(filters.minPrice));
+        }
+        if (filters.maxPrice !== undefined && filters.maxPrice !== null && filters.maxPrice !== '') {
+            query = query.lte('priceinr', Number(filters.maxPrice));
         }
         if (filters.kms) {
             const [min, max] = filters.kms;
