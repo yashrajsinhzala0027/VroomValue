@@ -42,7 +42,8 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
                 flexShrink: 0,
                 overflow: 'visible',
                 padding: '0',
-                transition: 'all 0.4s ease',
+                transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
+                filter: !isMainLogo ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.06))' : 'none'
             }}
         >
             {config.logo && !imgError ? (
@@ -51,11 +52,12 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
                     alt={make || 'VroomValue'}
                     style={{
                         width: 'auto',
-                        maxWidth: '220%', // Allow expansion for wide horizontal logos
-                        height: isMainLogo ? '50px' : '100%',
+                        maxWidth: isMainLogo ? '220%' : '110%',
+                        height: isMainLogo ? '50px' : '90%',
                         objectFit: 'contain',
                         transform: isMainLogo ? 'scale(1.4)' : 'none',
-                        transformOrigin: 'left center'
+                        transformOrigin: 'left center',
+                        transition: 'transform 0.4s'
                     }}
                     onError={() => setImgError(true)}
                 />
@@ -65,8 +67,9 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     fontWeight: 900,
-                    fontSize: `${size * 0.4}px`,
-                    padding: isMainLogo ? '0 12px' : '0'
+                    fontSize: `${size * 0.45}px`,
+                    padding: isMainLogo ? '0 12px' : '0',
+                    letterSpacing: '-0.5px'
                 }}>
                     {config.initial}
                 </span>

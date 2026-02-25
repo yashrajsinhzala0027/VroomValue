@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getCars, deleteCarListing, getTestDrives, updateCarListing, getSellRequests, approveSellRequest, rejectSellRequest, resetApp, endAuction, startAuction, unreserveCar } from '../api/mockApi';
+import { getCars, deleteCarListing, getTestDrives, updateCarListing, getSellRequests, approveSellRequest, rejectSellRequest, resetApp, endAuction, startAuction, unreserveCar, getUserCount } from '../api/mockApi';
 import ConfirmModal from './ConfirmModal';
 import { useAuth } from './AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
