@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CITIES, MAKES } from '../utils/constants';
 import CustomSelect from './CustomSelect';
-import { formatPriceShort } from '../utils/formatters';
 import AnimatedPrice from './AnimatedPrice';
+import { Search } from 'lucide-react';
 
-const SearchBar = ({ className = "", vertical = false }) => {
+const SearchBar = ({ className = '', vertical = false }) => {
     const navigate = useNavigate();
+    const cityId    = useId();
+    const makeId    = useId();
+    const minPriceId = useId();
+    const maxPriceId = useId();
+
     const [search, setSearch] = useState({
         city: '',
         make: '',
@@ -29,19 +34,26 @@ const SearchBar = ({ className = "", vertical = false }) => {
         if (search.make) params.append('make', search.make);
         params.append('minPrice', search.minPrice);
         params.append('maxPrice', search.maxPrice);
-
         navigate(`/listings?${params.toString()}`);
     };
 
     const gridStyles = vertical
-        ? { gridTemplateColumns: '1fr', gap: '24px' }
+        ? { gridTemplateColumns: '1fr', gap: '20px' }
         : { gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' };
 
     return (
-        <form className={`search-widget ${className}`} onSubmit={handleSearch} style={{ ...gridStyles, background: 'transparent', padding: 0, boxShadow: 'none' }}>
+        <form
+            className={`search-widget ${className}`}
+            onSubmit={handleSearch}
+            style={{ ...gridStyles, background: 'transparent', padding: 0, boxShadow: 'none' }}
+            role="search"
+            aria-label="Car search"
+        >
+            {/* City */}
             <div className="search-field">
-                <label style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Search City</label>
+                <label htmlFor={cityId} className="search-field-label">Search City</label>
                 <CustomSelect
+                    id={cityId}
                     name="city"
                     value={search.city}
                     options={CITIES}
@@ -51,9 +63,11 @@ const SearchBar = ({ className = "", vertical = false }) => {
                 />
             </div>
 
+            {/* Brand */}
             <div className="search-field">
-                <label style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px', display: 'block' }}>Brand Preference</label>
+                <label htmlFor={makeId} className="search-field-label">Brand Preference</label>
                 <CustomSelect
+                    id={makeId}
                     name="make"
                     value={search.make}
                     options={MAKES}
@@ -63,43 +77,66 @@ const SearchBar = ({ className = "", vertical = false }) => {
                 />
             </div>
 
+            {/* Budget Range */}
             <div className="search-field">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                    <label style={{ marginBottom: 0, fontWeight: 700, fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Budget</label>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div className="budget-header">
+                    <label className="search-field-label">Budget</label>
+                    <div className="budget-display">
                         <AnimatedPrice value={search.minPrice} />
-                        <span style={{ color: 'var(--text-muted)', fontWeight: 400, opacity: 0.6 }}>-</span>
+                        <span className="budget-sep">–</span>
                         <AnimatedPrice value={search.maxPrice} />
                     </div>
                 </div>
 
-                <div style={{ marginTop: '4px', marginBottom: '12px' }}>
-                    <div className="dual-slider-container">
-                        <div className="slider-track-active-area">
-                            <div className="slider-track-bg" style={{ background: 'var(--border)' }}></div>
-                            <div className="slider-track-fill" style={{
-                                background: 'var(--primary)',
-                                left: `${(search.minPrice / 7000000) * 100}%`,
+                <div className="dual-slider-container">
+                    <div className="slider-track-active-area">
+                        <div className="slider-track-bg" />
+                        <div
+                            className="slider-track-fill"
+                            style={{
+                                left:  `${(search.minPrice / 7000000) * 100}%`,
                                 width: `${((search.maxPrice - search.minPrice) / 7000000) * 100}%`
-                            }}></div>
-                        </div>
-
-                        <input type="range" name="minPrice" min="0" max="7000000" step="10000"
-                            value={search.minPrice}
-                            onChange={(e) => handlePriceChange('minPrice', Math.min(Number(e.target.value), search.maxPrice - 100000))}
-                            className={`dual-range-thumb ${search.minPrice > 3500000 ? 'thumb-z-index-2' : 'thumb-z-index-1'}`}
-                        />
-                        <input type="range" name="maxPrice" min="0" max="7000000" step="10000"
-                            value={search.maxPrice}
-                            onChange={(e) => handlePriceChange('maxPrice', Math.max(Number(e.target.value), search.minPrice + 100000))}
-                            className={`dual-range-thumb ${search.minPrice > 3500000 ? 'thumb-z-index-1' : 'thumb-z-index-2'}`}
+                            }}
                         />
                     </div>
+
+                    <input
+                        id={minPriceId}
+                        type="range"
+                        name="minPrice"
+                        min="0"
+                        max="7000000"
+                        step="10000"
+                        value={search.minPrice}
+                        aria-label="Minimum budget"
+                        aria-valuemin={0}
+                        aria-valuemax={7000000}
+                        aria-valuenow={search.minPrice}
+                        onChange={(e) => handlePriceChange('minPrice', Math.min(Number(e.target.value), search.maxPrice - 100000))}
+                        className={`dual-range-thumb ${search.minPrice > 3500000 ? 'thumb-z-index-2' : 'thumb-z-index-1'}`}
+                    />
+                    <input
+                        id={maxPriceId}
+                        type="range"
+                        name="maxPrice"
+                        min="0"
+                        max="7000000"
+                        step="10000"
+                        value={search.maxPrice}
+                        aria-label="Maximum budget"
+                        aria-valuemin={0}
+                        aria-valuemax={7000000}
+                        aria-valuenow={search.maxPrice}
+                        onChange={(e) => handlePriceChange('maxPrice', Math.max(Number(e.target.value), search.minPrice + 100000))}
+                        className={`dual-range-thumb ${search.minPrice > 3500000 ? 'thumb-z-index-1' : 'thumb-z-index-2'}`}
+                    />
                 </div>
             </div>
 
-            <button type="submit" className="btn btn-primary" style={{ height: '56px', borderRadius: '12px', width: '100%', fontSize: '1rem', fontWeight: 800 }}>
-                EXPLORE NOW
+            {/* Submit */}
+            <button type="submit" className="btn btn-primary search-submit-btn">
+                <Search size={18} />
+                Explore Now
             </button>
         </form>
     );

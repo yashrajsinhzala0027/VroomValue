@@ -230,6 +230,18 @@ const Listings = () => {
                             </div>
                         </div>
 
+                        {/* Mobile Action Bar */}
+                        <div className="mobile-only" style={{ marginBottom: '24px' }}>
+                            <button
+                                className="btn btn-outline"
+                                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px', borderRadius: '12px' }}
+                                onClick={() => setIsSidebarOpen(true)}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                <span>Filters & Sort</span>
+                            </button>
+                        </div>
+
                         <ListingsGrid cars={paginatedCars} loading={loading} />
 
                         {/* Pro Pagination Bar */}

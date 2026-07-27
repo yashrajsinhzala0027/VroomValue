@@ -1,272 +1,462 @@
-/* Global Mobile Resets */
+/* ============================================================
+ * VroomValue — Responsive System
+ * Covers: 320px → 3840px (mobile-first)
+ * ============================================================ */
+
+/* ── Desktop Defaults ── */
+.mobile-only { display: none; }
+
+/* ============================================================
+ * TABLET (≤ 1024px)
+ * ============================================================ */
+@media (max-width: 1024px) {
+  :root {
+    --gutter: clamp(16px, 3vw, 32px);
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    gap: 48px !important;
+  }
+
+  .hero-content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-content .hero-actions-container {
+    justify-content: center;
+  }
+
+  .hero-content .hero-stats-container {
+    justify-content: center;
+  }
+
+  .hero-content .hero-trust-badges {
+    justify-content: center;
+  }
+
+  .hero-form-card {
+    max-width: 560px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* Listings layout */
+  .listings-layout {
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+  }
+}
+
+/* ============================================================
+ * MOBILE (≤ 768px)
+ * ============================================================ */
 @media (max-width: 768px) {
-    :root {
-        --header-height: 60px;
-        --space-1: 4px;
-        --space-2: 8px;
-        --space-3: 12px;
-        --space-4: 16px;
-        --space-5: 24px;
-        --container-padding: 16px;
-    }
+  :root {
+    --header-height: 64px;
+    --gutter: 16px;
+    --section-spacing: clamp(48px, 8vw, 80px);
+  }
 
-    body {
-        font-size: 14px;
-    }
+  /* ── Utility overrides ── */
+  .mobile-only  { display: block !important; }
+  .desktop-only { display: none !important; }
 
-    /* Container Adjustments */
-    .container {
-        padding: 0 var(--container-padding);
-        width: 100%;
-        max-width: 100%;
-    }
+  /* ── Typography ── */
+  body { font-size: 15px; }
 
-    /* Header & Navigation */
-    .header-inner {
-        padding: 0 var(--space-4);
-    }
+  h1 { font-size: clamp(1.9rem, 7vw, 2.5rem) !important; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.5rem, 5.5vw, 2rem) !important; }
+  h3 { font-size: clamp(1.2rem, 4vw, 1.5rem) !important; }
 
-    .nav-links {
-        display: none;
-        /* Future: Hamburger menu implementation */
-    }
+  /* ── Header ── */
+  .header__nav { display: none !important; }
+  .mobile-menu-toggle { display: flex !important; }
 
-    .header__nav {
-        display: none !important;
-    }
+  /* ── Hero ── */
+  .hero-section {
+    height: auto;
+    min-height: auto;
+    padding-top: calc(var(--header-height) + 32px);
+    padding-bottom: 48px;
+  }
 
-    .mobile-toggle {
-        display: block !important;
-    }
+  .hero-container {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    text-align: center;
+  }
 
-    /* Hero Section Mobile */
-    .hero-section {
-        height: auto;
-        min-height: auto;
-        padding-top: 100px;
-        padding-bottom: 40px;
-        flex-direction: column;
-        text-align: center;
-    }
+  .hero-content {
+    align-items: center;
+    text-align: center;
+  }
 
-    .hero-container {
-        grid-template-columns: 1fr !important;
-        gap: 30px !important;
-    }
+  .hero-actions-container {
+    flex-direction: column !important;
+    width: 100%;
+  }
 
-    .hero-title {
-        font-size: 2.5rem !important;
-        line-height: 1.1;
-    }
+  .hero-actions-container .btn {
+    width: 100%;
+  }
 
-    .hero-subtitle {
-        font-size: 1rem !important;
-        margin: 0 auto 24px auto;
-    }
+  .hero-stats-container {
+    gap: 20px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
-    .hero-sidebar-wrapper {
-        padding: 16px;
-        width: 100%;
-    }
+  .hero-trust-badges {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 
-    .search-widget {
-        grid-template-columns: 1fr;
-        padding: 20px;
-    }
+  .hero-form-card {
+    width: 100%;
+    padding: 20px !important;
+  }
 
-    /* Listings Page Layout */
-    .listings-layout {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding-top: 20px;
-    }
+  .quick-filters {
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
 
-    .filters-sidebar {
-        display: none;
-        /* Hide sidebar on mobile for now, or use bottom sheet */
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        top: auto;
-        height: 60vh;
-        z-index: 1000;
-        overflow-y: auto;
-        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
-        border-radius: 20px 20px 0 0;
-    }
+  /* ── Trust Bar ── */
+  .trust-bar-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
 
-    .filters-sidebar.active {
-        display: block;
-        animation: slideUp 0.3s ease-out;
-    }
+  /* ── Listings ── */
+  .listings-layout {
+    grid-template-columns: 1fr !important;
+    padding-top: 16px;
+  }
 
-    @keyframes slideUp {
-        from {
-            transform: translateY(100%);
-        }
-
-        to {
-            transform: translateY(0);
-        }
-    }
-
-    /* Listings Grid */
-    .listings-grid {
-        grid-template-columns: 1fr !important;
-        /* Single column cards */
-        gap: 20px;
-    }
-
-    /* Valuation Wizard / Forms */
-    .valuation-wizard-container {
-        padding: calc(var(--header-height) + 10px) 10px 10px;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .wizard-card {
-        padding: 20px;
-        height: auto;
-        min-height: 0;
-        flex: 1;
-        overflow-y: auto;
-    }
-
-    .brand-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 12px;
-    }
-
-    .brand-item {
-        padding: 10px;
-        min-height: 80px;
-    }
-
-    .model-grid {
-        grid-template-columns: 1fr;
-    }
-
-    /* Form Rows to Stack */
-    .form-row {
-        flex-direction: column;
-        gap: 16px !important;
-    }
-
-    .form-group {
-        width: 100%;
-    }
-
-    .step-content {
-        padding: 0;
-    }
-
-    /* Sell Car Form */
-    .form-card-integrated {
-        padding: 20px;
-        margin: 10px;
-    }
-
-    /* Footer */
-    .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-        text-align: center;
-    }
-
-    .footer-col {
-        align-items: center;
-    }
-
-    .footer-bottom {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    /* Utility Adjustments */
-    .btn {
-        width: 100%;
-        /* Full width buttons on mobile */
-        justify-content: center;
-        padding: 14px;
-    }
-
-    .custom-select-header,
-    .premium-wizard-select {
-        padding: 12px 16px;
-    }
-
-    h1 {
-        font-size: 2rem !important;
-    }
-
-    h2 {
-        font-size: 1.5rem !important;
-    }
-
-    h3 {
-        font-size: 1.25rem !important;
-    }
-
-    /* Mobile Utilities */
-    .mobile-only {
-        display: block !important;
-    }
-
-    .desktop-only {
-        display: none !important;
-    }
-
-    /* Mobile Menu Active State */
-    .header__nav.mobile-active {
-        display: flex !important;
-        position: fixed;
-        top: 60px;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.98);
-        flex-direction: column;
-        padding: 24px;
-        gap: 16px;
-        border-bottom: 1px solid #e2e8f0;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-        animation: slideDown 0.3s ease-out;
-        backdrop-filter: blur(10px);
-    }
-
-    @keyframes slideDown {
-        from {
-            transform: translateY(-20px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    .form-grid-2,
-    .form-grid-mixed {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-/* Default Desktop Utilities */
-.mobile-only {
+  .filters-panel {
     display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    height: 85vh;
+    z-index: 1100;
+    border-radius: 24px 24px 0 0;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .filters-panel.active {
+    display: block;
+    transform: translateY(0);
+  }
+
+  .listings-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* ── Car Cards ── */
+  .car-card__image-container {
+    height: 200px !important;
+  }
+
+  /* ── Forms ── */
+  .form-row {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .form-group { width: 100% !important; }
+
+  .form-grid-2,
+  .form-grid-mixed {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Valuation Wizard ── */
+  .valuation-wizard-container {
+    padding: calc(var(--header-height) + 10px) 12px 12px;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wizard-card {
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .brand-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px;
+  }
+
+  .brand-item {
+    padding: 10px;
+    min-height: 76px;
+  }
+
+  .model-grid { grid-template-columns: 1fr; }
+
+  /* ── Footer ── */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 36px !important;
+  }
+
+  .footer-col.brand-col {
+    grid-column: 1 !important;
+    text-align: center;
+  }
+
+  .footer-col {
+    text-align: center;
+  }
+
+  .footer-col .footer-link-group {
+    align-items: center;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  /* ── Feature Cards ── */
+  .features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  /* ── Stats Counter ── */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px;
+  }
+
+  /* ── Testimonials ── */
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+
+  /* ── Featured Brands ── */
+  .brands-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px;
+  }
+
+  /* ── Listings & Filters Mobile ── */
+  .listings-layout {
+    grid-template-columns: 1fr;
+    padding-top: 16px;
+  }
+
+  .filters-panel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 92%;
+    max-width: 400px;
+    height: 80vh;
+    max-height: 80vh;
+    z-index: 1100;
+    border-radius: 24px;
+    overflow: hidden;
+    border: none !important;
+    background: var(--bg-main);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transform: translate(-50%, -45%) scale(0.95);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .filters-panel.active {
+    display: flex !important;
+    flex-direction: column;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  .filters-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    z-index: 1090;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .filters-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Compare Tray ── */
+  .compare-tray {
+    flex-direction: column !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 20px 20px 0 0 !important;
+    padding: 16px !important;
+  }
+
+  /* ── Car Details Page ── */
+  .car-details-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .sidebar-panel {
+    padding: 20px !important;
+  }
+
+  .price-display-wrapper {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .spec-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* ── Admin ── */
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── Misc ── */
+  .search-widget { padding: 16px !important; }
+  .dual-slider-container { margin: 4px 0; }
+
+  .btn { -webkit-tap-highlight-color: transparent; }
 }
 
-/* Small Mobile (iPhone SE etc) */
-@media (max-width: 380px) {
-    .brand-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
+/* ============================================================
+ * SMALL MOBILE (≤ 480px)
+ * ============================================================ */
+@media (max-width: 480px) {
+  :root {
+    --gutter: 12px;
+  }
 
-    .hero-title {
-        font-size: 2rem !important;
-    }
+  .trust-bar-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .hero-stats-container {
+    gap: 12px !important;
+  }
+
+  .brand-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sell Car Form - mobile */
+  .form-card-integrated {
+    padding: 16px !important;
+    margin: 8px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Hero buttons stack */
+  .hero-actions-container { gap: 10px !important; }
+}
+
+/* ============================================================
+ * EXTRA SMALL (≤ 380px — iPhone SE, Galaxy S5)
+ * ============================================================ */
+@media (max-width: 380px) {
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.35rem !important; }
+
+  .brand-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .hero-form-card { padding: 16px !important; }
+}
+
+/* ============================================================
+ * LARGE DESKTOP (≥ 1440px)
+ * ============================================================ */
+@media (min-width: 1440px) {
+  :root {
+    --gutter: 40px;
+  }
+}
+
+/* ============================================================
+ * ULTRAWIDE (≥ 1920px)
+ * ============================================================ */
+@media (min-width: 1920px) {
+  :root {
+    --container-width: 1680px;
+    --gutter: 48px;
+  }
+}
+
+/* ============================================================
+ * 4K (≥ 2560px)
+ * ============================================================ */
+@media (min-width: 2560px) {
+  :root {
+    --container-width: 2000px;
+    --gutter: 60px;
+  }
+
+  html { font-size: 18px; }
+}
+
+/* ============================================================
+ * TABLET PORTRAIT (769px – 1024px)
+ * ============================================================ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .trust-bar-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .listings-layout {
+    grid-template-columns: 240px 1fr !important;
+    gap: 20px;
+  }
+
+  .pro-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ============================================================
+ * PRINT
+ * ============================================================ */
+@media print {
+  .app-header,
+  .app-footer,
+  .compare-tray,
+  .mobile-menu-overlay { display: none !important; }
+
+  body { background: white; color: black; }
 }

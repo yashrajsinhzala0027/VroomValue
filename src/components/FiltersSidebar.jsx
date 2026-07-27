@@ -102,8 +102,18 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
     }, [brandSearch]);
 
     return (
-        <aside className="filters-panel" style={{ borderRight: '1px solid var(--border)' }}>
+        <aside className={`filters-panel ${className}`} style={{ borderRight: '1px solid var(--border)' }}>
             <div className="filters-panel-inner" style={{ padding: 'clamp(12px, 2vw, 20px)' }}>
+                {/* Mobile Header */}
+                <div className="filter-sidebar-header mobile-only" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--secondary)' }}>Filters</h3>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <button onClick={() => onChange('reset', true)} className="btn-text" style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.8rem', padding: '6px 12px', background: 'var(--primary-glow)', borderRadius: '20px' }}>Clear</button>
+                        <button onClick={onClose} style={{ background: 'var(--bg-deep)', border: 'none', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-main)', cursor: 'pointer' }}>✕</button>
+                    </div>
+                </div>
+
+                {/* Desktop Header */}
                 <div className="filter-sidebar-header desktop-only">
                     <h3>System Filters</h3>
                     <button
@@ -430,6 +440,13 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                     </div>
                 </FilterAccordion>
             </div> {/* end filters-panel-inner */}
+
+            {/* Mobile Footer with Apply Button (Fixed with Gradient Fade) */}
+            <div className="mobile-only filter-sidebar-footer" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '32px 16px 16px 16px', background: 'linear-gradient(to bottom, transparent 0%, var(--bg-main) 40%, var(--bg-main) 100%)', zIndex: 100, borderRadius: '0 0 24px 24px', pointerEvents: 'none' }}>
+                <button className="btn btn-primary" style={{ width: '100%', borderRadius: '12px', padding: '14px', fontSize: '1rem', fontWeight: 800, boxShadow: '0 8px 24px rgba(0,0,0,0.2)', pointerEvents: 'auto' }} onClick={onClose}>
+                    Apply Filters
+                </button>
+            </div>
         </aside>
     );
 };
