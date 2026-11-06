@@ -3,14 +3,32 @@ import { useNavigate } from 'react-router-dom';
 import { formatPriceINR, formatKm } from '../utils/formatters';
 import { useCompare } from './CompareContext';
 import { useWishlist } from './WishlistContext';
-import { Heart, Scale, CheckCircle2, TrendingUp, ShieldCheck } from 'lucide-react';
+import { Heart, Scale, CheckCircle2, TrendingUp, ShieldCheck, ArrowRight } from 'lucide-react';
 import '../styles/components.css';
+
+const MODEL_FALLBACK_MAP = {
+    swift:    '/cars/swift.jpg',
+    dzire:    '/cars/city.jpg',
+    thar:     '/cars/thar.jpg',
+    creta:    '/cars/harrier.jpg',
+    nexon:    '/cars/nexon.jpg',
+    fortuner: '/cars/fortuner.jpg',
+    innova:   '/cars/innova.jpg',
+    city:     '/cars/city.jpg',
+    harrier:  '/cars/harrier.jpg',
+    verna:    '/cars/verna.jpg',
+    fronx:    '/cars/fronx.jpg',
+    kwid:     '/cars/kwid.jpg',
+    scorpio:  '/cars/fortuner.jpg',
+    baleno:   '/cars/swift.jpg',
+    brezza:   '/cars/fronx.jpg',
+    seltos:   '/cars/harrier.jpg',
+};
 
 const CarCard = ({ car }) => {
     const navigate = useNavigate();
     const { addToCompare, compareList } = useCompare();
     const { toggleWishlist, isInWishlist } = useWishlist();
-    const [imageLoaded, setImageLoaded] = useState(false);
     const [imgFailed, setImgFailed] = useState(false);
 
     const isInCompare = compareList.some(c => c.id === car.id);
@@ -27,14 +45,15 @@ const CarCard = ({ car }) => {
     const valuation = parseJSON(car.valuation);
     const auction = parseJSON(car.auction);
 
-    // Dynamic Health Score based on age and kms
+    // Dynamic Condition Score based on age and kms
     const age = 2025 - (Number(car.year) || 2024);
     const kms = Number(car.kms) || 0;
-    const healthScore = Math.max(70, Math.min(99, Math.round(100 - (age * 2.2) - (kms / 12000))));
+    const healthScore = Math.max(72, Math.min(99, Math.round(100 - (age * 2.2) - (kms / 12000))));
 
     const frontImg = Array.isArray(images) && (images.find(img => img.type === 'exterior-front') || images[0]);
-    const rawSrc = frontImg ? frontImg.src : '/cars/swift.jpg';
-    const imgSrc = imgFailed ? '/cars/swift.jpg' : rawSrc;
+    const modelKey = (car.model || '').toLowerCase().trim();
+    const reliableFallback = MODEL_FALLBACK_MAP[modelKey] || '/cars/swift.jpg';
+    const imgSrc = imgFailed || !frontImg ? reliableFallback : frontImg.src;
 
     return (
         <div
@@ -43,15 +62,21 @@ const CarCard = ({ car }) => {
             role="article"
             aria-label={`${car.year} ${car.make} ${car.model}`}
         >
-            {/* Image Container with Skeleton */}
+            {/* 1. Vehicle Image Container */}
             <div className="car-card__image-container">
-                <div className={`skeleton-loader ${imageLoaded ? 'hidden' : ''}`} />
+                <img
+                    src={imgSrc}
+                    alt={`${car.year} ${car.make} ${car.model}`}
+                    className="car-card__image"
+                    loading="lazy"
+                    onError={() => setImgFailed(true)}
+                />
 
-                {/* Status Badges */}
+                {/* Status Badges Overlay */}
                 <div className="car-card__badges-wrapper">
                     {Boolean(car.certified) && (
                         <span className="car-card__badge certified">
-                            <ShieldCheck size={12} /> Certified
+                            <ShieldCheck size={11} /> Certified
                         </span>
                     )}
                     {valuation && (() => {
@@ -68,23 +93,11 @@ const CarCard = ({ car }) => {
                     )}
                 </div>
 
-                {/* Health Score Pill */}
+                {/* Health Condition Pill */}
                 <div className="car-card__health-pill">
                     <span className="health-dot" />
                     <span>{healthScore}% Condition</span>
                 </div>
-
-                <img
-                    src={imgSrc}
-                    alt={`${car.make} ${car.model}`}
-                    className="car-card__image"
-                    loading="lazy"
-                    onLoad={() => setImageLoaded(true)}
-                    onError={() => {
-                        setImgFailed(true);
-                        setImageLoaded(true);
-                    }}
-                />
 
                 {/* Top-Right Action Controls */}
                 <div className="car-card__action-controls">
@@ -92,24 +105,24 @@ const CarCard = ({ car }) => {
                         type="button"
                         className={`car-card__wishlist ${isLiked ? 'active' : ''}`}
                         onClick={(e) => { e.stopPropagation(); toggleWishlist(car); }}
-                        aria-label={isLiked ? "Remove from shortlist" : "Add to shortlist"}
+                        aria-label={isLiked ? 'Remove from shortlist' : 'Add to shortlist'}
                     >
-                        <Heart size={16} fill={isLiked ? "#ef4444" : "none"} color={isLiked ? "#ef4444" : "currentColor"} />
+                        <Heart size={15} fill={isLiked ? '#ef4444' : 'none'} color={isLiked ? '#ef4444' : '#69778C'} />
                     </button>
                     <button
                         type="button"
                         className={`car-card__compare ${isInCompare ? 'active' : ''}`}
                         onClick={(e) => { e.stopPropagation(); addToCompare(car); }}
-                        aria-label={isInCompare ? "Remove from comparison" : "Compare car"}
+                        aria-label={isInCompare ? 'Remove from comparison' : 'Compare car'}
                     >
-                        <Scale size={16} />
+                        <Scale size={14} />
                     </button>
                 </div>
             </div>
 
-            {/* Card Content */}
+            {/* 2. Card Content */}
             <div className="car-card__content">
-                <div className="car-card__title">
+                <div className="car-card__title-group">
                     <h4 className="car-card__heading">
                         {car.year} {car.make} {car.model}
                     </h4>
@@ -118,29 +131,26 @@ const CarCard = ({ car }) => {
                     </span>
                 </div>
 
-                {/* Vehicle Quick Specs Grid */}
-                <div className="car-card__specs">
-                    <div className="spec-item">
-                        <div className="spec-value">{formatKm(car.kms).replace(' km', '')}</div>
-                        <div className="spec-label">KM</div>
+                {/* Quick Specs Pill Row */}
+                <div className="car-card__specs-row">
+                    <div className="spec-pill">
+                        <span className="spec-pill-value">{formatKm(car.kms)}</span>
                     </div>
-                    <div className="spec-item spec-border">
-                        <div className="spec-value">{car.fuel}</div>
-                        <div className="spec-label">Fuel</div>
+                    <div className="spec-pill">
+                        <span className="spec-pill-value">{car.fuel}</span>
                     </div>
-                    <div className="spec-item">
-                        <div className="spec-value">{car.transmission}</div>
-                        <div className="spec-label">Trans</div>
+                    <div className="spec-pill">
+                        <span className="spec-pill-value">{car.transmission}</span>
                     </div>
                 </div>
 
-                {/* Pricing & EMI Information */}
+                {/* Price and EMI Row */}
                 <div className="car-card__price-row">
                     <div className="price-primary-row">
                         <span className="car-card__price">{formatPriceINR(car.priceINR)}</span>
                         {Boolean(car.certified) && (
                             <span className="verified-chip">
-                                <CheckCircle2 size={12} /> Verified
+                                <CheckCircle2 size={11} /> Verified
                             </span>
                         )}
                     </div>
@@ -148,8 +158,8 @@ const CarCard = ({ car }) => {
                         <span className="car-card__emi">
                             EMI from {formatPriceINR(Math.round(car.priceINR * 0.015))}/mo
                         </span>
-                        <span className="high-demand-badge">
-                            <TrendingUp size={12} /> High Demand
+                        <span className="card-view-details">
+                            View <ArrowRight size={12} />
                         </span>
                     </div>
                 </div>

@@ -55,7 +55,7 @@ const FAQS = [
     { q: 'Can I book a test drive for any car?', a: "Yes! High-intent buyers can book a doorstep test drive or visit our VV-Hubs. Simply use the 'Book Test Drive' feature on any car listing." },
 ];
 
-/* ── Animated FAQ Accordion ── */
+/* ── FAQ Accordion Item ── */
 const FAQItem = ({ q, a, isOpen, onToggle }) => (
     <div className={`faq-item ${isOpen ? 'open' : ''}`}>
         <button
@@ -69,21 +69,11 @@ const FAQItem = ({ q, a, isOpen, onToggle }) => (
                 {isOpen ? <Minus size={18} /> : <Plus size={18} />}
             </span>
         </button>
-        <AnimatePresence initial={false}>
-            {isOpen && (
-                <motion.div
-                    key="content"
-                    className="faq-content"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                    style={{ overflow: 'hidden' }}
-                >
-                    <p className="faq-answer-text">{a}</p>
-                </motion.div>
-            )}
-        </AnimatePresence>
+        {isOpen && (
+            <div className="faq-content">
+                <p className="faq-answer-text">{a}</p>
+            </div>
+        )}
     </div>
 );
 
@@ -120,25 +110,17 @@ const Home = () => {
                     </FadeInWhenVisible>
 
                     <div className="features-grid-home">
-                        {FEATURES.map(({ icon: Icon, color, bgColor, title, text }, i) => (
-                            <motion.div
-                                key={title}
-                                className="home-feature-card"
-                                initial={{ opacity: 0, y: 32 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: '-40px' }}
-                                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: i * 0.1 }}
-                                whileHover={{ y: -8, transition: { duration: 0.25 } }}
-                            >
+                        {FEATURES.map(({ icon: Icon, color, bgColor, title, text }) => (
+                            <div key={title} className="home-feature-card">
                                 <div
                                     className="home-feature-icon"
                                     style={{ background: bgColor, color }}
                                 >
-                                    <Icon size={28} />
+                                    <Icon size={26} />
                                 </div>
                                 <h3>{title}</h3>
                                 <p>{text}</p>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>

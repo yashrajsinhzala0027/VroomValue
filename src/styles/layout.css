@@ -413,38 +413,61 @@
 
 
 /* 5.2 Stats Section */
+.stats-counter-section {
+    padding: 0 0 64px;
+    background: transparent;
+}
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-    text-align: center;
+    gap: 24px;
+    background: #FFFFFF;
+    border: 1px solid #E7ECF2;
+    border-radius: 12px;
+    padding: 28px 32px;
+    box-shadow: 0 1px 3px rgba(24, 34, 53, 0.04);
 }
 
 .stats-grid .stat-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.stats-grid .stat-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 15%;
+    height: 70%;
+    width: 1px;
+    background: #E7ECF2;
 }
 
 .stats-grid .stat-value {
-    font-size: 3rem !important;
-    font-weight: 900;
-    color: #0f172a !important;
-    line-height: 1;
-    margin-bottom: 8px;
+    font-size: 2.1rem !important;
+    font-weight: 800;
+    color: #172238 !important;
+    line-height: 1.1;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
     font-family: var(--font-display);
 }
 
-.stats-grid .stat-value span {
-    color: #059669 !important;
+.stats-grid .stat-value .stat-plus {
+    color: #08B889 !important;
+    font-weight: 800;
+    margin-left: 2px;
 }
 
 .stats-grid .stat-label {
     font-size: 0.85rem;
-    font-weight: 700;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-weight: 600;
+    color: #69778C;
+    letter-spacing: 0.2px;
 }
 
 /* 5.3 Features Grid */
@@ -1060,38 +1083,37 @@ img {
 }
 
 .brand-card {
-    background: white;
-    border-radius: 14px;
+    background: #FFFFFF;
+    border-radius: 12px;
     padding: 20px 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(24, 34, 53, 0.04);
+    border: 1px solid #E7ECF2;
     cursor: pointer;
     transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    height: 84px;
+    height: 88px;
 }
 
 .brand-card:hover {
-    transform: translateY(-4px);
-    border-color: #059669;
-    box-shadow: 0 8px 24px rgba(5, 150, 105, 0.12);
+    transform: translateY(-3px);
+    border-color: #08B889;
+    box-shadow: 0 8px 20px rgba(8, 184, 137, 0.1);
 }
 
 .brand-card img {
-    max-width: 130px;
+    max-width: 120px;
     max-height: 40px;
     width: auto;
     height: auto;
     object-fit: contain;
-    object-position: center;
-    filter: grayscale(1) opacity(0.7);
-    transition: filter 0.25s ease, opacity 0.25s ease;
+    filter: none;
+    transition: transform 0.2s ease;
 }
 
 .brand-card:hover img {
-    filter: grayscale(0) opacity(1);
+    transform: scale(1.05);
 }
 
 /* 5.5 Filter Sidebar High-Definition (HD) Refinement */
@@ -1207,33 +1229,33 @@ img {
 .trust-bar-wrapper {
     position: relative;
     margin-top: -36px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     z-index: 10;
 }
 
 .trust-bar-grid {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    background: #FFFFFF;
+    border: 1px solid #E7ECF2;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(24, 34, 53, 0.05);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
-    padding: 24px 32px;
+    padding: 22px 28px;
 }
 
 .trust-item {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
 }
 
 .trust-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: #ecfdf5;
-    color: #059669;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(8, 184, 137, 0.08);
+    color: #08B889;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1241,17 +1263,17 @@ img {
 }
 
 .trust-label {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: #0f172a;
-    letter-spacing: -0.3px;
-    line-height: 1.2;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #182235;
+    letter-spacing: -0.2px;
+    line-height: 1.25;
 }
 
 .trust-sub {
-    font-size: 0.75rem;
-    color: #64748b;
-    font-weight: 600;
+    font-size: 0.78rem;
+    color: #69778C;
+    font-weight: 500;
     margin-top: 2px;
 }
 

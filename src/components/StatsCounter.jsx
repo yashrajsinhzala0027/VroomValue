@@ -1,27 +1,26 @@
 
 import React from 'react';
 
+const STATS = [
+    { value: '350', suffix: '+',  label: 'Certified Cars' },
+    { value: '18',  suffix: '+',  label: 'Cities Covered' },
+    { value: '140', suffix: '+',  label: 'Quality Checks' },
+    { value: '15',  suffix: 'k+', label: 'Happy Customers' },
+];
+
 const StatsCounter = () => {
     return (
         <section className="stats-counter-section">
             <div className="container">
                 <div className="stats-grid">
-                    <div className="stat-item">
-                        <div className="stat-value">350<span>+</span></div>
-                        <div className="stat-label">Certified Cars</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-value">18<span>+</span></div>
-                        <div className="stat-label">Cities Covered</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-value">140<span>+</span></div>
-                        <div className="stat-label">Quality Checks</div>
-                    </div>
-                    <div className="stat-item">
-                        <div className="stat-value">15<span>k+</span></div>
-                        <div className="stat-label">Happy Customers</div>
-                    </div>
+                    {STATS.map(({ value, suffix, label }) => (
+                        <div key={label} className="stat-item">
+                            <div className="stat-value">
+                                {value}<span className="stat-plus">{suffix}</span>
+                            </div>
+                            <div className="stat-label">{label}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

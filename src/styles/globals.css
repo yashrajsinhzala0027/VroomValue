@@ -1,58 +1,45 @@
 :root {
-  /* VroomValue Pro: Premium Commercial Palette (HSL for precision) */
-  --p-h: 160;
-  --p-s: 84%;
-  --p-l: 39%;
-  /* Emerald Primary */
-  --s-h: 220;
-  --s-s: 40%;
-  --s-l: 15%;
-  /* Midnight Secondary */
-  --a-h: 35;
-  --a-s: 100%;
-  --a-l: 50%;
-  /* Amber Accent */
-
-  --primary: hsl(var(--p-h), var(--p-s), var(--p-l));
-  --primary-deep: hsl(var(--p-h), var(--p-s), calc(var(--p-l) - 10%));
-  --primary-glow: hsla(var(--p-h), var(--p-s), var(--p-l), 0.15);
-  --primary-soft: hsl(var(--p-h), var(--p-s), 95%);
-  --secondary: hsl(var(--s-h), var(--s-s), var(--s-l));
-  --secondary-deep: hsl(var(--s-h), var(--s-s), calc(var(--s-l) - 5%));
-  --accent: hsl(var(--a-h), var(--a-s), var(--a-l));
+  /* VroomValue Professional Design System */
+  --primary: #08B889;
+  --primary-deep: #079B78;
+  --primary-glow: rgba(8, 184, 137, 0.12);
+  --primary-soft: rgba(8, 184, 137, 0.08);
+  --secondary: #172238;
+  --secondary-deep: #0f172a;
+  --accent: #f59e0b;
 
   /* Neutral Spectrum */
-  --bg-main: #fcfdfe;
-  --bg-surface: #ffffff;
-  --bg-glass: rgba(255, 255, 255, 0.75);
-  --border: #e8eef3;
-  --text-main: #1a202c;
-  --text-muted: #64748b;
+  --bg-main: #F7F9FC;
+  --bg-surface: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.95);
+  --border: #E7ECF2;
+  --text-main: #182235;
+  --text-muted: #69778C;
 
   /* Status Tokens */
-  --success: #10b981;
+  --success: #08B889;
   --warning: #f59e0b;
   --danger: #ef4444;
 
-  /* Design Tokens */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+  /* Modern Rectangular Design Tokens */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --radius-full: 9999px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 3px rgba(24, 34, 53, 0.04);
+  --shadow-md: 0 4px 14px rgba(24, 34, 53, 0.06);
+  --shadow-lg: 0 12px 28px rgba(24, 34, 53, 0.09);
 
-  --font-main: 'Inter', system-ui, sans-serif;
-  --font-display: 'Outfit', 'Inter', sans-serif;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Responsive Container & Spacing */
-  --container-width: 1440px;
-  --section-spacing: clamp(60px, 10vw, 120px);
-  --gutter: clamp(16px, 4vw, 40px);
+  /* Responsive Container & Spacing Scale */
+  --container-width: 1280px;
+  --section-spacing: 72px;
+  --gutter: 24px;
 
   /* Layout Variables */
-  --header-height: 80px;
+  --header-height: 76px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -61,18 +48,6 @@
   --space-8: 32px;
   --space-12: 48px;
   --space-16: 64px;
-}
-
-/* Dark Mode Overrides */
-[data-theme='dark'] {
-  --bg-main: #0b0e14;
-  --bg-surface: #151921;
-  --bg-glass: rgba(21, 25, 33, 0.8);
-  --border: #262c36;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --primary-soft: rgba(16, 185, 129, 0.1);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 * {

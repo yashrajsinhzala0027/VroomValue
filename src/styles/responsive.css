@@ -241,6 +241,11 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 20px;
+    padding: 24px 20px !important;
+  }
+
+  .stats-grid .stat-item:not(:last-child)::after {
+    display: none !important;
   }
 
   /* ── Testimonials ── */
@@ -250,9 +255,17 @@
   }
 
   /* ── Featured Brands ── */
+  .brand-grid,
   .brands-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* ── Trust Bar ── */
+  .trust-bar-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    padding: 18px 20px !important;
   }
 
   /* ── Listings & Filters Mobile ── */
