@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatPriceINR } from '../utils/formatters';
+import { TrendingUp, ShieldCheck } from 'lucide-react';
 
 const ValuationResult = ({ selection, result, onReset }) => {
     const navigate = useNavigate();
@@ -45,11 +46,11 @@ const ValuationResult = ({ selection, result, onReset }) => {
 
             <div className="valuation-insights">
                 <div className="insight-item">
-                    <span className="icon">⚡</span>
+                    <span className="icon"><TrendingUp size={20} color="var(--primary)" /></span>
                     <p>Demand for <strong>{selection.model}</strong> is high in <strong>{selection.city}</strong>. You can get a great deal today!</p>
                 </div>
                 <div className="insight-item">
-                    <span className="icon">🛡️</span>
+                    <span className="icon"><ShieldCheck size={20} color="#059669" /></span>
                     <p>Price includes <strong>VroomValue Assurance</strong> and free doorstep documentation.</p>
                 </div>
             </div>

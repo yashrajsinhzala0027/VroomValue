@@ -14,6 +14,7 @@ import BiddingWidget from './BiddingWidget';
 import VirtualShowroom from './VirtualShowroom';
 import { CarHealthScore, ResalePredictor } from './IntelligenceCenter';
 import AIValuationMeter from './AIValuationMeter';
+import { CheckCircle2, Gauge, Fuel, MapPin, Car as CarIcon, Settings, Zap, Users, ShieldCheck } from 'lucide-react';
 
 const CarDetails = () => {
     const { id } = useParams();
@@ -187,7 +188,7 @@ const CarDetails = () => {
                             <div className="features-icon-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px', marginTop: '20px' }}>
                                 {features.map(f => (
                                     <div key={f} className="feature-icon-item" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'var(--bg-main)', borderRadius: '12px', border: '1px solid var(--border)' }}>
-                                        <span style={{ fontSize: '1.2rem' }}>✨</span>
+                                        <CheckCircle2 size={16} color="var(--primary)" />
                                         <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{f}</span>
                                     </div>
                                 ))}
@@ -208,17 +209,19 @@ const CarDetails = () => {
                             </div>
                             <div className="spec-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '24px' }}>
                                 {[
-                                    { label: 'Engine', val: car.engineCapacity ? `${car.engineCapacity} cc` : '1.2L dual-Jet', icon: '🚀' },
-                                    { label: 'Mileage', val: car.mileageKmpl ? `${car.mileageKmpl} kmpl` : '22.3 kmpl', icon: '⛽' },
-                                    { label: 'RTO', val: car.rto || 'DL-01', icon: '📍' },
-                                    { label: 'Body', val: car.bodyType || 'Hatchback', icon: '🚗' },
-                                    { label: 'Trans', val: car.transmission, icon: '⚙️' },
-                                    { label: 'Fuel', val: car.fuel, icon: '🔥' },
-                                    { label: 'Seats', val: car.seats || '5 Seater', icon: '💺' },
-                                    { label: 'Insurance', val: car.insuranceValidity || 'Comprehensive', icon: '🛡️' }
+                                    { label: 'Engine', val: car.engineCapacity ? `${car.engineCapacity} cc` : '1.2L dual-Jet', Icon: Gauge },
+                                    { label: 'Mileage', val: car.mileageKmpl ? `${car.mileageKmpl} kmpl` : '22.3 kmpl', Icon: Fuel },
+                                    { label: 'RTO', val: car.rto || 'DL-01', Icon: MapPin },
+                                    { label: 'Body', val: car.bodyType || 'Hatchback', Icon: CarIcon },
+                                    { label: 'Trans', val: car.transmission, Icon: Settings },
+                                    { label: 'Fuel', val: car.fuel, Icon: Zap },
+                                    { label: 'Seats', val: car.seats || '5 Seater', Icon: Users },
+                                    { label: 'Insurance', val: car.insuranceValidity || 'Comprehensive', Icon: ShieldCheck }
                                 ].map(spec => (
                                     <div key={spec.label} style={{ padding: '16px', background: 'rgba(255,255,255,0.5)', borderRadius: '16px', border: '1px solid var(--border)' }}>
-                                        <div style={{ fontSize: '1.5rem', marginBottom: '8px' }}>{spec.icon}</div>
+                                        <div style={{ color: 'var(--primary)', marginBottom: '8px' }}>
+                                            <spec.Icon size={20} />
+                                        </div>
                                         <div className="spec-item-label" style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>{spec.label}</div>
                                         <div className="spec-item-value" style={{ fontWeight: 800, fontSize: '1rem', marginTop: '4px' }}>{spec.val}</div>
                                     </div>
@@ -276,7 +279,9 @@ const CarDetails = () => {
 
                             <div className="seller-trust-box" style={{ marginTop: '40px', padding: '28px', borderRadius: '28px', background: 'var(--bg-main)', border: '1px solid var(--border)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-                                    <div style={{ width: '56px', height: '56px', background: 'var(--primary)', borderRadius: '16px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem' }}>🛡️</div>
+                                    <div style={{ width: '56px', height: '56px', background: 'var(--primary)', borderRadius: '16px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ShieldCheck size={28} />
+                                    </div>
                                     <div>
                                         <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--text-main)' }}>VroomValue Certified</div>
                                         <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>140+ Point Digital Audit Passed</div>

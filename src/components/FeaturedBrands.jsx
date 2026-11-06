@@ -19,11 +19,11 @@ const FeaturedBrands = () => {
     const navigate = useNavigate();
 
     return (
-        <section className="section">
+        <section className="section featured-brands-section" style={{ padding: '80px 0' }}>
             <div className="container">
-                <div className="features-header">
+                <div className="section-header-center">
                     <h2>Browse by Brand</h2>
-                    <p>Explore India's most trusted manufacturers</p>
+                    <p className="section-subtitle">Explore India's most trusted manufacturers</p>
                 </div>
 
                 <div className="brand-grid">

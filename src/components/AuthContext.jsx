@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         // 1. Initial State Check
         if (localStorage.getItem('VV_AUTH_LOCK') === 'true') {
-            console.log("🔒 Persistent Auth Lock detected.");
+            console.log("Persistent Auth Lock detected.");
             handleLogoutCleanup();
         }
 
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
             // CRITICAL: Block any session IF the lock is on AND we have a session
             if (localStorage.getItem('VV_AUTH_LOCK') === 'true') {
                 if (session) {
-                    console.log("🔒 Blocking session due to Auth Lock.");
+                    console.log("Blocking session due to Auth Lock.");
                     handleLogoutCleanup();
                     supabase.auth.signOut({ scope: 'global' }).catch(() => { });
                 } else if (currentUser) {

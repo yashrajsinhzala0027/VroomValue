@@ -3,6 +3,7 @@ import { placeBid, getBidHistory } from '../api/mockApi';
 import { useAuth } from './AuthContext';
 import { useToast } from './Toasts';
 import { formatPriceINR } from '../utils/formatters';
+import { Trophy } from 'lucide-react';
 
 const BiddingWidget = ({ car, onBidPlaced }) => {
     const { currentUser } = useAuth();
@@ -79,7 +80,7 @@ const BiddingWidget = ({ car, onBidPlaced }) => {
         setLoading(true);
         try {
             await placeBid(car.id, currentUser.email, amount);
-            addToast('Bid placed successfully! 🎉', 'success');
+            addToast('Bid placed successfully!', 'success');
             setBidAmount('');
             const history = await getBidHistory(car.id);
             setBidHistory(history);
@@ -184,7 +185,7 @@ const BiddingWidget = ({ car, onBidPlaced }) => {
                     gap: '10px',
                     animation: 'fadeIn 0.5s ease'
                 }}>
-                    <span style={{ fontSize: '1.2rem' }}>🏆</span> You are currently the leading bidder!
+                    <Trophy size={18} color="#d97706" /> You are currently the leading bidder!
                 </div>
             )}
 

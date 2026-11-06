@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useCompare } from './CompareContext';
 import { useLocation } from 'react-router-dom';
 import { formatPriceINR } from '../utils/formatters';
+import { Scale, ChevronDown, Plus } from 'lucide-react';
 
 const CompareTray = () => {
     const { compareList, removeFromCompare, clearCompare } = useCompare();
@@ -65,7 +66,15 @@ const CompareTray = () => {
                     gap: '10px'
                 }}
             >
-                {isOpen ? '∨ MINIMIZE' : `📊 COMPARE NOW (${compareList.length})`}
+                {isOpen ? (
+                    <>
+                        <ChevronDown size={16} /> MINIMIZE
+                    </>
+                ) : (
+                    <>
+                        <Scale size={16} /> COMPARE NOW ({compareList.length})
+                    </>
+                )}
             </div>
 
             <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
@@ -124,7 +133,7 @@ const CompareTray = () => {
                                 minHeight: '114px',
                                 gap: '8px'
                             }}>
-                                <span style={{ fontSize: '1.5rem' }}>➕</span>
+                                <Plus size={22} color="#94a3b8" />
                                 <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>ADD VEHICLE</span>
                             </div>
                         );

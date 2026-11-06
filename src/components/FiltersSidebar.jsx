@@ -8,6 +8,7 @@ import {
 import { formatPriceShort } from '../utils/formatters';
 import BrandLogo from './BrandLogo';
 import { MODEL_TO_MAKE_MAP } from '../utils/modelMapping';
+import { X, Search } from 'lucide-react';
 
 // Invert the map for grouping
 const MAKE_TO_MODELS_MAP = {};
@@ -109,7 +110,7 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--secondary)' }}>Filters</h3>
                     <div style={{ display: 'flex', gap: '12px' }}>
                         <button onClick={() => onChange('reset', true)} className="btn-text" style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.8rem', padding: '6px 12px', background: 'var(--primary-glow)', borderRadius: '20px' }}>Clear</button>
-                        <button onClick={onClose} style={{ background: 'var(--bg-deep)', border: 'none', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-main)', cursor: 'pointer' }}>✕</button>
+                        <button onClick={onClose} style={{ background: 'var(--bg-deep)', border: 'none', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-main)', cursor: 'pointer' }} aria-label="Close filters"><X size={18} /></button>
                     </div>
                 </div>
 
@@ -183,15 +184,15 @@ const FiltersSidebar = ({ filters, onChange, onClose, className = "" }) => {
 
                 {/* Brands + Models */}
                 <FilterAccordion title="Brands + Models" isOpen={openSections.brands} onToggle={() => toggleSection('brands')}>
-                    <div className="reference-search-wrapper">
+                    <div className="reference-search-wrapper" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                         <input
                             type="text"
-                            placeholder="Search"
+                            placeholder="Search brands"
                             value={brandSearch}
                             onChange={(e) => setBrandSearch(e.target.value)}
                             className="reference-search-input"
                         />
-                        <span className="search-icon-right">🔍</span>
+                        <Search size={16} color="#94a3b8" style={{ position: 'absolute', right: '12px', pointerEvents: 'none' }} />
                     </div>
 
                     <span className="category-label">Top Brands</span>

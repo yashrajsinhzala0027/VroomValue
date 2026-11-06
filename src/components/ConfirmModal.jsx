@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/admin_action_modal.css';
+import { AlertTriangle, Gavel, CheckCircle2 } from 'lucide-react';
 
 const ConfirmModal = ({ isOpen, title, message, confirmText, type, onConfirm, onCancel }) => {
     // Animation state
@@ -21,8 +22,20 @@ const ConfirmModal = ({ isOpen, title, message, confirmText, type, onConfirm, on
     return (
         <div className={`admin-action-modal-overlay ${isOpen ? 'active' : ''}`}>
             <div className="admin-action-modal-content">
-                <div style={{ fontSize: '3rem', marginBottom: '10px' }}>
-                    {type === 'danger' ? '⚠️' : type === 'warning' ? '🔨' : '✨'}
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                    {type === 'danger' ? (
+                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <AlertTriangle size={28} color="#ef4444" />
+                        </div>
+                    ) : type === 'warning' ? (
+                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Gavel size={28} color="#d97706" />
+                        </div>
+                    ) : (
+                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#d1fae5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <CheckCircle2 size={28} color="#059669" />
+                        </div>
+                    )}
                 </div>
                 <h3 className="admin-action-modal-title">{title}</h3>
                 <p className="admin-action-modal-message">{message}</p>

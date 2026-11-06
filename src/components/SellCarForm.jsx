@@ -9,6 +9,7 @@ import { useAuth } from './AuthContext';
 import { useToast } from './Toasts';
 import CustomSelect from './CustomSelect';
 import { formatPriceINR } from '../utils/formatters';
+import { Camera, Check, IndianRupee, Cpu } from 'lucide-react';
 
 const SellCarForm = () => {
     const navigate = useNavigate();
@@ -418,7 +419,9 @@ const SellCarForm = () => {
                                         hidden
                                         onChange={(e) => handleImageUpload(e, type)}
                                     />
-                                    <div className="upload-icon">📸</div>
+                                    <div className="upload-icon" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Camera size={26} color="#64748b" />
+                                    </div>
                                     <div className="upload-text" style={{ fontSize: '0.7rem' }}>Tap to Upload</div>
 
                                     {formData.images.find(img => img.type === type) && (
@@ -428,7 +431,9 @@ const SellCarForm = () => {
                                                 alt="Preview"
                                                 style={{ objectFit: 'cover' }}
                                             />
-                                            <div className="upload-check-badge">✓</div>
+                                            <div className="upload-check-badge" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Check size={14} color="#ffffff" />
+                                            </div>
                                         </div>
                                     )}
                                 </label>
@@ -458,8 +463,12 @@ const SellCarForm = () => {
                             position: 'relative',
                             overflow: 'hidden'
                         }}>
-                            <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>💰</div>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>🤖 Real Market Price Estimate</div>
+                            <div style={{ position: 'absolute', top: '12px', right: '12px', opacity: 0.12 }}>
+                                <IndianRupee size={48} color="var(--primary)" />
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+                                <Cpu size={14} /> Real Market Price Estimate
+                            </div>
                             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
                                 <span style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--text-main)' }}>
                                     {formatPriceINR(valuationRange.fairPrice)} - {formatPriceINR(valuationRange.goodPrice)}
@@ -473,12 +482,12 @@ const SellCarForm = () => {
                                 type="button"
                                 onClick={() => setFormData({ ...formData, priceINR: valuationRange.fairPrice })}
                                 style={{
-                                    marginTop: '16px', padding: '6px 12px', border: '1px solid var(--primary)',
+                                    marginTop: '16px', padding: '6px 16px', border: '1px solid var(--primary)',
                                     borderRadius: '20px', fontSize: '0.75rem', background: 'white', color: 'var(--primary)',
                                     fontWeight: '600', cursor: 'pointer'
                                 }}
                             >
-                                Use Recommended Price 👆
+                                Use Recommended Price
                             </button>
                         </div>
                     )}

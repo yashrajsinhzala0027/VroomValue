@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Cpu } from 'lucide-react';
 
 const AIValuationMeter = ({ score = 92 }) => {
     const [progress, setProgress] = useState(0);
@@ -33,7 +34,7 @@ const AIValuationMeter = ({ score = 92 }) => {
             </div>
             <div className="meter-content">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '0.9rem' }}>🤖</span>
+                    <Cpu size={16} color="var(--primary)" />
                     <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price Confidence</h4>
                 </div>
                 <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>

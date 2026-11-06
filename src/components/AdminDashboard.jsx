@@ -5,6 +5,7 @@ import { useAuth } from './AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatPriceINR } from '../utils/formatters';
 import { useToast } from './Toasts';
+import { Lock, User, ChevronLeft, Car, Gavel, FileText, MessageSquare, Users } from 'lucide-react';
 
 const AdminDashboard = () => {
     const { currentUser, isVerifying: isAuthVerifying } = useAuth();
@@ -280,7 +281,7 @@ const AdminDashboard = () => {
                 reservePrice: auctionConfig.reservePrice
             });
             refreshData();
-            addToast("Auction started successfully! 🔨", "success");
+            addToast("Auction started successfully!", "success");
             setInitiatingAuctionCar(null);
         } catch (err) {
             addToast(err.message, "error");
@@ -292,7 +293,11 @@ const AdminDashboard = () => {
         return (
             <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>
                 <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '40px' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🔒</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Lock size={32} color="#ef4444" />
+                        </div>
+                    </div>
                     <h2 style={{ marginBottom: '16px' }}>Access Restricted</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
                         This area is reserved for VroomValue administrators. Please log in with an authorized account to continue.
@@ -311,7 +316,11 @@ const AdminDashboard = () => {
         return (
             <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>
                 <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '40px' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '20px' }}>👤</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <User size={32} color="#64748b" />
+                        </div>
+                    </div>
                     <h2 style={{ marginBottom: '16px' }}>Session Expired</h2>
                     <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
                         Your session has timed out. Please log in again to access the Command Center.
@@ -335,10 +344,10 @@ const AdminDashboard = () => {
             <button
                 className="back-btn"
                 onClick={() => navigate(-1)}
-                style={{ top: '35px', left: '20px', background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white' }}
+                style={{ top: '35px', left: '20px', background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 title="Go Back"
             >
-                <span>❮</span>
+                <ChevronLeft size={20} />
             </button>
             <div className="admin-header" style={{ background: 'linear-gradient(135deg, var(--secondary) 0%, #2d3748 100%)', padding: '40px 0', color: 'white' }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -393,35 +402,35 @@ const AdminDashboard = () => {
                 {/* Stats Cards */}
                 <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px', marginBottom: '40px', marginTop: '-30px' }}>
                     <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>🏎️</div>
+                        <div style={{ position: 'absolute', top: '12px', right: '12px', opacity: 0.1 }}><Car size={48} color="var(--text-main)" /></div>
                         <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Active Inventory</div>
                         <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: 'var(--text-main)' }}>{cars.length}</div>
                         <div style={{ color: 'var(--success)', fontSize: '0.8rem', fontWeight: 600 }}>↑ 12% from last month</div>
                     </div>
 
                     <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>🔨</div>
+                        <div style={{ position: 'absolute', top: '12px', right: '12px', opacity: 0.1 }}><Gavel size={48} color="#f59e0b" /></div>
                         <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Live Auctions</div>
                         <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: '#f59e0b' }}>{auctionCars.length}</div>
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600 }}>Real-time bidding active</div>
                     </div>
 
                     <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>📝</div>
+                        <div style={{ position: 'absolute', top: '12px', right: '12px', opacity: 0.1 }}><FileText size={48} color="#ef4444" /></div>
                         <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Pending Approvals</div>
                         <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: sellRequests.length > 0 ? 'var(--danger)' : 'var(--text-main)' }}>{sellRequests.length}</div>
                         <div style={{ color: sellRequests.length > 0 ? 'var(--danger)' : 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600 }}>{sellRequests.length > 0 ? 'Action Required' : 'All caught up'}</div>
                     </div>
 
                     <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>🤝</div>
+                        <div style={{ position: 'absolute', top: '12px', right: '12px', opacity: 0.1 }}><MessageSquare size={48} color="var(--primary)" /></div>
                         <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Total Inquiries</div>
                         <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: 'var(--primary)' }}>{testDrives.length}</div>
                         <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 600 }}>Test drives & leads</div>
                     </div>
 
                     <div className="stat-card" style={{ background: 'white', padding: '24px', borderRadius: '20px', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: '-10px', right: '-10px', fontSize: '4rem', opacity: 0.05 }}>👥</div>
+                        <div style={{ position: 'absolute', top: '12px', right: '12px', opacity: 0.1 }}><Users size={48} color="var(--text-main)" /></div>
                         <div className="stat-label" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>Total Users</div>
                         <div className="stat-value" style={{ fontSize: '2.2rem', fontWeight: 900, margin: '8px 0', color: 'var(--text-main)' }}>{userCount}</div>
                         <div style={{ color: 'var(--success)', fontSize: '0.8rem', fontWeight: 600 }}>Registered customers</div>
@@ -905,7 +914,7 @@ const AdminDashboard = () => {
             {initiatingAuctionCar && (
                 <div className={`modal-overlay ${initiatingAuctionCar ? 'active' : ''}`}>
                     <div className="modal-content small">
-                        <h3 style={{ marginTop: 0 }}>Start Auction 🔨</h3>
+                        <h3 style={{ marginTop: 0 }}>Start Auction</h3>
                         <p style={{ color: '#64748b', marginBottom: '20px' }}>
                             {initiatingAuctionCar.year} {initiatingAuctionCar.make} {initiatingAuctionCar.model}
                         </p>

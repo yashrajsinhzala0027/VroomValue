@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { TrendingUp } from 'lucide-react';
 
 export const CarHealthScore = ({ score = 92, engine = 95, body = 88, interior = 94 }) => {
     const getLevel = (s) => s > 90 ? 'Excellent' : s > 80 ? 'Good' : 'Fair';
@@ -102,7 +103,7 @@ export const ResalePredictor = ({ currentPrice }) => {
             </div>
 
             <div style={{ marginTop: '24px', display: 'flex', alignItems: 'center', gap: '12px', padding: '16px', background: 'var(--primary-soft)', borderRadius: '12px' }}>
-                <span style={{ fontSize: '1.2rem' }}>📈</span>
+                <TrendingUp size={20} color="var(--primary)" style={{ flexShrink: 0 }} />
                 <p style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--primary)', margin: 0 }}>
                     High retention asset. This model has a 12% lower depreciation rate than its segment average.
                 </p>

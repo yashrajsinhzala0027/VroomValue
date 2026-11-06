@@ -1,5 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Check } from 'lucide-react';
 
 const CustomSelect = ({ name, value, onChange, options, placeholder = "Select...", className = "", searchable = false, prefix = "", error }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -93,8 +94,8 @@ const CustomSelect = ({ name, value, onChange, options, placeholder = "Select...
                                         className={`custom-select-option ${isSelected ? 'selected' : ''}`}
                                         onClick={() => handleSelect(optValue)}
                                     >
-                                        {optLabel}
-                                        {isSelected && <span className="check-circle">✓</span>}
+                                        <span>{optLabel}</span>
+                                        {isSelected && <Check size={16} color="var(--primary)" />}
                                     </div>
                                 );
                             })

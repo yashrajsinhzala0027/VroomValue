@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { getSupportAnswer } from '../utils/supportLogic';
+import { MessageSquare, X } from 'lucide-react';
 
 const ChatWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -44,7 +45,7 @@ const ChatWidget = () => {
                 }}
                 className="chat-toggle"
             >
-                {isOpen ? '×' : '💬'}
+                {isOpen ? <X size={26} /> : <MessageSquare size={26} />}
             </div>
 
             {isOpen && (

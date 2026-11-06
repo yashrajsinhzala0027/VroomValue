@@ -3,7 +3,7 @@ import React from 'react';
 
 const StatsCounter = () => {
     return (
-        <section className="section" style={{ background: 'var(--bg-main)' }}>
+        <section className="stats-counter-section">
             <div className="container">
                 <div className="stats-grid">
                     <div className="stat-item">

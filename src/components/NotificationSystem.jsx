@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Target, CheckCircle2, Heart, Zap } from 'lucide-react';
 
 const NotificationSystem = () => {
     const [notification, setNotification] = useState(null);
@@ -67,9 +68,11 @@ const NotificationSystem = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '1.2rem'
                 }}>
-                    {notification.type === 'BID' ? '🎯' : notification.type === 'VERIFY' ? '✅' : notification.type === 'WISH' ? '❤️' : '⚡'}
+                    {notification.type === 'BID' ? <Target size={18} color="var(--primary)" /> :
+                     notification.type === 'VERIFY' ? <CheckCircle2 size={18} color="#059669" /> :
+                     notification.type === 'WISH' ? <Heart size={18} color="#e11d48" /> :
+                     <Zap size={18} color="#f59e0b" />}
                 </div>
                 <div>
                     <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--secondary)' }}>

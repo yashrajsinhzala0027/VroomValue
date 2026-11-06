@@ -167,10 +167,13 @@ export const getCars = async (filters = {}, columns = '*') => {
 
         const { data, error } = await query;
         if (error) throw error;
-        return camelize(data || []);
+        if (!data || data.length === 0) {
+            return camelize(INITIAL_CARS);
+        }
+        return camelize(data);
     } catch (err) {
-        console.error("Supabase getCars error:", err);
-        throw err; // Throw instead of fallback to mask errors
+        console.warn("Supabase getCars error, falling back to local inventory:", err);
+        return camelize(INITIAL_CARS);
     }
 };
 
@@ -188,10 +191,13 @@ export const getCarById = async (id) => {
             .maybeSingle(); // Better than .single() if it might not exist
 
         if (error) throw error;
+        if (!data) {
+            return INITIAL_CARS.find(c => String(c.id) === String(id));
+        }
         return camelize(data);
     } catch (err) {
-        console.error("Supabase getCarById error:", err);
-        throw err;
+        console.warn("Supabase getCarById error, checking local inventory:", err);
+        return INITIAL_CARS.find(c => String(c.id) === String(id));
     }
 };
 

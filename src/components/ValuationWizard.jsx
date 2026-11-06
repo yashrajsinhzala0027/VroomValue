@@ -9,6 +9,7 @@ import PremiumSelect from './PremiumSelect';
 import ConfirmModal from './ConfirmModal';
 import { getValuation } from '../api/mockApi';
 import ValuationResult from './ValuationResult';
+import { Check, X } from 'lucide-react';
 
 const ValuationWizard = () => {
     const navigate = useNavigate();
@@ -320,11 +321,13 @@ const ValuationWizard = () => {
             <div className={`wizard-card glass-panel ${step === 5 ? 'result-view' : ''}`}>
                 {step < 5 && (
                     <div className="wizard-header">
-                        <button className="exit-btn" onClick={() => setShowCancelModal(true)} title="Exit Valuation">×</button>
+                        <button className="exit-btn" onClick={() => setShowCancelModal(true)} title="Exit Valuation" aria-label="Exit Valuation" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={18} /></button>
                         <div className="wizard-progress">
                             {steps.slice(0, 4).map(s => (
                                 <div key={s.id} className={`progress-step-item ${step === s.id ? 'active' : ''} ${step > s.id ? 'completed' : ''}`}>
-                                    <div className="step-circle">{step > s.id ? '✓' : s.id}</div>
+                                    <div className="step-circle" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {step > s.id ? <Check size={14} /> : s.id}
+                                    </div>
                                     <span className="step-label">{s.title}</span>
                                 </div>
                             ))}

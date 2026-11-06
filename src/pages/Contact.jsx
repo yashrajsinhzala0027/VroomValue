@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useToast } from '../components/Toasts';
+import { Phone, Mail, MapPin } from 'lucide-react';
 
 const Contact = () => {
     const { addToast } = useToast();
@@ -33,17 +34,23 @@ const Contact = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: 'clamp(32px, 8vw, 60px)' }}>
                     <div style={{ padding: '24px', background: 'var(--bg-surface)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
-                        <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '8px', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>📞 Phone</h3>
+                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: 800, marginBottom: '8px', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <Phone size={16} /> Phone
+                        </h3>
                         <p style={{ color: 'var(--text-main)', fontWeight: 700 }}>1800-123-4567</p>
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Mon-Sat, 9 AM - 7 PM</p>
                     </div>
                     <div style={{ padding: '24px', background: 'var(--bg-surface)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
-                        <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '8px', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>✉️ Email</h3>
+                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: 800, marginBottom: '8px', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <Mail size={16} /> Email
+                        </h3>
                         <p style={{ color: 'var(--text-main)', fontWeight: 700 }}>support@VroomValue.in</p>
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>We reply within 24 hours</p>
                     </div>
                     <div style={{ padding: '24px', background: 'var(--bg-surface)', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
-                        <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '8px', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>📍 Address</h3>
+                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: 800, marginBottom: '8px', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            <MapPin size={16} /> Address
+                        </h3>
                         <p style={{ color: 'var(--text-main)', fontWeight: 700 }}>Ahmedabad, Gujarat</p>
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>India</p>
                     </div>

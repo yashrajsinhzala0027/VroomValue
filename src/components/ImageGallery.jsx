@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/components.css';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 const ImageGallery = ({ images = [] }) => {
     const [activeImage, setActiveImage] = useState(images.length > 0 ? images[0] : null);
@@ -46,11 +47,11 @@ const ImageGallery = ({ images = [] }) => {
                 />
 
                 {/* Navigation Overlays */}
-                <div className="gallery-nav-btn gallery-prev" onClick={handlePrev} style={{ left: '20px' }}>
-                    <span style={{ fontSize: '1.2rem' }}>❮</span>
+                <div className="gallery-nav-btn gallery-prev" onClick={handlePrev} style={{ left: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <ChevronLeft size={24} />
                 </div>
-                <div className="gallery-nav-btn gallery-next" onClick={handleNext} style={{ right: '20px' }}>
-                    <span style={{ fontSize: '1.2rem' }}>❯</span>
+                <div className="gallery-nav-btn gallery-next" onClick={handleNext} style={{ right: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <ChevronRight size={24} />
                 </div>
 
                 {/* View Tag */}
@@ -85,20 +86,20 @@ const ImageGallery = ({ images = [] }) => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     backdropFilter: 'blur(20px)'
                 }} onClick={() => setIsLightboxOpen(false)}>
-                    <div className="gallery-nav-btn gallery-prev" style={{ opacity: 1, left: '40px' }} onClick={(e) => { e.stopPropagation(); handlePrev(e); }}>
-                        <span>❮</span>
+                    <div className="gallery-nav-btn gallery-prev" style={{ opacity: 1, left: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); handlePrev(e); }}>
+                        <ChevronLeft size={28} />
                     </div>
                     <img src={activeImage.src} style={{ maxHeight: '85vh', maxWidth: '90vw', borderRadius: '12px', boxShadow: '0 0 100px rgba(0,0,0,0.5)' }} alt="Fullscreen" />
-                    <div className="gallery-nav-btn gallery-next" style={{ opacity: 1, right: '40px' }} onClick={(e) => { e.stopPropagation(); handleNext(e); }}>
-                        <span>❯</span>
+                    <div className="gallery-nav-btn gallery-next" style={{ opacity: 1, right: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.stopPropagation(); handleNext(e); }}>
+                        <ChevronRight size={28} />
                     </div>
                     <button style={{
                         position: 'absolute', top: '40px', right: '40px',
                         background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white',
                         width: '50px', height: '50px', borderRadius: '50%', cursor: 'pointer',
-                        fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
                     }} onClick={() => setIsLightboxOpen(false)}>
-                        &times;
+                        <X size={28} />
                     </button>
                 </div>
             )}

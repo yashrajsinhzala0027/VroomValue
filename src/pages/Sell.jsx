@@ -1,6 +1,7 @@
 
 import React from 'react';
 import SellCarForm from '../components/SellCarForm';
+import { TrendingUp, Scale, Zap } from 'lucide-react';
 
 const Sell = () => {
     return (
@@ -48,21 +49,27 @@ const Sell = () => {
             <section className="container">
                 <div className="benefits-grid">
                     <div className="benefit-item">
-                        <div className="benefit-icon">📈</div>
+                        <div className="benefit-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <TrendingUp size={24} color="var(--primary)" />
+                        </div>
                         <div>
                             <h4 style={{ fontWeight: '700' }}>Top Market Value</h4>
                             <p style={{ fontSize: '0.85rem', color: '#666' }}>We ensure you get the best price for your vehicle.</p>
                         </div>
                     </div>
                     <div className="benefit-item">
-                        <div className="benefit-icon">⚖️</div>
+                        <div className="benefit-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Scale size={24} color="var(--primary)" />
+                        </div>
                         <div>
                             <h4 style={{ fontWeight: '700' }}>AI Valuation</h4>
                             <p style={{ fontSize: '0.85rem', color: '#666' }}>Data-driven pricing that's fair and transparent.</p>
                         </div>
                     </div>
                     <div className="benefit-item">
-                        <div className="benefit-icon">⚡</div>
+                        <div className="benefit-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Zap size={24} color="var(--primary)" />
+                        </div>
                         <div>
                             <h4 style={{ fontWeight: '700' }}>Instant Sale</h4>
                             <p style={{ fontSize: '0.85rem', color: '#666' }}>Skip the wait with our expedited verification process.</p>

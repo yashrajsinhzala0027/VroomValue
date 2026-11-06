@@ -6,9 +6,9 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 if (!supabaseUrl || !supabaseAnonKey) {
     if (import.meta.env.VITE_USE_MOCK !== 'true') {
-        console.error('❌ Supabase credentials missing! If you are on Vercel, add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to Project Settings.');
+        console.error('Supabase credentials missing! If you are on Vercel, add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to Project Settings.');
     } else {
-        console.warn('⚠️ Supabase credentials missing, but using Mock Data mode.');
+        console.warn('Supabase credentials missing, but using Mock Data mode.');
     }
 }
 
