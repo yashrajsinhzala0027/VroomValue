@@ -231,7 +231,8 @@
   }
 
   /* ── Feature Cards ── */
-  .features-grid {
+  .features-grid,
+  .features-grid-home {
     grid-template-columns: 1fr !important;
     gap: 20px;
   }
@@ -444,7 +445,8 @@
     grid-template-columns: repeat(2, 1fr) !important;
   }
 
-  .features-grid {
+  .features-grid,
+  .features-grid-home {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
