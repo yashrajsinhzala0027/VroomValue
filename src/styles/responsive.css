@@ -449,6 +449,10 @@
   .features-grid-home {
     grid-template-columns: repeat(2, 1fr) !important;
   }
+
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }
 
 /* ============================================================

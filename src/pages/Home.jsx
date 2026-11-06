@@ -58,9 +58,16 @@ const FAQS = [
 /* ── Animated FAQ Accordion ── */
 const FAQItem = ({ q, a, isOpen, onToggle }) => (
     <div className={`faq-item ${isOpen ? 'open' : ''}`}>
-        <button className="faq-trigger" onClick={onToggle} aria-expanded={isOpen}>
-            <span>{q}</span>
-            {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+        <button
+            type="button"
+            className="faq-trigger"
+            onClick={onToggle}
+            aria-expanded={isOpen}
+        >
+            <span className="faq-question-text">{q}</span>
+            <span className="faq-icon-bubble">
+                {isOpen ? <Minus size={18} /> : <Plus size={18} />}
+            </span>
         </button>
         <AnimatePresence initial={false}>
             {isOpen && (
@@ -114,21 +121,24 @@ const Home = () => {
 
                     <div className="features-grid-home">
                         {FEATURES.map(({ icon: Icon, color, bgColor, title, text }, i) => (
-                            <FadeInWhenVisible key={title} delay={i * 0.1}>
-                                <motion.div
-                                    className="home-feature-card"
-                                    whileHover={{ y: -8, transition: { duration: 0.25 } }}
+                            <motion.div
+                                key={title}
+                                className="home-feature-card"
+                                initial={{ opacity: 0, y: 32 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: '-40px' }}
+                                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: i * 0.1 }}
+                                whileHover={{ y: -8, transition: { duration: 0.25 } }}
+                            >
+                                <div
+                                    className="home-feature-icon"
+                                    style={{ background: bgColor, color }}
                                 >
-                                    <div
-                                        className="home-feature-icon"
-                                        style={{ background: bgColor, color }}
-                                    >
-                                        <Icon size={28} />
-                                    </div>
-                                    <h3>{title}</h3>
-                                    <p>{text}</p>
-                                </motion.div>
-                            </FadeInWhenVisible>
+                                    <Icon size={28} />
+                                </div>
+                                <h3>{title}</h3>
+                                <p>{text}</p>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
