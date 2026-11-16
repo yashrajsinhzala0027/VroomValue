@@ -85,7 +85,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                             <User size={18} className="input-icon" />
                             <input
                                 type="text"
-                                className="form-control"
+                                className="form-control with-icon"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
                                 placeholder="Your full name"
@@ -101,7 +101,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                             <Phone size={18} className="input-icon" />
                             <input
                                 type="tel"
-                                className="form-control"
+                                className="form-control with-icon"
                                 placeholder="+91 98765 43210"
                                 value={phone}
                                 onChange={e => setPhone(e.target.value)}
@@ -117,7 +117,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                             <Calendar size={18} className="input-icon" />
                             <input
                                 type="date"
-                                className="form-control"
+                                className="form-control with-icon"
                                 value={date}
                                 onChange={e => setDate(e.target.value)}
                                 min={new Date().toLocaleDateString('en-CA')}

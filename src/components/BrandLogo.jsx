@@ -24,25 +24,15 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
     const isMainLogo = !make || make === 'VroomValue';
     const config = brandStyles[make] || brandStyles['VroomValue'];
 
-    // For main branding, if size is large (like 165), it's the width
-    const logoWidth = isMainLogo && size > 100 ? `${size}px` : (isMainLogo ? 'auto' : `${size}px`);
-    const logoHeight = isMainLogo ? 'auto' : `${size}px`;
-
     return (
         <div
             className={`brand-logo-container ${className} ${isMainLogo ? 'main-site-logo' : ''}`}
             style={{
-                width: logoWidth,
-                height: logoHeight,
-                minWidth: isMainLogo ? (size > 100 ? '160px' : '180px') : `${size}px`,
-                maxHeight: isMainLogo ? '80px' : 'none',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: isMainLogo ? 'flex-start' : 'center',
                 flexShrink: 0,
-                overflow: 'visible',
-                padding: '0',
-                transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)',
+                transition: 'all 0.3s ease',
                 filter: !isMainLogo ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.06))' : 'none'
             }}
         >
@@ -50,18 +40,16 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
                 <img
                     src={config.logo}
                     alt={make || 'VroomValue'}
-                    width={isMainLogo ? 180 : size}
-                    height={isMainLogo ? 50 : size}
+                    width={isMainLogo ? 150 : size}
+                    height={isMainLogo ? 38 : size}
                     loading={isMainLogo ? "eager" : "lazy"}
                     decoding="async"
                     style={{
+                        height: isMainLogo ? '38px' : `${size}px`,
                         width: 'auto',
-                        maxWidth: isMainLogo ? '220%' : '110%',
-                        height: isMainLogo ? '50px' : '90%',
+                        maxWidth: isMainLogo ? '165px' : `${size}px`,
                         objectFit: 'contain',
-                        transform: isMainLogo ? 'scale(1.4)' : 'none',
-                        transformOrigin: 'left center',
-                        transition: 'transform 0.4s'
+                        display: 'block'
                     }}
                     onError={() => setImgError(true)}
                 />
