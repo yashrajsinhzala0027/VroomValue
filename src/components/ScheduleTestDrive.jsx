@@ -6,21 +6,22 @@ import CustomSelect from './CustomSelect';
 
 const ScheduleTestDrive = ({ carId, carTitle }) => {
     const { addToast } = useToast();
-    const { user } = useAuth();
+    const { user, currentUser } = useAuth();
+    const activeUser = user || currentUser;
 
     // Pre-fill if user is logged in
-    const [name, setName] = useState(user ? user.name : '');
+    const [name, setName] = useState(activeUser ? activeUser.name : '');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
-    const [phone, setPhone] = useState(user ? user.phone : '');
+    const [phone, setPhone] = useState(activeUser ? activeUser.phone : '');
 
     // Update state if user logs in while component is mounted
     React.useEffect(() => {
-        if (user) {
-            setName(user.name);
-            setPhone(user.phone || '');
+        if (activeUser) {
+            setName(activeUser.name || '');
+            setPhone(activeUser.phone || '');
         }
-    }, [user]);
+    }, [activeUser]);
 
     const timeOptions = [
         { label: "10:00 AM", value: "10:00 AM" },
@@ -40,7 +41,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
         try {
             await bookTestDrive({
                 carId,
-                userId: user?.id || null,
+                userId: activeUser?.id || null,
                 carTitle,
                 name,
                 date,
@@ -51,7 +52,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
             // Clear form but keep name/phone if logged in
             setDate('');
             setTime('');
-            if (!user) {
+            if (!activeUser) {
                 setName('');
                 setPhone('');
             }

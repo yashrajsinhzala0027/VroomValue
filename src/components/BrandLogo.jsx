@@ -52,6 +52,8 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
                     alt={make || 'VroomValue'}
                     width={isMainLogo ? 180 : size}
                     height={isMainLogo ? 50 : size}
+                    loading={isMainLogo ? "eager" : "lazy"}
+                    decoding="async"
                     style={{
                         width: 'auto',
                         maxWidth: isMainLogo ? '220%' : '110%',

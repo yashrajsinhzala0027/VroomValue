@@ -3,14 +3,25 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+export const isMockConfigured = import.meta.env.VITE_USE_MOCK === 'true';
 
 if (!supabaseUrl || !supabaseAnonKey) {
-    if (import.meta.env.VITE_USE_MOCK !== 'true') {
-        console.error('Supabase credentials missing! If you are on Vercel, add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to Project Settings.');
+    if (!isMockConfigured) {
+        console.warn('Supabase credentials missing! Operating in local inventory mode.');
     } else {
-        console.warn('Supabase credentials missing, but using Mock Data mode.');
+        console.info('Operating in Local Mock Data mode.');
     }
 }
 
-// Provide fallback empty strings to prevent createClient from throwing 'supabaseKey is required'
-export const supabase = createClient(supabaseUrl || "https://placeholder.supabase.co", supabaseAnonKey || "placeholder");
+// Provide client with safe background auth settings when offline or in mock mode
+export const supabase = createClient(
+    supabaseUrl || "https://placeholder.supabase.co",
+    supabaseAnonKey || "placeholder",
+    {
+        auth: {
+            persistSession: true,
+            autoRefreshToken: !isMockConfigured,
+            detectSessionInUrl: !isMockConfigured
+        }
+    }
+);

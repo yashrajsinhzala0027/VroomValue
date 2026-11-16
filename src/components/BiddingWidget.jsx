@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { placeBid, getBidHistory } from '../api/mockApi';
+import { placeBid, getBidHistory, getCarById } from '../api/mockApi';
 import { useAuth } from './AuthContext';
 import { useToast } from './Toasts';
 import { formatPriceINR } from '../utils/formatters';

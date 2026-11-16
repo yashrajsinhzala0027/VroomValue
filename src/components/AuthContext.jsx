@@ -162,6 +162,10 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (err) {
             if (err.name === 'AbortError') return;
+            if (err.message && (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch'))) {
+                // Backend offline, gracefully skip remote profile sync
+                return;
+            }
             console.error("AuthContext fetchProfile Critical:", err);
         }
     };
@@ -214,6 +218,7 @@ export const AuthProvider = ({ children }) => {
 
     const value = React.useMemo(() => ({
         currentUser,
+        user: currentUser,
         login,
         signup,
         logout,
