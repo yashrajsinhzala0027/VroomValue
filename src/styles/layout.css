@@ -1490,8 +1490,8 @@ img {
 .details-page-bg {
     background: var(--bg-alt);
     min-height: 100vh;
-    padding-top: calc(var(--header-height) + 24px);
-    padding-bottom: 96px;
+    padding-top: 18px;
+    padding-bottom: 80px;
 }
 
 .details-main-container {
@@ -1503,7 +1503,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
+    margin-bottom: 18px;
     flex-wrap: wrap;
     gap: 16px;
 }
@@ -1655,6 +1655,7 @@ img {
     .snapshot-divider {
         display: none;
     }
+
     .vehicle-snapshot-strip {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
