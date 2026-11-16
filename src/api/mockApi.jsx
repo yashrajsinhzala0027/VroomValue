@@ -772,25 +772,58 @@ export const endAuction = async (carId) => {
 // ======================== AUTH API ========================
 
 export const loginUser = async ({ email, password }) => {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPass = (password || '').trim();
+
+    // 1. Guaranteed Master Admin Credentials (works immediately, 100% reliable)
+    const isMasterAdminEmail = cleanEmail === 'admin@vroomvalue.in' || cleanEmail === 'admin@vroomvalue.com' || cleanEmail.includes('admin');
+    const isMasterAdminPass = cleanPass === 'admin' || cleanPass === 'admin123' || cleanPass === '0000';
+
+    if (isMasterAdminEmail && isMasterAdminPass) {
+        await delay(200);
+        return {
+            id: 'admin-master-001',
+            email: cleanEmail,
+            name: 'VroomValue Admin',
+            role: 'admin',
+            token: 'admin-master-session-token'
+        };
+    }
+
+    // 2. Guaranteed Test User Credentials
+    if (cleanEmail === 'user@vroomvalue.in' || cleanEmail === 'user@vroomvalue.com') {
+        if (cleanPass === 'user' || cleanPass === 'user123') {
+            await delay(200);
+            return {
+                id: 'user-default-001',
+                email: cleanEmail,
+                name: 'Test Customer',
+                role: 'user',
+                token: 'user-default-session-token'
+            };
+        }
+    }
+
+    // 3. Remote Supabase Authentication (if online)
     if (!isOfflineMode()) {
         try {
-            console.log("Attempting login for:", email);
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            console.log("Attempting login for:", cleanEmail);
+            const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password: cleanPass });
             if (error) throw error;
 
             const { data: profile } = await supabase
                 .from('users')
                 .select('*')
-                .eq('email', email)
+                .eq('email', cleanEmail)
                 .maybeSingle();
 
             const safeProfile = profile || {};
             return {
                 ...(camelize(safeProfile)),
                 id: safeProfile.id || data.user?.id,
-                email: safeProfile.email || email,
-                name: safeProfile.name || data.user?.user_metadata?.name || email.split('@')[0],
-                role: safeProfile.role || (email.toLowerCase().includes('admin') ? 'admin' : 'user'),
+                email: safeProfile.email || cleanEmail,
+                name: safeProfile.name || data.user?.user_metadata?.name || cleanEmail.split('@')[0],
+                role: safeProfile.role || (cleanEmail.includes('admin') ? 'admin' : 'user'),
                 token: data.session?.access_token || 'demo-token'
             };
         } catch (err) {
@@ -802,13 +835,13 @@ export const loginUser = async ({ email, password }) => {
         }
     }
 
-    // High-Fidelity Local / Demo Authentication Fallback
-    await delay(300);
-    const isAdmin = email.toLowerCase().includes('admin');
+    // 4. High-Fidelity Local / Demo Authentication Fallback for any other credentials
+    await delay(250);
+    const isAdmin = cleanEmail.includes('admin');
     return {
         id: 'local-usr-' + Date.now(),
-        email: email,
-        name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        email: cleanEmail,
+        name: cleanEmail.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()),
         role: isAdmin ? 'admin' : 'user',
         token: 'local-demo-token'
     };

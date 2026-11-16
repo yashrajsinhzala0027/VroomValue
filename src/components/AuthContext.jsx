@@ -19,6 +19,18 @@ export const AuthProvider = ({ children }) => {
         if (localStorage.getItem('VV_AUTH_LOCK') === 'true') {
             console.log("Persistent Auth Lock detected.");
             handleLogoutCleanup();
+        } else {
+            // Restore persistent user session
+            try {
+                const storedSession = localStorage.getItem('VV_USER_SESSION');
+                if (storedSession) {
+                    const parsed = JSON.parse(storedSession);
+                    if (parsed && parsed.email) {
+                        setCurrentUser(parsed);
+                        sessionStorage.setItem('VV_ROLE_HINT', parsed.role || 'user');
+                    }
+                }
+            } catch (e) { }
         }
 
         // 2. SINGLE SOURCE OF TRUTH: handles initial session AND updates
@@ -105,6 +117,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(null);
         processedUIDs.current.clear();
         sessionStorage.removeItem('VV_ROLE_HINT'); // Clean cache on logout
+        localStorage.removeItem('VV_USER_SESSION');
     }, [currentUser]);
 
     const fetchProfile = async (uid, token, email = null, signal) => {
@@ -173,7 +186,13 @@ export const AuthProvider = ({ children }) => {
     const login = React.useCallback(async (email, password) => {
         // UNLOCK auth on manual login attempt
         localStorage.removeItem('VV_AUTH_LOCK');
-        return await loginUser({ email, password });
+        const user = await loginUser({ email, password });
+        if (user) {
+            setCurrentUser(user);
+            sessionStorage.setItem('VV_ROLE_HINT', user.role || 'user');
+            localStorage.setItem('VV_USER_SESSION', JSON.stringify(user));
+        }
+        return user;
     }, []);
 
     const signup = React.useCallback(async (userData) => {
