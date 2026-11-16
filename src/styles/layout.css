@@ -220,34 +220,26 @@
     border-color: var(--primary);
 }
 
-/* 5.1 Hero Section Styles */
+/* 5.1 Hero Section Styles — World-Class Automotive Stage */
 .hero-section {
-    padding-top: clamp(96px, 14vh, 152px);
-    padding-bottom: clamp(48px, 8vh, 96px);
-    background: var(--bg-main);
+    padding-top: clamp(84px, 11vh, 116px);
+    padding-bottom: clamp(40px, 6vh, 64px);
+    background: radial-gradient(ellipse 85% 55% at 75% 30%, rgba(221, 246, 236, 0.45) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
     position: relative;
     overflow: hidden;
 }
 
-.hero-section::before {
-    content: '';
-    position: absolute;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(circle, hsla(var(--p-h), var(--p-s), var(--p-l), 0.08) 0%, transparent 70%);
-    top: -200px;
-    right: -150px;
-    z-index: 0;
-    pointer-events: none;
-}
-
 .hero-container {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: clamp(48px, 7vw, 96px);
-    align-items: center;
     position: relative;
     z-index: 1;
+}
+
+.hero-showcase-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+    margin-bottom: clamp(36px, 5vw, 56px);
 }
 
 .hero-content {
@@ -262,32 +254,37 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--primary-soft);
-    color: var(--primary);
+    background: var(--accent);
+    color: var(--primary-deep);
     padding: 6px 14px;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-sm);
     font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
     margin-bottom: 20px;
-    border: 1px solid rgba(16, 185, 129, 0.25);
+    border: 1px solid rgba(7, 155, 120, 0.2);
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 5.5vw, 4.25rem);
-    font-weight: 900;
-    line-height: 1.08;
-    margin-bottom: 24px;
-    color: var(--secondary);
+    font-size: clamp(2.4rem, 4.8vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: var(--text-main);
     letter-spacing: -0.03em;
     font-family: var(--font-display);
 }
 
+.hero-title-accent {
+    color: var(--primary);
+    position: relative;
+}
+
 .hero-subtitle {
-    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
     line-height: 1.65;
     color: var(--text-muted);
-    margin-bottom: clamp(24px, 4vw, 40px);
+    margin-bottom: 32px;
     max-width: 520px;
 }
 
@@ -295,119 +292,319 @@
 .hero-actions-container {
     display: flex;
     gap: 14px;
-    margin-bottom: clamp(28px, 4vw, 44px);
+    margin-bottom: 36px;
     flex-wrap: wrap;
 }
 
-/* Stats inside hero */
-.hero-stats-container {
-    display: flex;
-    gap: clamp(20px, 4vw, 48px);
-    margin-bottom: clamp(24px, 4vw, 40px);
-    padding: 20px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+.hero-btn-main {
+    padding: 0.9rem 2.2rem;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
-.hero-stat-item { text-align: left; }
+.hero-btn-secondary {
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+}
 
-.hero-stat-value {
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
-    font-weight: 900;
+/* Stats Row */
+.hero-stats-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 32px);
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    max-width: 520px;
+    width: 100%;
+}
+
+.hero-stat-card {
+    text-align: left;
+}
+
+.hero-stat-num {
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    font-weight: 800;
     color: var(--primary);
     line-height: 1;
     margin-bottom: 4px;
     font-family: var(--font-display);
 }
 
-.hero-stat-label {
+.hero-stat-desc {
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.6px;
 }
 
-/* Trust Badges */
-.hero-trust-badges {
-    display: flex;
-    gap: clamp(16px, 3vw, 32px);
-    flex-wrap: wrap;
-}
-
-.trust-badge-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.trust-badge-icon {
-    width: 36px;
+.hero-stat-divider {
+    width: 1px;
     height: 36px;
-    background: var(--primary-glow);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary);
+    background: var(--border);
     flex-shrink: 0;
 }
 
-.trust-badge-text {
+/* Right: Automotive Photography Stage */
+.hero-vehicle-stage {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 380px;
+}
+
+.hero-studio-halo {
+    position: absolute;
+    width: 460px;
+    height: 460px;
+    background: radial-gradient(circle, rgba(221, 246, 236, 0.7) 0%, rgba(221, 246, 236, 0) 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-vehicle-hero-img {
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 14px 24px rgba(7, 43, 35, 0.1));
+}
+
+.hero-floor-shadow {
+    position: absolute;
+    bottom: 12px;
+    left: 12%;
+    right: 12%;
+    height: 24px;
+    background: radial-gradient(ellipse at center, rgba(7, 43, 35, 0.25) 0%, rgba(7, 43, 35, 0.06) 55%, transparent 75%);
+    border-radius: 50%;
+    filter: blur(5px);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.hero-floating-badge {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 24px rgba(23, 43, 43, 0.08);
+}
+
+.hero-floating-badge.badge-top {
+    top: 14%;
+    right: 2%;
+}
+
+.hero-floating-badge.badge-bottom {
+    bottom: 10%;
+    left: 0%;
+}
+
+.floating-badge-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.floating-badge-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.floating-badge-title {
+    font-size: 0.8rem;
     font-weight: 700;
-    font-size: 0.875rem;
     color: var(--text-main);
 }
 
-/* Search Card */
-.hero-form-card {
-    background: var(--bg-surface);
-    padding: clamp(24px, 3.5vw, 40px);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--border);
+.floating-badge-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
 }
 
-.hero-form-title {
+/* ── 03: Find Your Vroom Search Panel ── */
+.hero-search-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 32px rgba(23, 43, 43, 0.06);
+    padding: clamp(24px, 3vw, 36px);
+    position: relative;
+    z-index: 5;
+    margin-top: 12px;
+}
+
+.search-panel-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.search-panel-title {
     font-size: 1.35rem;
     font-weight: 800;
-    margin-bottom: 24px;
-    color: var(--secondary);
+    color: var(--text-main);
+    letter-spacing: -0.01em;
 }
 
-/* Quick Filters */
-.quick-filters {
-    margin-top: 20px;
+.search-panel-subtitle {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.quick-category-group {
     display: flex;
+    align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-    align-items: center;
 }
 
-.quick-filter-label {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.quick-filter-badge {
-    background: transparent;
-    cursor: pointer;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    transition: all 0.2s ease;
-    font-weight: 600;
+.quick-category-label {
     font-size: 0.75rem;
-    padding: 4px 12px;
-    border-radius: var(--radius-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-right: 2px;
 }
 
-.quick-filter-badge:hover {
+.quick-category-pill {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-main);
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-main);
+}
+
+.quick-category-pill:hover {
+    background: var(--accent);
+    color: var(--primary-deep);
     border-color: var(--primary);
+}
+
+/* ── 04: Trust and Verification Section ── */
+.trust-verification-section {
+    padding: 48px 0 64px;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.trust-strip-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+}
+
+.trust-strip-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.trust-strip-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
     color: var(--primary);
-    background: var(--primary-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.trust-strip-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.trust-strip-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.trust-indicators-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.trust-indicator-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.trust-indicator-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(23, 43, 43, 0.06);
+    border-color: var(--primary);
+}
+
+.trust-indicator-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: rgba(7, 155, 120, 0.08);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.trust-indicator-heading {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.trust-indicator-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
 }
 
 
