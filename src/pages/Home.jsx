@@ -139,7 +139,7 @@ const Home = () => {
                     </FadeInWhenVisible>
 
                     <FadeInWhenVisible delay={0.1}>
-                        <div className="faq-list" role="list">
+                        <div className="faq-list">
                             {FAQS.map((item, i) => (
                                 <FAQItem
                                     key={i}

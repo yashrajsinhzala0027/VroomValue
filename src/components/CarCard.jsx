@@ -69,6 +69,8 @@ const CarCard = ({ car }) => {
                     alt={`${car.year} ${car.make} ${car.model}`}
                     className="car-card__image"
                     loading="lazy"
+                    width="320"
+                    height="184"
                     onError={() => setImgFailed(true)}
                 />
 
@@ -123,9 +125,9 @@ const CarCard = ({ car }) => {
             {/* 2. Card Content */}
             <div className="car-card__content">
                 <div className="car-card__title-group">
-                    <h4 className="car-card__heading">
+                    <h3 className="car-card__heading">
                         {car.year} {car.make} {car.model}
-                    </h4>
+                    </h3>
                     <span className="car-card__variant">
                         {car.variant} • {car.owner === 1 ? '1st Owner' : `${car.owner}nd Owner`}
                     </span>

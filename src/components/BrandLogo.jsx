@@ -50,6 +50,8 @@ const BrandLogo = ({ make, size = 48, className = '' }) => {
                 <img
                     src={config.logo}
                     alt={make || 'VroomValue'}
+                    width={isMainLogo ? 180 : size}
+                    height={isMainLogo ? 50 : size}
                     style={{
                         width: 'auto',
                         maxWidth: isMainLogo ? '220%' : '110%',

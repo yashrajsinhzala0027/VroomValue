@@ -69,7 +69,7 @@
 }
 
 .car-card__badge.certified {
-    background: #08B889 !important;
+    background: #067A57 !important;
     color: #FFFFFF !important;
 }
 
@@ -1711,7 +1711,7 @@ input[type="checkbox"]:checked::after {
     position: absolute;
     width: 100%;
     left: 0;
-    height: 20px;
+    height: 28px;
     pointer-events: none;
     -webkit-appearance: none;
     appearance: none;
@@ -1726,8 +1726,8 @@ input[type="checkbox"]:checked::after {
     pointer-events: auto;
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     background: var(--primary);
     border-radius: 50%;
     cursor: pointer;
@@ -3754,7 +3754,7 @@ input[type="checkbox"]:checked::after {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #08B889;
+    color: #067A5B;
     font-weight: 700;
     font-size: 0.92rem;
     text-decoration: none;
@@ -3762,7 +3762,7 @@ input[type="checkbox"]:checked::after {
 }
 
 .carousel-actions .section-link:hover {
-    color: #079B78;
+    color: #044E3A;
     transform: translateX(2px);
 }
 

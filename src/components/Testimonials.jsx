@@ -38,7 +38,7 @@ const Testimonials = () => (
             <div className="testimonials-grid">
                 {TESTIMONIALS.map(({ name, location, text, rating, hue }) => (
                     <div key={name} className="testimonial-card">
-                        <div className="testimonial-stars" aria-label={`${rating} out of 5 stars`}>
+                        <div className="testimonial-stars" role="img" aria-label={`${rating} out of 5 stars`}>
                             {Array.from({ length: rating }).map((_, idx) => (
                                 <Star key={idx} size={16} fill="#f59e0b" color="#f59e0b" />
                             ))}

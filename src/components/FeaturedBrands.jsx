@@ -42,6 +42,8 @@ const FeaturedBrands = () => {
                                 src={brand.logo}
                                 alt={brand.name}
                                 loading="lazy"
+                                width="120"
+                                height="40"
                             />
                         </div>
                     ))}
