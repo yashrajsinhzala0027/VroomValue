@@ -10,10 +10,10 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
     const { user, currentUser } = useAuth();
     const activeUser = user || currentUser;
 
-    const [name, setName] = useState(activeUser ? activeUser.name : '');
+    const [name, setName] = useState(activeUser?.name || '');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
-    const [phone, setPhone] = useState(activeUser ? activeUser.phone : '');
+    const [phone, setPhone] = useState(activeUser?.phone || '');
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
@@ -86,7 +86,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                             <input
                                 type="text"
                                 className="form-control with-icon"
-                                value={name}
+                                value={name || ''}
                                 onChange={e => setName(e.target.value)}
                                 placeholder="Your full name"
                                 required
@@ -103,7 +103,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                                 type="tel"
                                 className="form-control with-icon"
                                 placeholder="+91 98765 43210"
-                                value={phone}
+                                value={phone || ''}
                                 onChange={e => setPhone(e.target.value)}
                                 required
                             />
@@ -118,7 +118,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                             <input
                                 type="date"
                                 className="form-control with-icon"
-                                value={date}
+                                value={date || ''}
                                 onChange={e => setDate(e.target.value)}
                                 min={new Date().toLocaleDateString('en-CA')}
                                 required
