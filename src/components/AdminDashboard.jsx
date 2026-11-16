@@ -334,8 +334,9 @@ const AdminDashboard = () => {
     const auctionCars = cars.filter(c => c.auction && c.auction.isAuction);
     const transactionCars = cars.filter(c => c.status === 'sold' || c.status === 'reserved');
     const inventoryCars = cars.filter(c => {
-        if (statusFilter === 'all') return c.status !== 'pending'; // Show all except raw pending
-        return c.status === statusFilter;
+        const carStatus = c.status || 'approved';
+        if (statusFilter === 'all') return carStatus !== 'pending'; // Show all except raw pending
+        return carStatus === statusFilter;
     });
     const totalValue = cars.reduce((acc, car) => acc + car.priceINR, 0);
 
@@ -518,7 +519,7 @@ const AdminDashboard = () => {
                                                 <td style={{ fontWeight: 600 }}>{formatPriceINR(car.priceINR)}</td>
                                                 <td>
                                                     <span className={`badge ${car.sellerType === 'VroomValue Certified' ? 'badge-certified' : ''}`} style={{ fontSize: '0.75rem', padding: '6px 10px' }}>
-                                                        {car.status === 'approved' ? car.sellerType : car.status.toUpperCase()}
+                                                        {(!car.status || car.status === 'approved') ? (car.sellerType || 'Certified') : String(car.status).toUpperCase()}
                                                     </span>
                                                 </td>
                                                 <td style={{ textAlign: 'right' }}>
@@ -740,7 +741,7 @@ const AdminDashboard = () => {
                                                 <tr key={car.id}>
                                                     <td>
                                                         <span className={`badge ${car.status === 'sold' ? 'badge-sold' : 'badge-reserved'}`} style={car.status === 'reserved' ? { background: '#fff7ed', color: '#c2410c' } : {}}>
-                                                            {car.status.toUpperCase()}
+                                                            {String(car.status || 'ACTIVE').toUpperCase()}
                                                         </span>
                                                     </td>
                                                     <td>
@@ -758,7 +759,7 @@ const AdminDashboard = () => {
                                                         {details?.date ? new Date(details.date).toLocaleDateString() : 'Recent'}
                                                     </td>
                                                     <td>
-                                                        {car.status.toLowerCase() === 'reserved' && (
+                                                        {String(car.status || '').toLowerCase() === 'reserved' && (
                                                             <button
                                                                 onClick={() => handleUnreserve(car.id)}
                                                                 className="action-btn"

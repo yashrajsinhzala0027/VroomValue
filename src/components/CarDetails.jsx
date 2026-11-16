@@ -151,7 +151,7 @@ const CarDetails = () => {
                     <span>/</span>
                     <Link to="/listings">LISTINGS</Link>
                     <span>/</span>
-                    <span className="active">{car.make.toUpperCase()} {car.model.toUpperCase()}</span>
+                    <span className="active">{String(car.make || '').toUpperCase()} {String(car.model || '').toUpperCase()}</span>
                 </div>
 
                 <button

@@ -84,10 +84,12 @@ const getStoredCars = () => {
         const stored = localStorage.getItem('vv_local_cars');
         if (stored) {
             const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                return parsed.map(c => ({ status: 'approved', sellerType: 'VroomValue Certified', ...c }));
+            }
         }
     } catch (e) { }
-    return INITIAL_CARS;
+    return INITIAL_CARS.map(c => ({ status: 'approved', sellerType: 'VroomValue Certified', ...c }));
 };
 
 const saveStoredCars = (cars) => {
