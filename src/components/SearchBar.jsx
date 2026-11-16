@@ -37,10 +37,15 @@ const SearchBar = ({ className = '', vertical = false }) => {
         navigate(`/listings?${params.toString()}`);
     };
 
+    const gridStyles = vertical
+        ? { gridTemplateColumns: '1fr', gap: '20px' }
+        : { gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' };
+
     return (
         <form
-            className={`search-widget ${vertical ? 'search-widget-vertical' : 'search-widget-horizontal'} ${className}`}
+            className={`search-widget ${className}`}
             onSubmit={handleSearch}
+            style={{ ...gridStyles, background: 'transparent', padding: 0, boxShadow: 'none' }}
             role="search"
             aria-label="Car search"
         >

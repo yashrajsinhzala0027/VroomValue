@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useToast } from './Toasts';
 import { bookTestDrive } from '../api/mockApi';
 import CustomSelect from './CustomSelect';
+import { User, Calendar, Clock, Phone, Car } from 'lucide-react';
 
 const ScheduleTestDrive = ({ carId, carTitle }) => {
     const { addToast } = useToast();
     const { user, currentUser } = useAuth();
     const activeUser = user || currentUser;
 
-    // Pre-fill if user is logged in
     const [name, setName] = useState(activeUser ? activeUser.name : '');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [phone, setPhone] = useState(activeUser ? activeUser.phone : '');
+    const [submitting, setSubmitting] = useState(false);
 
-    // Update state if user logs in while component is mounted
-    React.useEffect(() => {
+    useEffect(() => {
         if (activeUser) {
             setName(activeUser.name || '');
             setPhone(activeUser.phone || '');
@@ -24,21 +24,22 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
     }, [activeUser]);
 
     const timeOptions = [
-        { label: "10:00 AM", value: "10:00 AM" },
-        { label: "12:00 PM", value: "12:00 PM" },
-        { label: "02:00 PM", value: "02:00 PM" },
-        { label: "04:00 PM", value: "04:00 PM" },
-        { label: "06:00 PM", value: "06:00 PM" }
+        { label: "10:00 AM – 12:00 PM", value: "10:00 AM" },
+        { label: "12:00 PM – 02:00 PM", value: "12:00 PM" },
+        { label: "02:00 PM – 04:00 PM", value: "02:00 PM" },
+        { label: "04:00 PM – 06:00 PM", value: "04:00 PM" },
+        { label: "06:00 PM – 08:00 PM", value: "06:00 PM" }
     ];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!name || !date || !time || !phone) {
-            addToast("Please fill all fields", "error");
+            addToast("Please fill all fields to schedule your test drive.", "error");
             return;
         }
 
         try {
+            setSubmitting(true);
             await bookTestDrive({
                 carId,
                 userId: activeUser?.id || null,
@@ -48,8 +49,7 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                 time,
                 phone
             });
-            addToast("Test drive requested! We will call you at " + time, "success");
-            // Clear form but keep name/phone if logged in
+            addToast(`Test drive scheduled for ${date} at ${time}! We will contact you shortly.`, "success");
             setDate('');
             setTime('');
             if (!activeUser) {
@@ -57,72 +57,101 @@ const ScheduleTestDrive = ({ carId, carTitle }) => {
                 setPhone('');
             }
         } catch (err) {
-            addToast("Failed to book test drive", "error");
+            addToast("Failed to book test drive. Please try again.", "error");
+        } finally {
+            setSubmitting(false);
         }
     };
 
     return (
-        <div className="test-drive-widget">
-            <h3>Schedule Test Drive</h3>
-            <form onSubmit={handleSubmit}>
-                <div className="test-drive-field">
-                    <label className="form-label">Full Name</label>
-                    <div style={{ position: 'relative' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <input
-                            type="text" className="form-control with-icon"
-                            value={name} onChange={e => setName(e.target.value)}
-                            placeholder="Your Name"
-                            required
-                        />
+        <section className="details-section-card test-drive-card" aria-labelledby="test-drive-heading">
+            <div className="section-card-header">
+                <div>
+                    <h3 id="test-drive-heading" className="section-card-title">Schedule Doorstep Test Drive</h3>
+                    <p className="section-card-subtitle">Experience this vehicle at your home or nearest VV-Hub with zero obligation.</p>
+                </div>
+                <div className="test-drive-badge">
+                    <Car size={16} />
+                    <span>Free Doorstep Trial</span>
+                </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="test-drive-form">
+                <div className="form-grid-2">
+                    {/* Full Name */}
+                    <div className="test-drive-field">
+                        <label className="form-label">Full Name</label>
+                        <div className="input-with-icon-wrap">
+                            <User size={18} className="input-icon" />
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                                placeholder="Your full name"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {/* Contact Number */}
+                    <div className="test-drive-field">
+                        <label className="form-label">Phone Number</label>
+                        <div className="input-with-icon-wrap">
+                            <Phone size={18} className="input-icon" />
+                            <input
+                                type="tel"
+                                className="form-control"
+                                placeholder="+91 98765 43210"
+                                value={phone}
+                                onChange={e => setPhone(e.target.value)}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {/* Preferred Date */}
+                    <div className="test-drive-field">
+                        <label className="form-label">Preferred Date</label>
+                        <div className="input-with-icon-wrap">
+                            <Calendar size={18} className="input-icon" />
+                            <input
+                                type="date"
+                                className="form-control"
+                                value={date}
+                                onChange={e => setDate(e.target.value)}
+                                min={new Date().toLocaleDateString('en-CA')}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {/* Preferred Time */}
+                    <div className="test-drive-field">
+                        <label className="form-label">Preferred Time Slot</label>
+                        <div className="input-with-icon-wrap select-wrap">
+                            <Clock size={18} className="input-icon" style={{ zIndex: 2 }} />
+                            <CustomSelect
+                                name="time"
+                                value={time}
+                                options={timeOptions}
+                                onChange={(e) => setTime(e.target.value)}
+                                placeholder="Choose convenient slot"
+                                className="with-icon"
+                            />
+                        </div>
                     </div>
                 </div>
 
-                <div className="test-drive-field">
-                    <label className="form-label">Preferred Date</label>
-                    <div style={{ position: 'relative' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                        <input
-                            type="date" className="form-control with-icon"
-                            value={date} onChange={e => setDate(e.target.value)}
-                            min={new Date().toLocaleDateString('en-CA')}
-                            required
-                        />
-                    </div>
-                </div>
-
-                <div className="test-drive-field">
-                    <label className="form-label">Preferred Time</label>
-                    <div style={{ position: 'relative' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', zIndex: 1 }}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        <CustomSelect
-                            name="time"
-                            value={time}
-                            options={timeOptions}
-                            onChange={(e) => setTime(e.target.value)}
-                            placeholder="Select Time"
-                            className="with-icon"
-                        />
-                    </div>
-                </div>
-
-                <div className="test-drive-field">
-                    <label className="form-label">Contact Number</label>
-                    <div style={{ position: 'relative' }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                        <input
-                            type="tel" className="form-control with-icon" placeholder="e.g. +91 9876543210"
-                            value={phone} onChange={e => setPhone(e.target.value)}
-                            required
-                        />
-                    </div>
-                </div>
-
-                <button type="submit" className="test-drive-btn">
-                    Submit Request
+                <button
+                    type="submit"
+                    className="btn btn-primary test-drive-submit-btn"
+                    disabled={submitting}
+                >
+                    {submitting ? 'Requesting Test Drive...' : 'Confirm Doorstep Test Drive'}
                 </button>
             </form>
-        </div>
+        </section>
     );
 };
 

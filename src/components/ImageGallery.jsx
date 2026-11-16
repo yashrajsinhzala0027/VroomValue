@@ -38,41 +38,71 @@ const ImageGallery = ({ images = [] }) => {
 
     return (
         <div className="gallery-container page-enter">
-            <div className="gallery-main glass-panel" onClick={() => setIsLightboxOpen(true)} style={{ aspectRatio: '16/9', overflow: 'hidden', position: 'relative', background: '#000', padding: 0, border: 'none', borderRadius: '24px' }}>
+            <div
+                className="gallery-main"
+                onClick={() => setIsLightboxOpen(true)}
+                style={{
+                    aspectRatio: '16/10',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    background: 'var(--bg-alt)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    cursor: 'zoom-in'
+                }}
+            >
                 <img
                     src={activeImage?.src}
                     alt="Car View"
-                    loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                    loading="eager"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
                 />
 
                 {/* Navigation Overlays */}
-                <div className="gallery-nav-btn gallery-prev" onClick={handlePrev} style={{ left: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <ChevronLeft size={24} />
+                <div
+                    className="gallery-nav-btn gallery-prev"
+                    onClick={handlePrev}
+                    style={{ left: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    aria-label="Previous image"
+                >
+                    <ChevronLeft size={22} />
                 </div>
-                <div className="gallery-nav-btn gallery-next" onClick={handleNext} style={{ right: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <ChevronRight size={24} />
+                <div
+                    className="gallery-nav-btn gallery-next"
+                    onClick={handleNext}
+                    style={{ right: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    aria-label="Next image"
+                >
+                    <ChevronRight size={22} />
                 </div>
 
                 {/* View Tag */}
                 <div style={{
-                    position: 'absolute', bottom: '24px', left: '24px',
-                    background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)',
-                    color: 'white', padding: '8px 16px', borderRadius: '12px',
-                    fontSize: '0.75rem', fontWeight: 800, letterSpacing: '1px',
-                    border: '1px solid rgba(255,255,255,0.1)', textTransform: 'uppercase'
+                    position: 'absolute', bottom: '16px', left: '16px',
+                    background: 'rgba(23, 43, 43, 0.75)', backdropFilter: 'blur(8px)',
+                    color: '#FFFFFF', padding: '6px 14px', borderRadius: 'var(--radius-sm)',
+                    fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.8px',
+                    border: '1px solid rgba(255,255,255,0.15)', textTransform: 'uppercase'
                 }}>
                     {activeImage?.type?.replace(/-/g, ' ') || 'EXTERIOR VIEW'}
                 </div>
             </div>
 
-            <div className="gallery-grid" style={{ marginTop: '20px', gap: '12px' }}>
+            <div className="gallery-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', marginTop: '14px', gap: '10px' }}>
                 {images.map((img) => (
                     <div
                         key={img.id}
                         className={`gallery-thumb ${activeImage.id === img.id ? 'active' : ''}`}
                         onClick={() => setActiveImage(img)}
-                        style={{ borderRadius: '12px', overflow: 'hidden', border: activeImage.id === img.id ? '2px solid var(--primary)' : '2px solid transparent', transition: 'all 0.3s ease' }}
+                        style={{
+                            borderRadius: 'var(--radius-sm)',
+                            overflow: 'hidden',
+                            height: '68px',
+                            border: activeImage.id === img.id ? '2px solid var(--primary)' : '1px solid var(--border)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            background: 'var(--bg-alt)'
+                        }}
                     >
                         <img src={img.src} alt={img.type} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>

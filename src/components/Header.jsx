@@ -11,11 +11,10 @@ import {
 import '../styles/layout.css';
 
 const NAV_LINKS = [
-    { to: '/listings',                label: 'Buy Cars',   icon: Car },
-    { to: '/listings?isAuction=true', label: 'Auctions',   icon: Gavel },
-    { to: '/valuation',               label: 'Valuation',  icon: BarChart3 },
-    { to: '/sell',                    label: 'Sell',       icon: DollarSign },
-    { to: '/saved',                   label: 'Shortlist',  icon: Heart, isShortlist: true },
+    { to: '/listings',              label: 'Buy Car',    icon: Car },
+    { to: '/listings?isAuction=true', label: 'Auctions', icon: Gavel },
+    { to: '/valuation',             label: 'Valuation',  icon: BarChart3 },
+    { to: '/sell',                  label: 'Sell',       icon: DollarSign },
 ];
 
 const Header = () => {
@@ -91,22 +90,28 @@ const Header = () => {
                     {/* ── Desktop Nav ── */}
                     <nav className="header__nav" aria-label="Main navigation">
                         <div className="header__links-group">
-                            {NAV_LINKS.map(({ to, label, isShortlist }) => (
+                            {NAV_LINKS.map(({ to, label }) => (
                                 <Link
                                     key={to}
                                     to={to}
-                                    className={`header__link ${isShortlist ? 'header-shortlist-link' : ''} ${isActive(to, isShortlist) ? 'active' : ''}`}
+                                    className={`header__link ${isActive(to) ? 'active' : ''}`}
                                 >
-                                    {isShortlist && <Heart size={15} style={{ marginRight: '5px' }} />}
                                     {label}
-                                    {isShortlist && wishlist.length > 0 && (
-                                        <span className="header__badge">{wishlist.length}</span>
-                                    )}
                                 </Link>
                             ))}
                         </div>
 
                         <div className="header__actions-group">
+                            <Link
+                                to="/saved"
+                                className={`header__link header-shortlist-link ${isActive('/saved', true) ? 'active' : ''}`}
+                            >
+                                <Heart size={15} />
+                                Shortlist
+                                {wishlist.length > 0 && (
+                                    <span className="header__badge">{wishlist.length}</span>
+                                )}
+                            </Link>
 
                             {currentUser ? (
                                 <div className="user-nav-dropdown-wrapper">

@@ -46,7 +46,7 @@ const FeaturedCarousel = () => {
                 <div className="carousel-header">
                     <div>
                         <h2>Hot Deals & Live Auctions</h2>
-                        <p className="carousel-subtitle">Discover exceptional vehicles and exciting auction opportunities.</p>
+                        <p>Bids ending soon • Certified Fresh Arrivals</p>
                     </div>
                 </div>
                 <div className="trending-slider">
@@ -65,7 +65,7 @@ const FeaturedCarousel = () => {
             <div className="carousel-header">
                 <div>
                     <h2>Hot Deals & Live Auctions</h2>
-                    <p className="carousel-subtitle">Discover exceptional vehicles and exciting auction opportunities.</p>
+                    <p className="carousel-subtitle">Bids ending soon • 140-point certified fresh arrivals</p>
                 </div>
                 <div className="carousel-actions">
                     <Link to="/listings" className="section-link">

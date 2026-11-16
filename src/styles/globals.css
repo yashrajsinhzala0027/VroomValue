@@ -1,39 +1,23 @@
 :root {
-  /* VroomValue Premium Automotive Design System */
-  /* Primary: Deep Emerald Green — #079B78 */
-  --primary: #079B78;
-  --primary-hover: #068264;
-  --primary-deep: #075C4D;
-  --primary-glow: rgba(7, 155, 120, 0.16);
-  --primary-soft: rgba(7, 155, 120, 0.08);
-
-  /* Secondary: Dark Forest Green — #075C4D */
-  --secondary: #075C4D;
-  --secondary-deep: #054035;
-
-  /* Accent: Fresh Mint — #DDF6EC */
-  --accent: #DDF6EC;
-  --accent-mint: #DDF6EC;
-  --accent-soft: rgba(221, 246, 236, 0.5);
-  --accent-gold: #f59e0b;
+  /* VroomValue Professional Design System */
+  --primary: #08B889;
+  --primary-deep: #079B78;
+  --primary-glow: rgba(8, 184, 137, 0.12);
+  --primary-soft: rgba(8, 184, 137, 0.08);
+  --secondary: #172238;
+  --secondary-deep: #0f172a;
+  --accent: #f59e0b;
 
   /* Neutral Spectrum */
-  /* Main background: #FFFFFF | Secondary background: #F5F8F7 */
-  --bg-main: #FFFFFF;
+  --bg-main: #F7F9FC;
   --bg-surface: #FFFFFF;
-  --bg-alt: #F5F8F7;
-  --bg-glass: rgba(255, 255, 255, 0.96);
-
-  /* Borders: #E6ECE9 */
-  --border: #E6ECE9;
-  --border-subtle: #EDF2F0;
-
-  /* Primary text: #172B2B | Secondary text: #71817F */
-  --text-main: #172B2B;
-  --text-muted: #71817F;
+  --bg-glass: rgba(255, 255, 255, 0.95);
+  --border: #E7ECF2;
+  --text-main: #182235;
+  --text-muted: #69778C;
 
   /* Status Tokens */
-  --success: #079B78;
+  --success: #08B889;
   --warning: #f59e0b;
   --danger: #ef4444;
 
@@ -42,20 +26,20 @@
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-full: 9999px;
-  --shadow-sm: 0 1px 3px rgba(23, 43, 43, 0.04);
-  --shadow-md: 0 4px 16px rgba(23, 43, 43, 0.06);
-  --shadow-lg: 0 12px 32px rgba(23, 43, 43, 0.08);
+  --shadow-sm: 0 1px 3px rgba(24, 34, 53, 0.04);
+  --shadow-md: 0 4px 14px rgba(24, 34, 53, 0.06);
+  --shadow-lg: 0 12px 28px rgba(24, 34, 53, 0.09);
 
-  --font-main: 'Plus Jakarta Sans', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Plus Jakarta Sans', 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Responsive Container & Spacing Scale */
-  --container-width: 1360px;
-  --section-spacing: 80px;
+  --container-width: 1280px;
+  --section-spacing: 72px;
   --gutter: 24px;
 
   /* Layout Variables */
-  --header-height: 72px;
+  --header-height: 76px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -211,33 +195,31 @@ h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.65rem;
-  padding: 0.8rem 1.75rem;
-  min-height: 46px;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-main);
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: -0.01em;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid transparent;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  min-height: 48px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 2px solid transparent;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
   position: relative;
-  text-decoration: none;
+  overflow: hidden;
 }
 
 .btn-primary {
   background: var(--primary);
-  color: #FFFFFF;
-  box-shadow: 0 3px 12px rgba(7, 155, 120, 0.25);
+  color: white;
+  box-shadow: 0 4px 14px 0 hsla(var(--p-h), var(--p-s), var(--p-l), 0.39);
 }
 
 .btn-primary:hover {
   background: var(--primary-deep);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(7, 155, 120, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
 }
 
 .btn-primary:active {
@@ -246,7 +228,7 @@ h6 {
 
 .btn-secondary {
   background: var(--secondary);
-  color: #FFFFFF;
+  color: white;
 }
 
 .btn-outline {
@@ -258,8 +240,8 @@ h6 {
 .btn-outline:hover {
   border-color: var(--primary);
   color: var(--primary);
-  background: var(--accent-soft);
-  transform: translateY(-1px);
+  background: var(--primary-soft);
+  transform: translateY(-2px);
 }
 
 /* Premium Grid Layouts */

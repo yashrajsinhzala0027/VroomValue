@@ -220,26 +220,34 @@
     border-color: var(--primary);
 }
 
-/* 5.1 Hero Section Styles — World-Class Automotive Stage */
+/* 5.1 Hero Section Styles */
 .hero-section {
-    padding-top: clamp(84px, 11vh, 116px);
-    padding-bottom: clamp(40px, 6vh, 64px);
-    background: radial-gradient(ellipse 85% 55% at 75% 30%, rgba(221, 246, 236, 0.45) 0%, rgba(255, 255, 255, 0) 70%), #FFFFFF;
+    padding-top: clamp(96px, 14vh, 152px);
+    padding-bottom: clamp(48px, 8vh, 96px);
+    background: var(--bg-main);
     position: relative;
     overflow: hidden;
 }
 
-.hero-container {
-    position: relative;
-    z-index: 1;
+.hero-section::before {
+    content: '';
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, hsla(var(--p-h), var(--p-s), var(--p-l), 0.08) 0%, transparent 70%);
+    top: -200px;
+    right: -150px;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.hero-showcase-grid {
+.hero-container {
     display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    gap: clamp(32px, 5vw, 64px);
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(48px, 7vw, 96px);
     align-items: center;
-    margin-bottom: clamp(36px, 5vw, 56px);
+    position: relative;
+    z-index: 1;
 }
 
 .hero-content {
@@ -254,37 +262,32 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--accent);
-    color: var(--primary-deep);
+    background: var(--primary-soft);
+    color: var(--primary);
     padding: 6px 14px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-full);
     font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.3px;
     margin-bottom: 20px;
-    border: 1px solid rgba(7, 155, 120, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .hero-title {
-    font-size: clamp(2.4rem, 4.8vw, 3.8rem);
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 20px;
-    color: var(--text-main);
+    font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+    font-weight: 900;
+    line-height: 1.08;
+    margin-bottom: 24px;
+    color: var(--secondary);
     letter-spacing: -0.03em;
     font-family: var(--font-display);
 }
 
-.hero-title-accent {
-    color: var(--primary);
-    position: relative;
-}
-
 .hero-subtitle {
-    font-size: clamp(1rem, 1.3vw, 1.15rem);
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
     line-height: 1.65;
     color: var(--text-muted);
-    margin-bottom: 32px;
+    margin-bottom: clamp(24px, 4vw, 40px);
     max-width: 520px;
 }
 
@@ -292,319 +295,119 @@
 .hero-actions-container {
     display: flex;
     gap: 14px;
-    margin-bottom: 36px;
+    margin-bottom: clamp(28px, 4vw, 44px);
     flex-wrap: wrap;
 }
 
-.hero-btn-main {
-    padding: 0.9rem 2.2rem;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.hero-btn-secondary {
-    padding: 0.9rem 2rem;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-/* Stats Row */
-.hero-stats-row {
+/* Stats inside hero */
+.hero-stats-container {
     display: flex;
-    align-items: center;
-    gap: clamp(16px, 3vw, 32px);
-    padding: 16px 0;
+    gap: clamp(20px, 4vw, 48px);
+    margin-bottom: clamp(24px, 4vw, 40px);
+    padding: 20px 0;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    max-width: 520px;
-    width: 100%;
 }
 
-.hero-stat-card {
-    text-align: left;
-}
+.hero-stat-item { text-align: left; }
 
-.hero-stat-num {
-    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
-    font-weight: 800;
+.hero-stat-value {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 900;
     color: var(--primary);
     line-height: 1;
     margin-bottom: 4px;
     font-family: var(--font-display);
 }
 
-.hero-stat-desc {
+.hero-stat-label {
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.8px;
 }
 
-.hero-stat-divider {
-    width: 1px;
-    height: 36px;
-    background: var(--border);
-    flex-shrink: 0;
-}
-
-/* Right: Automotive Photography Stage */
-.hero-vehicle-stage {
-    position: relative;
+/* Trust Badges */
+.hero-trust-badges {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 380px;
+    gap: clamp(16px, 3vw, 32px);
+    flex-wrap: wrap;
 }
 
-.hero-studio-halo {
-    position: absolute;
-    width: 460px;
-    height: 460px;
-    background: radial-gradient(circle, rgba(221, 246, 236, 0.7) 0%, rgba(221, 246, 236, 0) 70%);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 0;
-    pointer-events: none;
-}
-
-.hero-vehicle-hero-img {
-    width: 100%;
-    max-width: 620px;
-    height: auto;
-    object-fit: contain;
-    position: relative;
-    z-index: 2;
-    filter: drop-shadow(0 14px 24px rgba(7, 43, 35, 0.1));
-}
-
-.hero-floor-shadow {
-    position: absolute;
-    bottom: 12px;
-    left: 12%;
-    right: 12%;
-    height: 24px;
-    background: radial-gradient(ellipse at center, rgba(7, 43, 35, 0.25) 0%, rgba(7, 43, 35, 0.06) 55%, transparent 75%);
-    border-radius: 50%;
-    filter: blur(5px);
-    z-index: 1;
-    pointer-events: none;
-}
-
-.hero-floating-badge {
-    position: absolute;
-    z-index: 3;
+.trust-badge-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 16px;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    box-shadow: 0 8px 24px rgba(23, 43, 43, 0.08);
 }
 
-.hero-floating-badge.badge-top {
-    top: 14%;
-    right: 2%;
-}
-
-.hero-floating-badge.badge-bottom {
-    bottom: 10%;
-    left: 0%;
-}
-
-.floating-badge-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    background: var(--accent);
-    color: var(--primary);
+.trust-badge-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-glow);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--primary);
     flex-shrink: 0;
 }
 
-.floating-badge-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.floating-badge-title {
-    font-size: 0.8rem;
+.trust-badge-text {
     font-weight: 700;
+    font-size: 0.875rem;
     color: var(--text-main);
 }
 
-.floating-badge-sub {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-}
-
-/* ── 03: Find Your Vroom Search Panel ── */
-.hero-search-panel {
+/* Search Card */
+.hero-form-card {
     background: var(--bg-surface);
+    padding: clamp(24px, 3.5vw, 40px);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
     border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    box-shadow: 0 10px 32px rgba(23, 43, 43, 0.06);
-    padding: clamp(24px, 3vw, 36px);
-    position: relative;
-    z-index: 5;
-    margin-top: 12px;
 }
 
-.search-panel-top-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.search-panel-title {
+.hero-form-title {
     font-size: 1.35rem;
     font-weight: 800;
-    color: var(--text-main);
-    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+    color: var(--secondary);
 }
 
-.search-panel-subtitle {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-.quick-category-group {
+/* Quick Filters */
+.quick-filters {
+    margin-top: 20px;
     display: flex;
-    align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
-.quick-category-label {
-    font-size: 0.75rem;
-    font-weight: 700;
+.quick-filter-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--text-muted);
-    margin-right: 2px;
+    letter-spacing: 1px;
 }
 
-.quick-category-pill {
-    padding: 6px 14px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-main);
-    background: var(--bg-alt);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+.quick-filter-badge {
+    background: transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: var(--font-main);
-}
-
-.quick-category-pill:hover {
-    background: var(--accent);
-    color: var(--primary-deep);
-    border-color: var(--primary);
-}
-
-/* ── 04: Trust and Verification Section ── */
-.trust-verification-section {
-    padding: 48px 0 64px;
-    background: var(--bg-alt);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-}
-
-.trust-strip-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    padding-bottom: 36px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 36px;
-}
-
-.trust-strip-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.trust-strip-icon-box {
-    width: 44px;
-    height: 44px;
-    border-radius: var(--radius-sm);
-    background: var(--accent);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.trust-strip-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-.trust-strip-sub {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-.trust-indicators-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-}
-
-.trust-indicator-card {
-    background: #FFFFFF;
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 24px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.trust-indicator-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(23, 43, 43, 0.06);
-    border-color: var(--primary);
-}
-
-.trust-indicator-icon-wrap {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-sm);
-    background: rgba(7, 155, 120, 0.08);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-}
-
-.trust-indicator-heading {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-main);
-    margin-bottom: 8px;
-}
-
-.trust-indicator-desc {
-    font-size: 0.82rem;
     color: var(--text-muted);
-    line-height: 1.55;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+}
+
+.quick-filter-badge:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-soft);
 }
 
 
@@ -1675,191 +1478,758 @@ img {
     color: #fff;
 }
 
-/* 12. Car Details Premium - Aesthetic Refinement */
+/* 12. Car Details — World-Class Automotive Product Page */
 .details-page-bg {
-    background: var(--bg-main);
-    background-image:
-        radial-gradient(circle at 0% 0%, hsla(var(--p-h), var(--p-s), var(--p-l), 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 100% 100%, hsla(var(--s-h), var(--s-s), var(--s-l), 0.03) 0%, transparent 40%);
+    background: var(--bg-alt);
     min-height: 100vh;
-    padding-bottom: 100px;
+    padding-top: calc(var(--header-height) + 24px);
+    padding-bottom: 96px;
+}
+
+.details-main-container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+.details-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .details-breadcrumb {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 32px;
-    padding: 12px 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
 .details-breadcrumb a {
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    transition: color 0.3s ease;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 .details-breadcrumb a:hover {
     color: var(--primary);
 }
 
-.details-breadcrumb span {
-    color: var(--border);
+.breadcrumb-separator {
+    color: #CBD5E1;
+    font-size: 0.8rem;
 }
 
-.details-breadcrumb .active {
-    color: var(--primary);
-}
-
-.back-gallery-btn {
-    margin-bottom: 32px;
-    padding: 8px 20px;
-    font-size: 0.85rem;
-}
-
-.vehicle-overview {
-    padding: clamp(20px, 4vw, 32px);
-}
-
-.vehicle-overview h2 {
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-    font-weight: 800;
-}
-
-.overview-text {
-    line-height: 1.7;
-    color: var(--text-muted);
-    font-size: 1rem;
-}
-
-.feature-tag-list {
-    margin-top: 24px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.spec-grid-container {
-    padding: clamp(20px, 4vw, 32px);
-    background: var(--bg-surface);
-}
-
-.spec-grid-container h2 {
-    font-size: 1.3rem;
-    margin-bottom: 24px;
-    font-weight: 900;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.spec-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 24px;
-    padding: 0;
-}
-
-.spec-item-label {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-}
-
-.spec-item-value {
+.breadcrumb-current {
+    color: var(--text-main);
     font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--secondary);
 }
 
-/* 12.1 Intelligence Center Styles */
-.trust-report-card {
-    padding: 24px;
-}
-
-.health-score-container {
-    display: flex;
-    gap: 24px;
+.details-back-btn {
+    display: inline-flex;
     align-items: center;
-    margin-bottom: 32px;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    background: #FFFFFF;
 }
 
-.health-meter-ring {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 10px solid var(--border);
+/* 2-Column Car Details Layout */
+.car-details-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+@media (max-width: 1024px) {
+    .car-details-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+}
+
+.details-primary-column {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    background: var(--bg-surface);
-    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+    gap: 24px;
+    min-width: 0;
 }
 
-.health-score-value {
-    font-size: 2.2rem;
-    font-weight: 900;
-    line-height: 1;
-}
-
-.health-score-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 1px;
-    opacity: 0.7;
-    margin-top: 4px;
-}
-
-.health-stat-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-}
-
-.health-stat-card {
-    background: var(--bg-main);
-    background: rgba(255, 255, 255, 0.5);
-    padding: 16px;
-    border-radius: 16px;
+/* Gallery Wrapper */
+.details-gallery-wrapper {
+    background: #FFFFFF;
     border: 1px solid var(--border);
-    transition: all 0.3s ease;
-}
-
-.health-stat-card:hover {
-    background: #fff;
-    transform: scale(1.02);
+    border-radius: var(--radius-md);
+    padding: 16px;
     box-shadow: var(--shadow-sm);
 }
 
-.health-stat-label {
+.gallery-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.gallery-360-trigger {
+    padding: 7px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFFFFF;
+}
+
+.gallery-certified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary-deep);
+    background: var(--accent);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+}
+
+/* Snapshot Bar */
+.vehicle-snapshot-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 24px;
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.snapshot-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.snapshot-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+}
+
+.snapshot-val {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-top: 2px;
+}
+
+.snapshot-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+}
+
+@media (max-width: 640px) {
+    .snapshot-divider {
+        display: none;
+    }
+    .vehicle-snapshot-strip {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+
+/* Standard Details Section Card */
+.details-section-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+}
+
+.section-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.section-card-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+    margin: 0 0 4px;
+}
+
+.section-card-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.section-card-subtitle-bold {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 24px 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.overview-body-text {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+}
+
+.features-badge-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.feature-badge-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.feature-check-icon {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+/* Technical Specifications Grid */
+.specs-verified-tag {
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primary-deep);
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.specs-tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 768px) {
+    .specs-tiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.spec-tile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+
+.spec-tile-icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: #FFFFFF;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+}
+
+.spec-tile-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.spec-tile-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.4px;
+}
+
+.spec-tile-val {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+}
+
+/* Inspection Checklist (Replacing fake health score) */
+.checklist-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--accent);
+    color: var(--primary-deep);
     font-size: 0.75rem;
     font-weight: 700;
+    border-radius: var(--radius-sm);
+}
+
+.inspection-checklist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.inspection-checklist-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+}
+
+.checklist-check-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--primary-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.checklist-text-wrap {
+    flex: 1;
+}
+
+.checklist-category-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.checklist-category-desc {
+    font-size: 0.78rem;
     color: var(--text-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+}
+
+.checklist-row-status {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Test Drive Card Overrides */
+.test-drive-card .test-drive-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--accent);
+    color: var(--primary-deep);
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+}
+
+.test-drive-form {
+    margin-top: 20px;
+}
+
+.test-drive-field {
+    margin-bottom: 16px;
+}
+
+.test-drive-field .form-label {
     display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+}
+
+.input-with-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-with-icon-wrap .input-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.input-with-icon-wrap .form-control {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px 0 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: var(--bg-alt);
+    font-family: var(--font-main);
+    transition: all 0.2s ease;
+}
+
+.input-with-icon-wrap .form-control:focus {
+    border-color: var(--primary);
+    background: #FFFFFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(7, 155, 120, 0.15);
+}
+
+.input-with-icon-wrap.select-wrap .custom-select-header {
+    height: 48px;
+    padding-left: 42px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+}
+
+.test-drive-submit-btn {
+    width: 100%;
+    height: 48px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+/* ── Sticky Sidebar Panel ── */
+.details-sidebar-column {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+}
+
+.details-sticky-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
     margin-bottom: 8px;
 }
 
-.health-progress-bg {
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 8px;
+.sidebar-dot {
+    color: #CBD5E1;
 }
 
-.health-progress-fill {
-    height: 100%;
-    transition: width 1s ease;
+.sidebar-vehicle-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.2;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+}
+
+.sidebar-variant-text {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.sidebar-pricing-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+
+.pricing-primary-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-price-amount {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--primary);
+    font-family: var(--font-display);
+    line-height: 1;
+}
+
+.sidebar-wishlist-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-wishlist-btn:hover {
+    border-color: #ef4444;
+}
+
+.pricing-secondary-line {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.pricing-tax-note {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.sidebar-actions-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.sidebar-buy-btn {
+    width: 100%;
+    height: 48px;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.sidebar-reserve-btn {
+    width: 100%;
+    height: 48px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: #FFFFFF;
+}
+
+.sidebar-whatsapp-btn {
+    width: 100%;
+    height: 44px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    background: rgba(37, 211, 102, 0.1);
+    color: #075C4D;
+    border: 1px solid rgba(37, 211, 102, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-whatsapp-btn:hover {
+    background: rgba(37, 211, 102, 0.2);
+    border-color: #25D366;
+}
+
+.sidebar-status-banner {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-status-banner.sold {
+    background: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.sidebar-status-banner.reserved {
+    background: #FEF3C7;
+    color: #D97706;
+    border: 1px solid #FDE68A;
+}
+
+.sidebar-reassurance-box {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+.reassurance-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.reassurance-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.reassurance-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.reassurance-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.reassurance-points {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reassurance-point-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.reassurance-check {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+/* Mobile Fixed Action Bar */
+.mobile-details-bottom-bar {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .mobile-details-bottom-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #FFFFFF;
+        border-top: 1px solid var(--border);
+        padding: 12px 20px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 -4px 16px rgba(23, 43, 43, 0.08);
+    }
+
+    .mobile-bar-price-wrap {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobile-bar-price-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+
+    .mobile-bar-price-val {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--primary);
+        font-family: var(--font-display);
+    }
+
+    .mobile-bar-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .mobile-bar-heart-btn {
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-sm);
+        background: #FFFFFF;
+    }
+
+    .mobile-bar-buy-btn {
+        height: 44px;
+        padding: 0 20px;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
 }
 
 /* 12.2 Bidding Premium - Aesthetic Refinement */
