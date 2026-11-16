@@ -966,15 +966,22 @@
 .minimal-checkbox {
     width: 18px;
     height: 18px;
-    border: 1.5px solid var(--secondary);
-    border-radius: 2px;
-    display: flex;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 4px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: white;
-    transition: all 0.2s;
+    background: #FFFFFF;
+    transition: all 0.2s ease;
     flex-shrink: 0;
     position: relative;
+    box-sizing: border-box;
+}
+
+.checkbox-label:hover .minimal-checkbox,
+.brand-list-item:hover .minimal-checkbox {
+    border-color: var(--primary);
+    background: rgba(7, 155, 120, 0.05);
 }
 
 .checkbox-label input:checked+.minimal-checkbox,
@@ -1972,7 +1979,7 @@ input[type="checkbox"]:checked::after {
     height: 100%;
     overflow-y: auto;
     padding-right: 8px;
-    padding-bottom: 120px;
+    padding-bottom: 24px;
     scrollbar-width: thin;
 }
 
